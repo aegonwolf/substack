@@ -2,17 +2,16 @@ import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import type { Publication } from '$lib/types';
 import { validatePublicationData } from '$lib/utils';
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 
 export const load: PageServerLoad = async () => {
   try {
-    const subscriberFilePath = join(process.cwd(), 'static', 'jsons', 'subscriber_counts.json');
-    const recommendationCountsFilePath = join(process.cwd(), 'static', 'jsons', 'recommendation_counts.json');
-    
     let rawData: string;
     try {
-      rawData = readFileSync(subscriberFilePath, 'utf-8');
+      const response = await fetch('/jsons/subscriber_counts.json');
+      if (!response.ok) {
+        throw new Error(`Failed to fetch subscriber_counts.json: ${response.status}`);
+      }
+      rawData = await response.text();
     } catch (fileError) {
       console.error('Failed to read subscriber data file:', fileError);
       throw error(500, 'Unable to load publication data file');
@@ -20,8 +19,10 @@ export const load: PageServerLoad = async () => {
     
     let recommendationCountsData: any[] = [];
     try {
-      const recommendationCountsRawData = readFileSync(recommendationCountsFilePath, 'utf-8');
-      recommendationCountsData = JSON.parse(recommendationCountsRawData);
+      const response = await fetch('/jsons/recommendation_counts.json');
+      if (response.ok) {
+        recommendationCountsData = await response.json();
+      }
     } catch (recommendationsError) {
       console.error('Failed to read recommendation counts data file:', recommendationsError);
       // Don't throw error, just use empty recommendations

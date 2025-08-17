@@ -5,9 +5,11 @@
 	// Component props using Svelte 5 runes
 	let {
 		graphData,
+		categoryStats,
 		backgroundColor = '#000000'
 	}: {
 		graphData: { nodes: any[]; links: any[]; metadata: any };
+		categoryStats: any[];
 		backgroundColor?: string;
 	} = $props();
 
@@ -21,6 +23,15 @@
 	let hoveredNode = $state<any>(null);
 	let tooltipPosition = $state({ x: 0, y: 0 });
 
+	// Create a map for quick category stats lookup
+	let categoryStatsMap = $derived(() => {
+		const map = new Map();
+		categoryStats?.forEach(cat => {
+			map.set(`category_${cat.category}`, cat);
+		});
+		return map;
+	});
+
 	// Track mouse position for tooltip
 	function handleMouseMove(event: MouseEvent) {
 		if (hoveredNode) {
@@ -28,21 +39,34 @@
 		}
 	}
 
-	// Derive tooltip content reactively
+	// Derive tooltip content reactively with category stats
 	let tooltipContent = $derived(
 		(() => {
-			const content = {
-				show: hoveredNode !== null,
+			if (!hoveredNode) return { show: false };
+			
+			const stats = categoryStatsMap.get(hoveredNode.id);
+			const medianSubs = stats?.median_subscriber_count || 0;
+			const meanSubs = stats?.mean_subscriber_count || 0;
+			const maxSubs = stats?.max_subscriber_count || 0;
+			const outgoing = stats?.outgoing || hoveredNode?.outgoing_connections || 0;
+			const incoming = stats?.incoming || hoveredNode?.incoming_connections || 0;
+			
+			return {
+				show: true,
 				name: hoveredNode?.name || '',
-				category: hoveredNode?.category || '',
-				subscriberText: hoveredNode?.subscriber_count
-					? hoveredNode.subscriber_count >= 1000
-						? `${Math.round(hoveredNode.subscriber_count / 1000)}k subscribers`
-						: `${hoveredNode.subscriber_count} subscribers`
-					: 'No subscriber data',
-				isBestseller: hoveredNode?.is_bestseller || false
+				medianText: medianSubs >= 1000 
+					? `${Math.round(medianSubs / 1000)}k median` 
+					: `${Math.round(medianSubs)} median`,
+				meanText: meanSubs >= 1000 
+					? `${Math.round(meanSubs / 1000)}k average` 
+					: `${Math.round(meanSubs)} average`,
+				maxText: maxSubs >= 1000 
+					? `${Math.round(maxSubs / 1000)}k max` 
+					: `${Math.round(maxSubs)} max`,
+				outgoingConnections: outgoing,
+				incomingConnections: incoming,
+				totalConnections: hoveredNode?.inDegree + hoveredNode?.outDegree || 0
 			};
-			return content;
 		})()
 	);
 
@@ -52,33 +76,33 @@
 	};
 
 	const focusNode = (node: any, ms = 800) => {
-  if (!node || !forceGraphInstance) return;
+		if (!node || !forceGraphInstance) return;
 
-  const ctrls: any = forceGraphInstance.controls();
+		const ctrls: any = forceGraphInstance.controls();
 
-  // robust current coords (works for both d3 & ngraph engines)
-  const p = node.__threeObj?.position ?? { x: node.x, y: node.y, z: node.z };
-  const x = p?.x ?? 0, y = p?.y ?? 0, z = p?.z ?? 0;
+		// robust current coords (works for both d3 & ngraph engines)
+		const p = node.__threeObj?.position ?? { x: node.x, y: node.y, z: node.z };
+		const x = p?.x ?? 0, y = p?.y ?? 0, z = p?.z ?? 0;
 
-  // same idea as the official example: move along the node->camera ray
-  const distance = Math.max(40, (forceGraphInstance.getGraphBbox()?.x[1] ?? 200) * 0.2);
-  const denom = Math.hypot(x || 1, y || 1, z || 1); // avoid 0/0
-  const distRatio = 1 + distance / denom;
+		// same idea as the official example: move along the node->camera ray
+		const distance = Math.max(40, (forceGraphInstance.getGraphBbox()?.x[1] ?? 200) * 0.3);
+		const denom = Math.hypot(x || 1, y || 1, z || 1); // avoid 0/0
+		const distRatio = 1 + distance / denom;
 
-  forceGraphInstance.cameraPosition(
-    { x: x * distRatio, y: y * distRatio, z: z * distRatio },
-    { x, y, z },
-    ms
-  );
+		forceGraphInstance.cameraPosition(
+			{ x: x * distRatio, y: y * distRatio, z: z * distRatio },
+			{ x, y, z },
+			ms
+		);
 
-  // ensure orbit/zoom revolves around the node
-  ctrls.target.set(x, y, z);
-  if (typeof ctrls.update === 'function') ctrls.update();
-};
+		// ensure orbit/zoom revolves around the node
+		ctrls.target.set(x, y, z);
+		if (typeof ctrls.update === 'function') ctrls.update();
+	};
 
 	const handleNodeClick = (node: any) => {
-		console.log('Node clicked:', node.name, node);
-		focusNode(node, 800, 140);
+		console.log('Category node clicked:', node.name, node);
+		focusNode(node, 800);
 	};
 
 	// Component lifecycle - onMount
@@ -99,61 +123,65 @@
 
 			// Dynamic import to avoid SSR issues
 			const { default: ForceGraph3D } = await import('3d-force-graph');
+			const SpriteText = await import('https://esm.sh/three-spritetext');
 
-			// Initialize with optimized data and settings
+			// Initialize with d3 engine for draggable nodes
 			forceGraphInstance = new ForceGraph3D(graphContainer, { controlType: 'orbit' })
 				.graphData(graphData)
 				.nodeId('id')
-				.nodeLabel('label') // Use pre-computed labels
-				.nodeVal('val') // Use pre-computed sizes
-				.nodeColor('color') // Use pre-computed colors
-				.nodeOpacity(0.9)
-				.nodeResolution(8) // Balanced resolution
-				.nodeRelSize(4)
-				// Use ngraph for better performance with good clustering
-				.forceEngine('ngraph')
-				.ngraphPhysics({
-					springLength: 100,
-					springCoefficient: 0.0005,
-					gravity: -0.8,
-					theta: 0.8,
-					dragCoefficient: 0.01,
-					timeStep: 20
+				.nodeLabel('label')
+				.nodeVal('val')
+				// Use SpriteText to display category names as text-only nodes
+				.nodeThreeObject((node: any) => {
+					const sprite = new SpriteText.default(node.name || node.id);
+					sprite.material.depthWrite = false; // make sprite background transparent
+					sprite.color = node.color || '#ffffff';
+					sprite.textHeight = 8;
+					return sprite;
 				})
-				// Optimize link rendering while maintaining visibility
-				.linkWidth(0) // Use 1px lines for performance
-				.linkColor(() => 'rgba(150,150,150,0.6)')
+				// Use d3 force engine to enable node dragging
+				.forceEngine('d3')
+				.d3AlphaDecay(0.02) // Slower decay for smoother physics
+				.d3VelocityDecay(0.4) // Standard velocity damping
+				.numDimensions(3)
+				// Link styling
+				.linkWidth((link: any) => Math.sqrt(link.value || 1) * 0.3)
+				.linkColor(() => 'rgba(150,150,255,0.4)')
 				.linkOpacity(0.4)
-				// Canvas settings - use computed dimensions
+				// Canvas settings
 				.backgroundColor(backgroundColor)
 				.width(width)
 				.height(height)
-				// Interactions
+				// Enable interactions
 				.enablePointerInteraction(true)
-				.enableNodeDrag(false) // Disable for performance with many nodes
+				.enableNodeDrag(true) // Enable dragging with d3 engine
 				.enableNavigationControls(true)
 				.showNavInfo(false)
-				// Performance settings - let physics run longer for better layout
-				.warmupTicks(50) // Some warmup for initial positioning
-				.cooldownTicks(500)
-				.cooldownTime(20000)
+				// Physics settings
+				.warmupTicks(50)
+				.cooldownTicks(200)
+				.cooldownTime(10000)
 				// Event handlers
 				.onNodeHover(handleNodeHover)
 				.onNodeClick(handleNodeClick)
-				.enableNavigationControls(true);
+				.onNodeDragEnd((node: any) => {
+					// Pin node position after dragging
+					node.fx = node.x;
+					node.fy = node.y;
+					node.fz = node.z;
+				});
 
 			isInitialized = true;
-			// after init, tune the controls a bit
+			
+			// Tune the controls similar to the original
 			const controls: any = forceGraphInstance.controls();
 			controls.enableDamping = true;
 			controls.dampingFactor = 0.1;
-			controls.screenSpacePanning = true; // right-drag pans "under the cursor"
+			controls.screenSpacePanning = true;
 			controls.minDistance = 50;
 			controls.maxDistance = 8000;
-			// Some three.js versions support this; safe to gate it:
 			if ('zoomToCursor' in controls) controls.zoomToCursor = true;
 		} catch (err) {
-			// console.error('Error initializing graph:', err);
 			error = err instanceof Error ? err.message : 'Failed to initialize graph';
 		}
 	});
@@ -169,9 +197,6 @@
 			}
 		};
 	});
-
-	// Skip automatic resizing for now to avoid color parsing issues
-	// TODO: Investigate why .width()/.height() calls trigger color re-parsing
 
 	// Reactive updates for background color
 	$effect(() => {
@@ -199,23 +224,26 @@
 		{:else if !browser || !isInitialized}
 			<div class="absolute inset-0 flex items-center justify-center">
 				<div class="preset-filled-surface-100-900 rounded-lg p-6">
-					<h3 class="h3">Loading Graph...</h3>
-					<p class="mt-2">Initializing {graphData.metadata.total_nodes} nodes...</p>
+					<h3 class="h3">Loading Category Network...</h3>
+					<p class="mt-2">Initializing {graphData.metadata.total_nodes} categories...</p>
 				</div>
 			</div>
 		{:else}
 			<!-- Graph info overlay -->
 			<div class="absolute top-2 left-2 z-10">
-				<div class="preset-filled-surface-100-900 rounded-lg p-2 opacity-80">
-					<p class="text-sm">
-						Nodes: {graphData.metadata.total_nodes} | Links: {graphData.metadata.total_links}
+				<div class="preset-filled-surface-100-900 rounded-lg p-3 opacity-90">
+					<p class="text-sm font-medium">
+						Categories: {graphData.metadata.categories_count}
+					</p>
+					<p class="text-xs opacity-75 mt-1">
+						Connections: {graphData.metadata.total_links} | Drag nodes to interact
 					</p>
 				</div>
 			</div>
 		{/if}
 	</div>
 
-	<!-- Single reactive tooltip that follows mouse - outside container -->
+	<!-- Enhanced tooltip for categories -->
 	{#if tooltipContent.show}
 		<div
 			class="pointer-events-none fixed z-[9999]"
@@ -225,24 +253,42 @@
 				<header class="card-header pb-2">
 					<h4 class="text-on-surface h4 font-semibold">{tooltipContent.name}</h4>
 				</header>
-				<section class="card-body space-y-2">
-					<div class="flex items-center justify-between">
-						<span class="text-sm opacity-75">Category:</span>
-						<span class="text-sm font-medium">{tooltipContent.category}</span>
-					</div>
-					<div class="flex items-center justify-between">
-						<span class="text-sm opacity-75">Subscribers:</span>
-						<span class="text-sm font-medium">{tooltipContent.subscriberText}</span>
-					</div>
-					{#if tooltipContent.isBestseller}
-						<div class="pt-2">
-							<span class="bg-orange-500 badge">Bestseller</span>
+				<section class="card-body space-y-3">
+					<!-- Subscriber Statistics -->
+					<div class="space-y-1">
+						<div class="text-xs font-semibold opacity-75 uppercase">Subscriber Stats</div>
+						<div class="flex items-center justify-between">
+							<span class="text-sm opacity-75">Median:</span>
+							<span class="text-sm font-medium">{tooltipContent.medianText}</span>
 						</div>
-					{/if}
+						<div class="flex items-center justify-between">
+							<span class="text-sm opacity-75">Average:</span>
+							<span class="text-sm font-medium">{tooltipContent.meanText}</span>
+						</div>
+						<div class="flex items-center justify-between">
+							<span class="text-sm opacity-75">Maximum:</span>
+							<span class="text-sm font-medium">{tooltipContent.maxText}</span>
+						</div>
+					</div>
+					
+					<!-- Connection Statistics -->
+					<div class="space-y-1 pt-2 border-t border-surface-500">
+						<div class="text-xs font-semibold opacity-75 uppercase">Connections</div>
+						<div class="flex items-center justify-between">
+							<span class="text-sm opacity-75">Recommendations to:</span>
+							<span class="text-sm font-medium">{tooltipContent.outgoingConnections}</span>
+						</div>
+						<div class="flex items-center justify-between">
+							<span class="text-sm opacity-75">Recommendations from:</span>
+							<span class="text-sm font-medium">{tooltipContent.incomingConnections}</span>
+						</div>
+						<div class="flex items-center justify-between">
+							<span class="text-sm opacity-75">Graph connections:</span>
+							<span class="text-sm font-medium">{tooltipContent.totalConnections}</span>
+						</div>
+					</div>
 				</section>
 			</div>
 		</div>
 	{/if}
 </div>
-
-

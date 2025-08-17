@@ -1,7 +1,5 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 
 export interface CategoryData {
 	category: string;
@@ -15,11 +13,14 @@ export interface CategoryData {
 }
 
 
-function loadCategoryData(): CategoryData[] {
+async function loadCategoryData(): Promise<CategoryData[]> {
 	try {
-		const filePath = join(process.cwd(), 'static/jsons/categories.json');
-		const rawData = readFileSync(filePath, 'utf-8');
-		const jsonData = JSON.parse(rawData);
+		const response = await fetch('/jsons/categories.json');
+		if (!response.ok) {
+			throw new Error(`Failed to fetch categories.json: ${response.status}`);
+		}
+		
+		const jsonData = await response.json();
 		
 		if (!Array.isArray(jsonData)) {
 			throw new Error('Invalid data format: expected array');
@@ -43,7 +44,7 @@ function loadCategoryData(): CategoryData[] {
 
 export const load: PageServerLoad = async () => {
 	try {
-		const categories = loadCategoryData();
+		const categories = await loadCategoryData();
 		
 		// Calculate some basic statistics
 		const totalCategories = categories.length;
