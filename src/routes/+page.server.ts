@@ -3,7 +3,7 @@ import type { PageServerLoad } from './$types';
 import type { Publication } from '$lib/types';
 import { validatePublicationData } from '$lib/utils';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ fetch }) => {
   try {
     let rawData: string;
     try {

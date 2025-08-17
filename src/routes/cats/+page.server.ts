@@ -13,7 +13,7 @@ export interface CategoryData {
 }
 
 
-async function loadCategoryData(): Promise<CategoryData[]> {
+async function loadCategoryData(fetch: typeof globalThis.fetch): Promise<CategoryData[]> {
 	try {
 		const response = await fetch('/jsons/categories.json');
 		if (!response.ok) {
@@ -42,9 +42,9 @@ async function loadCategoryData(): Promise<CategoryData[]> {
 	}
 }
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ fetch }) => {
 	try {
-		const categories = await loadCategoryData();
+		const categories = await loadCategoryData(fetch);
 		
 		// Calculate some basic statistics
 		const totalCategories = categories.length;

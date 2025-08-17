@@ -38,17 +38,68 @@
 	let isInitialized = $state(false);
 	let error = $state<string | null>(null);
 
+	// Render scheduling
+	let rafPending = false;
+	const scheduleDraw = () => {
+		if (rafPending) return;
+		rafPending = true;
+		requestAnimationFrame(() => {
+			rafPending = false;
+			draw();
+		});
+	};
+
+	// links used for rendering (mutated by d3-force to hold node refs)
+	let renderLinks: any[] = [];
+
+	// --- Styling / helpers ---
 	const nodeRadius = (n: any) => 2 + Math.sqrt(n?.val ?? 1) * 1.6;
 	const showLabels = () => transform.k > 1.5;
-	const LINK = {
-		COLOR: '#c8c8c8',                 // high contrast on dark bg
-		ALPHA: 0.75,                      // single alpha (no double-fade)
-		BASE_PX: 1.25,                    // base screen px thickness
-		ZOOM_BOOST: (k: number) => Math.min(3, 0.75 * Math.log2(k + 1)), // thicker when zoomed in
-		GLOW_ALPHA: 0.18,                 // subtle halo
-		GLOW_MULTIPLIER: 3                // halo is thicker than the core
-		};
 
+	// Link style that adapts to zoom
+	const LINK = {
+		COLOR: '#c6cad3',
+		FAR_ALPHA: 0.06,     // very faint when zoomed out
+		NEAR_ALPHA: 0.28,    // still subtle when zoomed in
+		BASE_PX: 0.9,
+		MAX_PX: 1.6
+	};
+	const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
+	const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+	// Smooth alpha as we zoom (k ∈ [0.6, 3] ramps)
+	function linkAlphaForK(k: number) {
+		if (k <= 0.6) return LINK.FAR_ALPHA;
+		if (k >= 3)   return LINK.NEAR_ALPHA;
+		return lerp(LINK.FAR_ALPHA, LINK.NEAR_ALPHA, (k - 0.6) / (3 - 0.6));
+	}
+	// Line thickness in screen pixels
+	function linkWidthPxForK(k: number) {
+		return clamp(LINK.BASE_PX + 0.35 * Math.log2(k + 1), LINK.BASE_PX, LINK.MAX_PX);
+	}
+
+	// Level-of-detail: fraction of links to draw at a given zoom
+	// (0 when far out, 100% when zoomed in)
+	function linkFractionForK(k: number) {
+		if (k < 0.5) return 0.0;
+		if (k < 1.0) return 0.12;
+		if (k < 2.0) return 0.28;
+		if (k < 3.0) return 0.6;
+		return 1.0;
+	}
+
+	// Deterministic per-link random in [0,1) so sampling is stable
+	function hash01(str: string) {
+		let h = 2166136261 >>> 0;
+		for (let i = 0; i < str.length; i++) {
+			h ^= str.charCodeAt(i);
+			h = Math.imul(h, 16777619);
+		}
+		// xorshift
+		h ^= h >>> 13; h = Math.imul(h, 0x5bd1e995);
+		h ^= h >>> 15;
+		return (h >>> 0) / 4294967296;
+	}
 
 	function handleMouseMove(ev: MouseEvent) {
 		tooltipPosition = { x: ev.clientX, y: ev.clientY };
@@ -88,7 +139,6 @@
 
 	function draw() {
 		if (!ctx) return;
-		ctx.save();
 
 		// clear + background
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -99,47 +149,56 @@
 		// apply zoom transform
 		ctx.setTransform(transform.k, 0, 0, transform.k, transform.x, transform.y);
 
-		// ------ LINKS (trimmed to node edges) ------
-		const strokePx = LINK.BASE_PX + LINK.ZOOM_BOOST(transform.k);
-		const drawLinks = (glow = false) => {
+		// ------ LINKS (LOD + subtle) ------
+		const k = transform.k;
+		const frac = linkFractionForK(k);
+		const alpha = linkAlphaForK(k);
+		const strokePx = linkWidthPxForK(k);
+
+		if (frac > 0 && renderLinks.length) {
 			ctx.beginPath();
-			for (const l of graphData.links) {
-			const s: any = l.source, t: any = l.target;
-			if (!s || !t) continue;
+			let drawn = 0;
+			const maxPerFrame = 20000; // hard cap for perf
+			for (let i = 0; i < renderLinks.length; i++) {
+				const l: any = renderLinks[i];
+				const s: any = l.source, t: any = l.target;
+				if (!s || !t || s.x == null || t.x == null) continue;
 
-			const dx = t.x - s.x, dy = t.y - s.y;
-			const len = Math.hypot(dx, dy);
-			if (!len) continue;
+				// stable sampling
+				if (l._r == null) {
+					const sid = typeof l.source === 'object' ? l.source.id : l.source;
+					const tid = typeof l.target === 'object' ? l.target.id : l.target;
+					l._r = hash01(String(sid) + '|' + String(tid));
+				}
+				if (l._r > frac) continue;
 
-			// trim to node edge so lines aren't hidden under circles
-			const rs = nodeRadius(s) + (glow ? 1.5 / transform.k : 0);
-			const rt = nodeRadius(t) + (glow ? 1.5 / transform.k : 0);
-			if (len <= rs + rt) continue;
+				// when far out, skip trimming (cheaper)
+				if (k < 1.5) {
+					ctx.moveTo(s.x, s.y);
+					ctx.lineTo(t.x, t.y);
+				} else {
+					// trim to node edges (nicer when zoomed in)
+					const dx = t.x - s.x, dy = t.y - s.y;
+					const len = Math.hypot(dx, dy);
+					if (!len || !isFinite(len)) continue;
+					const rs = nodeRadius(s);
+					const rt = nodeRadius(t);
+					if (len <= rs + rt) continue;
+					const ux = dx / len, uy = dy / len;
+					const x1 = s.x + ux * rs, y1 = s.y + uy * rs;
+					const x2 = t.x - ux * rt, y2 = t.y - uy * rt;
+					ctx.moveTo(x1, y1);
+					ctx.lineTo(x2, y2);
+				}
 
-			const ux = dx / len, uy = dy / len;
-			const x1 = s.x + ux * rs, y1 = s.y + uy * rs;
-			const x2 = t.x - ux * rt, y2 = t.y - uy * rt;
-
-			ctx.moveTo(x1, y1);
-			ctx.lineTo(x2, y2);
+				if (++drawn >= maxPerFrame) break;
 			}
+			ctx.globalAlpha = alpha;
+			ctx.lineWidth = strokePx / k; // constant in screen px
+			ctx.strokeStyle = LINK.COLOR;
 			ctx.stroke();
-		};
-
-		// optional glow for contrast
-		ctx.save();
-		ctx.globalAlpha = LINK.GLOW_ALPHA;
-		ctx.lineWidth = (strokePx * LINK.GLOW_MULTIPLIER) / transform.k; // screen px
-		ctx.strokeStyle = '#ffffff';
-		drawLinks(true);
-		ctx.restore();
-
-		// core stroke
-		ctx.globalAlpha = LINK.ALPHA;
-		ctx.lineWidth = strokePx / transform.k; // keep constant in screen px
-		ctx.strokeStyle = LINK.COLOR;
-		drawLinks(false);
-		ctx.globalAlpha = 1;
+			ctx.globalAlpha = 1;
+		}
 
 		// ------ NODES ------
 		for (const n of graphData.nodes) {
@@ -157,10 +216,10 @@
 			ctx.textBaseline = 'top';
 			ctx.fillStyle = '#fff';
 			for (const n of graphData.nodes) {
-			const r = nodeRadius(n);
-			const label = n.label ?? n.name ?? n.id;
-			if (!label) continue;
-			ctx.fillText(label, n.x, n.y + r + 2 / transform.k);
+				const r = nodeRadius(n);
+				const label = n.label ?? n.name ?? n.id;
+				if (!label) continue;
+				ctx.fillText(label, n.x, n.y + r + 2 / transform.k);
 			}
 		}
 
@@ -173,10 +232,7 @@
 			ctx.strokeStyle = 'rgba(255,255,255,0.9)';
 			ctx.stroke();
 		}
-
-		ctx.restore();
-		}
-
+	}
 
 	function focusNode(n: any, duration = 800, targetK = Math.min(8, Math.max(2, transform.k * 1.3))) {
 		if (!n || !d3zoom) return;
@@ -199,10 +255,9 @@
 				x: start.x + (end.x - start.x) * e,
 				y: start.y + (end.y - start.y) * e
 			};
-			draw();
+			scheduleDraw();
 			if (u < 1) requestAnimationFrame(step);
 			else {
-				// sync d3-zoom internal state
 				d3select(canvasEl).call(
 					d3zoom.transform,
 					zoomIdentity.translate(end.x / dpr, end.y / dpr).scale(end.k)
@@ -212,7 +267,6 @@
 		requestAnimationFrame(step);
 	}
 
-	// NEW: zoom-to-fit (call anytime)
 	function zoomToFit(padding = 60, duration = 600) {
 		const nodes = graphData.nodes;
 		if (!nodes.length) return;
@@ -259,7 +313,7 @@
 		const p = toGraphCoords(ev);
 		draggingNode.fx = p.x;
 		draggingNode.fy = p.y;
-		draw();
+		scheduleDraw();
 	}
 	function onPointerUp() {
 		if (!draggingNode) return;
@@ -294,7 +348,7 @@
 		canvasEl.style.width = `${width}px`;
 		canvasEl.style.height = `${height}px`;
 		if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-		draw();
+		scheduleDraw();
 	}
 
 	onMount(async () => {
@@ -323,9 +377,8 @@
 			resizeObserver = new ResizeObserver(setupCanvasSize);
 			resizeObserver.observe(containerEl);
 
-			// Wider zoom range 👇
 			d3zoom = zoom<HTMLCanvasElement, unknown>()
-				.scaleExtent([0.005, 64])  // << allow way farther zoom-out & zoom-in
+				.scaleExtent([0.005, 64])
 				.filter((event: any) => !draggingNode || event.type === 'wheel')
 				.on('zoom', (event: any) => {
 					transform = {
@@ -333,7 +386,7 @@
 						x: event.transform.x * dpr,
 						y: event.transform.y * dpr
 					};
-					draw();
+					scheduleDraw();
 				});
 
 			d3select(canvasEl).call(d3zoom as any);
@@ -352,7 +405,15 @@
 
 			// d3-force (2D)
 			const nodes = graphData.nodes;
-			const links = graphData.links.map((l: any) => ({ ...l }));
+			const links = graphData.links.map((l: any) => ({ ...l })); // shallow copy
+			renderLinks = links; // render the same (mutated) array
+
+			// give each link a stable sampling key once
+			for (const l of links) {
+				const sid = typeof l.source === 'object' ? l.source.id : l.source;
+				const tid = typeof l.target === 'object' ? l.target.id : l.target;
+				l._r = hash01(String(sid) + '|' + String(tid));
+			}
 
 			sim = forceSimulation(nodes)
 				.force('link', forceLink(links).id((d: any) => d.id)
@@ -370,12 +431,12 @@
 				.velocityDecay(0.3)
 				.on('tick', () => {
 					rebuildQuadtree();
-					draw();
+					// throttle ticks to animation frames
+					scheduleDraw();
 				});
 
 			isInitialized = true;
 
-			// settle a bit then fit everything in view
 			setTimeout(() => zoomToFit(60, 500), 350);
 		} catch (e: any) {
 			error = e?.message ?? 'Failed to initialize d3-force 2D graph';
@@ -399,7 +460,7 @@
 	});
 
 	$effect(() => {
-		if (isInitialized) draw();
+		if (isInitialized) scheduleDraw();
 	});
 </script>
 
