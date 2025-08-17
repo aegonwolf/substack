@@ -40,6 +40,15 @@
 
 	const nodeRadius = (n: any) => 2 + Math.sqrt(n?.val ?? 1) * 1.6;
 	const showLabels = () => transform.k > 1.5;
+	const LINK = {
+		COLOR: '#c8c8c8',                 // high contrast on dark bg
+		ALPHA: 0.75,                      // single alpha (no double-fade)
+		BASE_PX: 1.25,                    // base screen px thickness
+		ZOOM_BOOST: (k: number) => Math.min(3, 0.75 * Math.log2(k + 1)), // thicker when zoomed in
+		GLOW_ALPHA: 0.18,                 // subtle halo
+		GLOW_MULTIPLIER: 3                // halo is thicker than the core
+		};
+
 
 	function handleMouseMove(ev: MouseEvent) {
 		tooltipPosition = { x: ev.clientX, y: ev.clientY };
@@ -81,30 +90,58 @@
 		if (!ctx) return;
 		ctx.save();
 
-		// clear + bg
+		// clear + background
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.clearRect(0, 0, width * dpr, height * dpr);
 		ctx.fillStyle = backgroundColor;
 		ctx.fillRect(0, 0, width * dpr, height * dpr);
 
-		// apply zoom
+		// apply zoom transform
 		ctx.setTransform(transform.k, 0, 0, transform.k, transform.x, transform.y);
 
-		// links
-		ctx.beginPath();
-		for (const l of graphData.links) {
+		// ------ LINKS (trimmed to node edges) ------
+		const strokePx = LINK.BASE_PX + LINK.ZOOM_BOOST(transform.k);
+		const drawLinks = (glow = false) => {
+			ctx.beginPath();
+			for (const l of graphData.links) {
 			const s: any = l.source, t: any = l.target;
 			if (!s || !t) continue;
-			ctx.moveTo(s.x, s.y);
-			ctx.lineTo(t.x, t.y);
-		}
-		ctx.globalAlpha = 0.45;
-		ctx.lineWidth = 1 / transform.k;
-		ctx.strokeStyle = 'rgba(150,150,150,0.6)';
-		ctx.stroke();
+
+			const dx = t.x - s.x, dy = t.y - s.y;
+			const len = Math.hypot(dx, dy);
+			if (!len) continue;
+
+			// trim to node edge so lines aren't hidden under circles
+			const rs = nodeRadius(s) + (glow ? 1.5 / transform.k : 0);
+			const rt = nodeRadius(t) + (glow ? 1.5 / transform.k : 0);
+			if (len <= rs + rt) continue;
+
+			const ux = dx / len, uy = dy / len;
+			const x1 = s.x + ux * rs, y1 = s.y + uy * rs;
+			const x2 = t.x - ux * rt, y2 = t.y - uy * rt;
+
+			ctx.moveTo(x1, y1);
+			ctx.lineTo(x2, y2);
+			}
+			ctx.stroke();
+		};
+
+		// optional glow for contrast
+		ctx.save();
+		ctx.globalAlpha = LINK.GLOW_ALPHA;
+		ctx.lineWidth = (strokePx * LINK.GLOW_MULTIPLIER) / transform.k; // screen px
+		ctx.strokeStyle = '#ffffff';
+		drawLinks(true);
+		ctx.restore();
+
+		// core stroke
+		ctx.globalAlpha = LINK.ALPHA;
+		ctx.lineWidth = strokePx / transform.k; // keep constant in screen px
+		ctx.strokeStyle = LINK.COLOR;
+		drawLinks(false);
 		ctx.globalAlpha = 1;
 
-		// nodes
+		// ------ NODES ------
 		for (const n of graphData.nodes) {
 			const r = nodeRadius(n);
 			ctx.beginPath();
@@ -113,21 +150,21 @@
 			ctx.fill();
 		}
 
-		// labels at higher zoom
+		// ------ LABELS ------
 		if (showLabels()) {
 			ctx.font = `${12 / transform.k}px Sans-Serif`;
 			ctx.textAlign = 'center';
 			ctx.textBaseline = 'top';
 			ctx.fillStyle = '#fff';
 			for (const n of graphData.nodes) {
-				const r = nodeRadius(n);
-				const label = n.label ?? n.name ?? n.id;
-				if (!label) continue;
-				ctx.fillText(label, n.x, n.y + r + 2 / transform.k);
+			const r = nodeRadius(n);
+			const label = n.label ?? n.name ?? n.id;
+			if (!label) continue;
+			ctx.fillText(label, n.x, n.y + r + 2 / transform.k);
 			}
 		}
 
-		// hover ring
+		// ------ HOVER RING ------
 		if (hoveredNode) {
 			const r = nodeRadius(hoveredNode);
 			ctx.beginPath();
@@ -138,7 +175,8 @@
 		}
 
 		ctx.restore();
-	}
+		}
+
 
 	function focusNode(n: any, duration = 800, targetK = Math.min(8, Math.max(2, transform.k * 1.3))) {
 		if (!n || !d3zoom) return;
