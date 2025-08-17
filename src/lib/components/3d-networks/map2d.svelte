@@ -478,14 +478,14 @@
 		<div class="absolute inset-0 grid place-items-center">
 			<div class="preset-filled-surface-100-900 rounded-lg p-6">
 				<h3 class="h3">Loading 2D Graph…</h3>
-				<p class="mt-2">Initializing {graphData.metadata.total_nodes} nodes…</p>
+				<p class="mt-2">Initializing tens of thousands of newsletter recommendations</p>
 			</div>
 		</div>
 	{:else}
 		<div class="absolute top-2 left-2 z-10">
-			<div class="preset-filled-surface-100-900 rounded-lg p-2 opacity-80">
+			<div class="preset-filled-surface-100-900/20f rounded-lg p-2 opacity-80">
 				<p class="text-sm">
-					2D (d3-force) • Nodes: {graphData.metadata.total_nodes} • Links: {graphData.metadata.total_links} • Press <kbd>F</kbd> to fit
+					Press <kbd>F</kbd> to fit
 				</p>
 			</div>
 		</div>

@@ -96,9 +96,10 @@
 
 			// Dynamic imports to avoid SSR issues
 			const ForceGraph3D = (await import('3d-force-graph')).default;
-			const threeMod = await import('three'); // for MOUSE/TOUCH enums
-			const MOUSE = (threeMod as any).MOUSE;
-			const TOUCH = (threeMod as any).TOUCH;
+			// Access Three.js from the global scope set by 3d-force-graph
+			const THREE = (window as any).THREE;
+			const MOUSE = THREE?.MOUSE || { PAN: 2, DOLLY: 1 };
+			const TOUCH = THREE?.TOUCH || { PAN: 0, DOLLY_PAN: 2 };
 
 			// Initialize with your existing settings, flattened to 2D
 			forceGraphInstance = new ForceGraph3D(graphContainer, { controlType: 'orbit' })

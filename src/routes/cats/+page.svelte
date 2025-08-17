@@ -10,7 +10,10 @@
 	const { data }: { data: PageData } = $props();
 
 	// Reactive state management with Svelte 5 runes
-	let sortBy = $state<'mean' | 'median' | 'min' | 'max' | 'stddev' | 'outgoing' | 'incoming'>('mean');
+	let sortBy = $state<'mean' | 'median' | 'min' | 'max' | 'stddev' | 'outgoing' | 'incoming'>(
+		'mean'
+	);
+	let sortDirection = $state<'desc' | 'asc'>('desc'); // Default to descending (highest first)
 
 	// Pagination state
 	let currentPage = $state(1);
@@ -23,22 +26,33 @@
 		}
 
 		const sorted = [...data.categories];
-		
+		const multiplier = sortDirection === 'desc' ? -1 : 1;
+
 		switch (sortBy) {
 			case 'mean':
-				return sorted.sort((a, b) => b.mean_subscriber_count - a.mean_subscriber_count);
+				return sorted.sort(
+					(a, b) => multiplier * (b.mean_subscriber_count - a.mean_subscriber_count)
+				);
 			case 'median':
-				return sorted.sort((a, b) => b.median_subscriber_count - a.median_subscriber_count);
+				return sorted.sort(
+					(a, b) => multiplier * (b.median_subscriber_count - a.median_subscriber_count)
+				);
 			case 'min':
-				return sorted.sort((a, b) => b.min_subscriber_count - a.min_subscriber_count);
+				return sorted.sort(
+					(a, b) => multiplier * (b.min_subscriber_count - a.min_subscriber_count)
+				);
 			case 'max':
-				return sorted.sort((a, b) => b.max_subscriber_count - a.max_subscriber_count);
+				return sorted.sort(
+					(a, b) => multiplier * (b.max_subscriber_count - a.max_subscriber_count)
+				);
 			case 'stddev':
-				return sorted.sort((a, b) => b.stddev_subscriber_count - a.stddev_subscriber_count);
+				return sorted.sort(
+					(a, b) => multiplier * (b.stddev_subscriber_count - a.stddev_subscriber_count)
+				);
 			case 'outgoing':
-				return sorted.sort((a, b) => b.outgoing - a.outgoing);
+				return sorted.sort((a, b) => multiplier * (b.outgoing - a.outgoing));
 			case 'incoming':
-				return sorted.sort((a, b) => b.incoming - a.incoming);
+				return sorted.sort((a, b) => multiplier * (b.incoming - a.incoming));
 			default:
 				return sorted;
 		}
@@ -54,6 +68,7 @@
 	// Reset to first page when sort changes
 	$effect(() => {
 		sortBy;
+		sortDirection;
 		currentPage = 1;
 	});
 
@@ -61,11 +76,23 @@
 	const isLoading = $derived(!data);
 	const hasError = $derived(data && !data.categories);
 
+	// Handle sort column click - toggle direction if same column, otherwise set new column
+	function handleSort(newSortBy: typeof sortBy) {
+		if (sortBy === newSortBy) {
+			// Toggle direction if clicking the same column
+			sortDirection = sortDirection === 'desc' ? 'asc' : 'desc';
+		} else {
+			// Set new column and default to descending
+			sortBy = newSortBy;
+			sortDirection = 'desc';
+		}
+	}
+
 	// Accessibility: Handle keyboard navigation for sort controls
 	function handleSortKeydown(event: KeyboardEvent, sortType: typeof sortBy) {
 		if (event.key === 'Enter' || event.key === ' ') {
 			event.preventDefault();
-			sortBy = sortType;
+			handleSort(sortType);
 		}
 	}
 </script>
@@ -121,111 +148,27 @@
 			<!-- Statistics Cards -->
 			<section class="grid grid-cols-1 gap-6 md:grid-cols-3">
 				<div class="card preset-tonal-surface p-6 shadow-lg">
-					<h3 class="text-surface-800-100-token h4 mb-2">Total Categories</h3>
-					<p class="text-3xl font-bold text-primary-600-300-token">{data.stats?.totalCategories || 0}</p>
+					<h3 class="text-surface-800-100-token mb-2 h4">Total Categories</h3>
+					<p class="text-primary-600-300-token text-3xl font-bold">
+						{data.stats?.totalCategories || 0}
+					</p>
 				</div>
 				<div class="card preset-tonal-surface p-6 shadow-lg">
-					<h3 class="text-surface-800-100-token h4 mb-2">Total Outgoing</h3>
-					<p class="text-3xl font-bold text-warning-600-300-token">{formatSubscriberCount(data.stats?.totalOutgoing || 0)}</p>
+					<h3 class="text-surface-800-100-token mb-2 h4">Total Outgoing</h3>
+					<p class="text-warning-600-300-token text-3xl font-bold">
+						{formatSubscriberCount(data.stats?.totalOutgoing || 0)}
+					</p>
 				</div>
 				<div class="card preset-tonal-surface p-6 shadow-lg">
-					<h3 class="text-surface-800-100-token h4 mb-2">Total Incoming</h3>
-					<p class="text-3xl font-bold text-success-600-300-token">{formatSubscriberCount(data.stats?.totalIncoming || 0)}</p>
+					<h3 class="text-surface-800-100-token mb-2 h4">Total Incoming</h3>
+					<p class="text-success-600-300-token text-3xl font-bold">
+						{formatSubscriberCount(data.stats?.totalIncoming || 0)}
+					</p>
 				</div>
-			</section>
-
-			<!-- Sort Controls Section -->
-			<section class="card preset-tonal-surface p-6 shadow-lg" aria-labelledby="sort-heading">
-				<h2 id="sort-heading" class="text-surface-900-50-token mb-6 h3">Sort Categories</h2>
-				<div class="flex flex-wrap gap-3">
-					<!-- Sort Buttons -->
-					<button
-						class="btn transition-all duration-200 {sortBy === 'mean'
-							? 'preset-filled-primary-500 shadow-md'
-							: 'preset-tonal-surface hover:preset-filled-surface-300-700'}"
-						onclick={() => (sortBy = 'mean')}
-						onkeydown={(e) => handleSortKeydown(e, 'mean')}
-						aria-label="Sort by mean subscriber count"
-					>
-						Mean Subscribers
-					</button>
-					<button
-						class="btn transition-all duration-200 {sortBy === 'median'
-							? 'preset-filled-primary-500 shadow-md'
-							: 'preset-tonal-surface hover:preset-filled-surface-300-700'}"
-						onclick={() => (sortBy = 'median')}
-						onkeydown={(e) => handleSortKeydown(e, 'median')}
-						aria-label="Sort by median subscriber count"
-					>
-						Median Subscribers
-					</button>
-					<button
-						class="btn transition-all duration-200 {sortBy === 'min'
-							? 'preset-filled-primary-500 shadow-md'
-							: 'preset-tonal-surface hover:preset-filled-surface-300-700'}"
-						onclick={() => (sortBy = 'min')}
-						onkeydown={(e) => handleSortKeydown(e, 'min')}
-						aria-label="Sort by minimum subscriber count"
-					>
-						Min Subscribers
-					</button>
-					<button
-						class="btn transition-all duration-200 {sortBy === 'max'
-							? 'preset-filled-primary-500 shadow-md'
-							: 'preset-tonal-surface hover:preset-filled-surface-300-700'}"
-						onclick={() => (sortBy = 'max')}
-						onkeydown={(e) => handleSortKeydown(e, 'max')}
-						aria-label="Sort by maximum subscriber count"
-					>
-						Max Subscribers
-					</button>
-					<button
-						class="btn transition-all duration-200 {sortBy === 'stddev'
-							? 'preset-filled-primary-500 shadow-md'
-							: 'preset-tonal-surface hover:preset-filled-surface-300-700'}"
-						onclick={() => (sortBy = 'stddev')}
-						onkeydown={(e) => handleSortKeydown(e, 'stddev')}
-						aria-label="Sort by standard deviation"
-					>
-						Std Deviation
-					</button>
-					<button
-						class="btn transition-all duration-200 {sortBy === 'outgoing'
-							? 'preset-filled-primary-500 shadow-md'
-							: 'preset-tonal-surface hover:preset-filled-surface-300-700'}"
-						onclick={() => (sortBy = 'outgoing')}
-						onkeydown={(e) => handleSortKeydown(e, 'outgoing')}
-						aria-label="Sort by outgoing recommendations"
-					>
-						Outgoing Recs
-					</button>
-					<button
-						class="btn transition-all duration-200 {sortBy === 'incoming'
-							? 'preset-filled-primary-500 shadow-md'
-							: 'preset-tonal-surface hover:preset-filled-surface-300-700'}"
-						onclick={() => (sortBy = 'incoming')}
-						onkeydown={(e) => handleSortKeydown(e, 'incoming')}
-						aria-label="Sort by incoming recommendations"
-					>
-						Incoming Recs
-					</button>
-				</div>
-				<p class="text-surface-500-400-token mt-3 text-sm">
-					Currently sorting by: <span class="font-medium">{sortBy === 'mean' ? 'Mean Subscribers' : sortBy === 'median' ? 'Median Subscribers' : sortBy === 'min' ? 'Min Subscribers' : sortBy === 'max' ? 'Max Subscribers' : sortBy === 'stddev' ? 'Standard Deviation' : sortBy === 'outgoing' ? 'Outgoing Recommendations' : 'Incoming Recommendations'}</span>
-				</p>
 			</section>
 
 			<!-- Category Leaderboard Table Section -->
 			<section class="card shadow-xl" aria-labelledby="rankings-heading">
-				<header class="card-header preset-tonal-primary p-6">
-					<h2 id="rankings-heading" class="text-primary-900-50-token h3">Category Rankings</h2>
-					<div class="mt-2">
-						<p class="text-primary-700-200-token">
-							{sortedData.length} categories • Sorted by {sortBy}
-						</p>
-					</div>
-				</header>
-
 				{#if sortedData.length === 0}
 					<!-- No Results State -->
 					<div class="space-y-4 p-12 text-center" role="status" aria-live="polite">
@@ -249,22 +192,98 @@
 											<span class="flex items-center gap-2"> Category </span>
 										</th>
 										<th class="text-surface-800-100-token text-right font-semibold" scope="col">
-											<span class="flex items-center justify-end gap-2"> Mean </span>
+											<button
+												class="hover:text-primary-600-300-token flex w-full items-center justify-end gap-2 text-right transition-colors duration-200 {sortBy ===
+												'mean'
+													? 'text-primary-600-300-token'
+													: ''}"
+												onclick={() => handleSort('mean')}
+												onkeydown={(e) => handleSortKeydown(e, 'mean')}
+												aria-label="Sort by mean subscriber count"
+											>
+												Mean {sortBy === 'mean' ? (sortDirection === 'desc' ? '↓' : '↑') : ''}
+											</button>
 										</th>
 										<th class="text-surface-800-100-token text-right font-semibold" scope="col">
-											<span class="flex items-center justify-end gap-2"> Median </span>
+											<button
+												class="hover:text-primary-600-300-token flex w-full items-center justify-end gap-2 text-right transition-colors duration-200 {sortBy ===
+												'median'
+													? 'text-primary-600-300-token'
+													: ''}"
+												onclick={() => handleSort('median')}
+												onkeydown={(e) => handleSortKeydown(e, 'median')}
+												aria-label="Sort by median subscriber count"
+											>
+												Median {sortBy === 'median' ? (sortDirection === 'desc' ? '↓' : '↑') : ''}
+											</button>
 										</th>
 										<th class="text-surface-800-100-token text-right font-semibold" scope="col">
-											<span class="flex items-center justify-end gap-2"> Min </span>
+											<button
+												class="hover:text-primary-600-300-token flex w-full items-center justify-end gap-2 text-right transition-colors duration-200 {sortBy ===
+												'min'
+													? 'text-primary-600-300-token'
+													: ''}"
+												onclick={() => handleSort('min')}
+												onkeydown={(e) => handleSortKeydown(e, 'min')}
+												aria-label="Sort by minimum subscriber count"
+											>
+												Min {sortBy === 'min' ? (sortDirection === 'desc' ? '↓' : '↑') : ''}
+											</button>
 										</th>
 										<th class="text-surface-800-100-token text-right font-semibold" scope="col">
-											<span class="flex items-center justify-end gap-2"> Max </span>
+											<button
+												class="hover:text-primary-600-300-token flex w-full items-center justify-end gap-2 text-right transition-colors duration-200 {sortBy ===
+												'max'
+													? 'text-primary-600-300-token'
+													: ''}"
+												onclick={() => handleSort('max')}
+												onkeydown={(e) => handleSortKeydown(e, 'max')}
+												aria-label="Sort by maximum subscriber count"
+											>
+												Max {sortBy === 'max' ? (sortDirection === 'desc' ? '↓' : '↑') : ''}
+											</button>
 										</th>
 										<th class="text-surface-800-100-token text-right font-semibold" scope="col">
-											<span class="flex items-center justify-end gap-2"> Std Dev </span>
+											<button
+												class="hover:text-primary-600-300-token flex w-full items-center justify-end gap-2 text-right transition-colors duration-200 {sortBy ===
+												'stddev'
+													? 'text-primary-600-300-token'
+													: ''}"
+												onclick={() => handleSort('stddev')}
+												onkeydown={(e) => handleSortKeydown(e, 'stddev')}
+												aria-label="Sort by standard deviation"
+											>
+												Std Dev {sortBy === 'stddev' ? (sortDirection === 'desc' ? '↓' : '↑') : ''}
+											</button>
 										</th>
 										<th class="text-surface-800-100-token text-center font-semibold" scope="col">
-											<span class="flex items-center justify-center gap-2"> Recommendations </span>
+											<div class="flex items-center justify-center gap-2">
+												<button
+													class="hover:text-primary-600-300-token transition-colors duration-200 {sortBy ===
+													'incoming'
+														? 'text-primary-600-300-token'
+														: ''}"
+													onclick={() => handleSort('incoming')}
+													onkeydown={(e) => handleSortKeydown(e, 'incoming')}
+													aria-label="Sort by incoming recommendations"
+													title="Sort by incoming recommendations"
+												>
+													↓In {sortBy === 'incoming' ? (sortDirection === 'desc' ? '↓' : '↑') : ''}
+												</button>
+												<span class="text-surface-500-400-token">|</span>
+												<button
+													class="hover:text-primary-600-300-token transition-colors duration-200 {sortBy ===
+													'outgoing'
+														? 'text-primary-600-300-token'
+														: ''}"
+													onclick={() => handleSort('outgoing')}
+													onkeydown={(e) => handleSortKeydown(e, 'outgoing')}
+													aria-label="Sort by outgoing recommendations"
+													title="Sort by outgoing recommendations"
+												>
+													↑Out {sortBy === 'outgoing' ? (sortDirection === 'desc' ? '↓' : '↑') : ''}
+												</button>
+											</div>
 										</th>
 									</tr>
 								</thead>
@@ -277,7 +296,7 @@
 												</span>
 											</td>
 											<td>
-												<span class="font-medium text-primary-600-300-token capitalize">
+												<span class="text-primary-600-300-token font-medium capitalize">
 													{category.category}
 												</span>
 											</td>
@@ -297,11 +316,17 @@
 												{formatSubscriberCount(Math.round(category.stddev_subscriber_count))}
 											</td>
 											<td class="text-surface-600-300-token text-center font-mono">
-												<div class="flex gap-1 justify-center">
-													<span class="badge preset-tonal-success text-xs" title="Incoming recommendations">
+												<div class="flex justify-center gap-1">
+													<span
+														class="badge preset-tonal-success text-xs"
+														title="Incoming recommendations"
+													>
 														↓{formatSubscriberCount(category.incoming)}
 													</span>
-													<span class="badge preset-tonal-warning text-xs" title="Outgoing recommendations">
+													<span
+														class="badge preset-tonal-warning text-xs"
+														title="Outgoing recommendations"
+													>
 														↑{formatSubscriberCount(category.outgoing)}
 													</span>
 												</div>
@@ -341,28 +366,42 @@
 									<div class="grid grid-cols-2 gap-3 text-sm">
 										<div>
 											<span class="text-surface-500-400-token block">Mean Subscribers</span>
-											<span class="font-mono font-semibold">{formatSubscriberCount(Math.round(category.mean_subscriber_count))}</span>
+											<span class="font-mono font-semibold"
+												>{formatSubscriberCount(Math.round(category.mean_subscriber_count))}</span
+											>
 										</div>
 										<div>
 											<span class="text-surface-500-400-token block">Median Subscribers</span>
-											<span class="font-mono font-semibold">{formatSubscriberCount(Math.round(category.median_subscriber_count))}</span>
+											<span class="font-mono font-semibold"
+												>{formatSubscriberCount(Math.round(category.median_subscriber_count))}</span
+											>
 										</div>
 										<div>
 											<span class="text-surface-500-400-token block">Min Subscribers</span>
-											<span class="font-mono font-semibold">{formatSubscriberCount(category.min_subscriber_count)}</span>
+											<span class="font-mono font-semibold"
+												>{formatSubscriberCount(category.min_subscriber_count)}</span
+											>
 										</div>
 										<div>
 											<span class="text-surface-500-400-token block">Max Subscribers</span>
-											<span class="font-mono font-semibold">{formatSubscriberCount(category.max_subscriber_count)}</span>
+											<span class="font-mono font-semibold"
+												>{formatSubscriberCount(category.max_subscriber_count)}</span
+											>
 										</div>
 									</div>
 									<div class="mt-3">
 										<span class="text-surface-500-400-token block text-sm">Recommendations</span>
-										<div class="flex gap-1 mt-1">
-											<span class="badge preset-tonal-success text-xs" title="Incoming recommendations">
+										<div class="mt-1 flex gap-1">
+											<span
+												class="badge preset-tonal-success text-xs"
+												title="Incoming recommendations"
+											>
 												↓{formatSubscriberCount(category.incoming)}
 											</span>
-											<span class="badge preset-tonal-warning text-xs" title="Outgoing recommendations">
+											<span
+												class="badge preset-tonal-warning text-xs"
+												title="Outgoing recommendations"
+											>
 												↑{formatSubscriberCount(category.outgoing)}
 											</span>
 										</div>
@@ -394,12 +433,12 @@
 						</div>
 
 						<!-- Pagination Component -->
-						<div class="flex-1 flex justify-center md:justify-end">
+						<div class="flex flex-1 justify-center md:justify-end">
 							<Pagination
 								data={sortedData}
 								page={currentPage}
 								onPageChange={(e) => (currentPage = e.page)}
-								pageSize={pageSize}
+								{pageSize}
 								onPageSizeChange={(e) => (pageSize = e.pageSize)}
 								siblingCount={1}
 								showFirstLastButtons={true}
@@ -415,7 +454,10 @@
 
 						<!-- Results Info -->
 						<div class="text-surface-600-300-token text-sm">
-							Showing {Math.min((currentPage - 1) * pageSize + 1, sortedData.length)}-{Math.min(currentPage * pageSize, sortedData.length)} of {sortedData.length} categories
+							Showing {Math.min((currentPage - 1) * pageSize + 1, sortedData.length)}-{Math.min(
+								currentPage * pageSize,
+								sortedData.length
+							)} of {sortedData.length} categories
 						</div>
 					</section>
 				{/if}

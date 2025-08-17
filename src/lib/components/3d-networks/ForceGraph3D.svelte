@@ -200,7 +200,7 @@
 			<div class="absolute inset-0 flex items-center justify-center">
 				<div class="preset-filled-surface-100-900 rounded-lg p-6">
 					<h3 class="h3">Loading Graph...</h3>
-					<p class="mt-2">Initializing {graphData.metadata.total_nodes} nodes...</p>
+					<p class="mt-2">Initializing tens of thousands of newsletter recommendations</p>
 				</div>
 			</div>
 		{:else}

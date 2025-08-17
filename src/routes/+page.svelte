@@ -87,10 +87,7 @@
 <div class="container mx-auto max-w-7xl space-y-8 p-4">
 	<!-- Header Section -->
 	<header class="space-y-4 text-center">
-		<h1 class="gradient-heading h1">Substack Leaderboard Dashboard</h1>
-		<p class="text-surface-600-300-token text-lg">
-			Discover the most popular Substack publications ranked by subscriber count
-		</p>
+		<h1 class="gradient-heading h1">Substack Subscriber Ranking</h1>
 	</header>
 
 	<!-- Loading State -->
@@ -163,7 +160,6 @@
 					<div class="space-y-3">
 						<span class="text-surface-800-100-token label font-medium">
 							Subscription Type
-							<span class="text-surface-500-400-token ml-1 text-sm">(payment model)</span>
 						</span>
 						<div
 							class="btn-group preset-filled-surface-200-800"
@@ -216,14 +212,6 @@
 
 			<!-- Leaderboard Table Section -->
 			<section class="card shadow-xl" aria-labelledby="rankings-heading">
-				<header class="card-header preset-tonal-primary p-6">
-					<h2 id="rankings-heading" class="text-primary-900-50-token h3">Publication Rankings</h2>
-					<div class="mt-2">
-						<p class="text-primary-700-200-token">
-							{filteredData.length} publications • {selectedBoard} • {selectedCategory}
-						</p>
-					</div>
-				</header>
 
 				{#if filteredData.length === 0}
 					<!-- No Results State -->
@@ -415,28 +403,6 @@
 				{/if}
 			</section>
 		</main>
-
-		<!-- Footer Section -->
-		<footer class="mt-16 space-y-4 text-center">
-			<div class="mx-auto max-w-2xl card preset-tonal-surface p-6">
-				<p class="text-surface-600-300-token text-sm">
-					📊 Data sourced from Substack publication metrics
-					{#if data?.stats}
-						<br />
-						<span class="text-surface-700-200-token font-medium">
-							{data.stats.validCount} publications loaded across {data.stats.categories.length} categories
-						</span>
-					{/if}
-				</p>
-				<div class="text-surface-500-400-token mt-4 flex justify-center gap-4 text-xs">
-					<span>🔄 Updated regularly</span>
-					<span>•</span>
-					<span>📱 Mobile optimized</span>
-					<span>•</span>
-					<span>♿ Accessible design</span>
-				</div>
-			</div>
-		</footer>
 	{/if}
 </div>
 

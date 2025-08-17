@@ -123,7 +123,7 @@
 
 			// Dynamic import to avoid SSR issues
 			const { default: ForceGraph3D } = await import('3d-force-graph');
-			const SpriteText = await import('https://esm.sh/three-spritetext');
+			const SpriteText = await import('three-spritetext');
 
 			// Initialize with d3 engine for draggable nodes
 			forceGraphInstance = new ForceGraph3D(graphContainer, { controlType: 'orbit' })
