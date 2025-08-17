@@ -11,11 +11,11 @@
 </svelte:head>
 
 <!-- Navigation Header -->
-<header class="shadow-sm shadow-primary-100-900/50">
+<header class="w-full overflow-hidden shadow-sm shadow-primary-100-900/50">
 	<Navigation />
 </header>
 
 <!-- Main Content -->
-<main class="min-h-screen">
+<main class="min-h-screen w-full overflow-x-hidden">
 	{@render children?.()}
 </main>

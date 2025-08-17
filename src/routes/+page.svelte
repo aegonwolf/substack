@@ -84,10 +84,10 @@
 </script>
 
 <!-- Main Dashboard Layout -->
-<div class="container mx-auto max-w-7xl space-y-8 p-4">
+<div class="container mx-auto max-w-7xl space-y-6 px-4 py-4 md:space-y-8 md:px-6">
 	<!-- Header Section -->
-	<header class="space-y-4 text-center">
-		<h1 class="gradient-heading h1">Substack Subscriber Ranking</h1>
+	<header class="space-y-4 text-center px-2">
+		<h1 class="gradient-heading h1 leading-tight">Substack Subscriber Ranking</h1>
 	</header>
 
 	<!-- Loading State -->
@@ -129,9 +129,9 @@
 		<!-- Main Content Area -->
 		<main class="space-y-8">
 			<!-- Filter Controls Section -->
-			<section class="card preset-tonal-surface p-6 shadow-lg" aria-labelledby="filter-heading">
-				<h2 id="filter-heading" class="text-surface-900-50-token mb-6 h3">Filter Publications</h2>
-				<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+			<section class="card preset-tonal-surface p-4 md:p-6 shadow-lg" aria-labelledby="filter-heading">
+				<h2 id="filter-heading" class="text-surface-900-50-token mb-4 md:mb-6 h3">Filter Publications</h2>
+				<div class="grid grid-cols-1 gap-4 md:gap-6 md:grid-cols-2">
 					<!-- Category Filter -->
 					<div class="space-y-3">
 						<label class="text-surface-800-100-token label font-medium" for="category-select">
@@ -161,47 +161,89 @@
 						<span class="text-surface-800-100-token label font-medium">
 							Subscription Type
 						</span>
-						<div
-							class="btn-group preset-filled-surface-200-800"
-							role="radiogroup"
-							aria-labelledby="board-type-label"
-						>
-							<button
-								class="btn transition-all duration-200 {selectedBoard === 'all'
-									? 'preset-filled-primary-500 shadow-md'
-									: 'preset-tonal-surface hover:preset-filled-surface-300-700'}"
-								onclick={() => (selectedBoard = 'all')}
-								onkeydown={(e) => handleBoardKeydown(e, 'all')}
-								role="radio"
-								aria-checked={selectedBoard === 'all'}
-								aria-label="Show all publications"
+						<div class="space-y-2 md:space-y-0">
+							<!-- Mobile: Stacked buttons -->
+							<div class="flex flex-col gap-2 md:hidden">
+								<button
+									class="btn w-full justify-center py-3 transition-all duration-200 {selectedBoard === 'all'
+										? 'preset-filled-primary-500 shadow-md'
+										: 'preset-tonal-surface hover:preset-filled-surface-300-700'}"
+									onclick={() => (selectedBoard = 'all')}
+									onkeydown={(e) => handleBoardKeydown(e, 'all')}
+									role="radio"
+									aria-checked={selectedBoard === 'all'}
+									aria-label="Show all publications"
+								>
+									All Publications
+								</button>
+								<button
+									class="btn w-full justify-center py-3 transition-all duration-200 {selectedBoard === 'free'
+										? 'preset-filled-primary-500 shadow-md'
+										: 'preset-tonal-surface hover:preset-filled-surface-300-700'}"
+									onclick={() => (selectedBoard = 'free')}
+									onkeydown={(e) => handleBoardKeydown(e, 'free')}
+									role="radio"
+									aria-checked={selectedBoard === 'free'}
+									aria-label="Show free publications"
+								>
+									Free Publications
+								</button>
+								<button
+									class="btn w-full justify-center py-3 transition-all duration-200 {selectedBoard === 'paid'
+										? 'preset-filled-primary-500 shadow-md'
+										: 'preset-tonal-surface hover:preset-filled-surface-300-700'}"
+									onclick={() => (selectedBoard = 'paid')}
+									onkeydown={(e) => handleBoardKeydown(e, 'paid')}
+									role="radio"
+									aria-checked={selectedBoard === 'paid'}
+									aria-label="Show paid publications"
+								>
+									Paid Publications
+								</button>
+							</div>
+							<!-- Desktop: Button group -->
+							<div
+								class="hidden md:flex btn-group preset-filled-surface-200-800"
+								role="radiogroup"
+								aria-labelledby="board-type-label"
 							>
-								All Publications
-							</button>
-							<button
-								class="btn transition-all duration-200 {selectedBoard === 'free'
-									? 'preset-filled-primary-500 shadow-md'
-									: 'preset-tonal-surface hover:preset-filled-surface-300-700'}"
-								onclick={() => (selectedBoard = 'free')}
-								onkeydown={(e) => handleBoardKeydown(e, 'free')}
-								role="radio"
-								aria-checked={selectedBoard === 'free'}
-								aria-label="Show free publications"
-							>
-								Free Publications
-							</button>
-							<button
-								class="btn transition-all duration-200 {selectedBoard === 'paid'
-									? 'preset-filled-primary-500 shadow-md'
-									: 'preset-tonal-surface hover:preset-filled-surface-300-700'}"
-								onclick={() => (selectedBoard = 'paid')}
-								onkeydown={(e) => handleBoardKeydown(e, 'paid')}
-								role="radio"
-								aria-checked={selectedBoard === 'paid'}
-								aria-label="Show paid publications"
-							>
-								Paid Publications
-							</button>
+								<button
+									class="btn transition-all duration-200 {selectedBoard === 'all'
+										? 'preset-filled-primary-500 shadow-md'
+										: 'preset-tonal-surface hover:preset-filled-surface-300-700'}"
+									onclick={() => (selectedBoard = 'all')}
+									onkeydown={(e) => handleBoardKeydown(e, 'all')}
+									role="radio"
+									aria-checked={selectedBoard === 'all'}
+									aria-label="Show all publications"
+								>
+									All Publications
+								</button>
+								<button
+									class="btn transition-all duration-200 {selectedBoard === 'free'
+										? 'preset-filled-primary-500 shadow-md'
+										: 'preset-tonal-surface hover:preset-filled-surface-300-700'}"
+									onclick={() => (selectedBoard = 'free')}
+									onkeydown={(e) => handleBoardKeydown(e, 'free')}
+									role="radio"
+									aria-checked={selectedBoard === 'free'}
+									aria-label="Show free publications"
+								>
+									Free Publications
+								</button>
+								<button
+									class="btn transition-all duration-200 {selectedBoard === 'paid'
+										? 'preset-filled-primary-500 shadow-md'
+										: 'preset-tonal-surface hover:preset-filled-surface-300-700'}"
+									onclick={() => (selectedBoard = 'paid')}
+									onkeydown={(e) => handleBoardKeydown(e, 'paid')}
+									role="radio"
+									aria-checked={selectedBoard === 'paid'}
+									aria-label="Show paid publications"
+								>
+									Paid Publications
+								</button>
+							</div>
 						</div>
 						<p class="text-surface-500-400-token text-xs">
 							Filter by subscription model or view all publications
@@ -235,7 +277,7 @@
 					</div>
 				{:else}
 					<!-- Desktop Table -->
-					<div class="hidden p-6 md:block">
+					<div class="hidden p-4 md:p-6 md:block">
 						<div class="table-container">
 							<table class="table-hover table" aria-label="Publication leaderboard rankings">
 								<thead>
@@ -302,7 +344,7 @@
 					</div>
 
 					<!-- Mobile Card Layout -->
-					<div class="space-y-4 p-6 md:hidden">
+					<div class="space-y-3 p-4 md:hidden">
 						{#each paginatedData as publication, index}
 							{@const absoluteIndex = (currentPage - 1) * pageSize + index}
 							<div
@@ -356,7 +398,7 @@
 
 				<!-- Pagination Controls -->
 				{#if filteredData.length > 0}
-					<section class="flex flex-col gap-6 p-6 md:flex-row md:items-center md:justify-between">
+					<section class="flex flex-col gap-4 p-4 md:gap-6 md:p-6 md:flex-row md:items-center md:justify-between">
 						<!-- Page Size Selector -->
 						<div class="flex items-center gap-3">
 							<label for="page-size" class="text-surface-800-100-token text-sm font-medium">
@@ -376,7 +418,7 @@
 						</div>
 
 						<!-- Pagination Component -->
-						<div class="flex-1 flex justify-center md:justify-end">
+						<div class="flex-1 flex justify-center md:justify-end overflow-x-auto">
 							<Pagination
 								data={filteredData}
 								page={currentPage}
