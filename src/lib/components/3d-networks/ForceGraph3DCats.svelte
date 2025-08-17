@@ -141,13 +141,13 @@
 				})
 				// Use d3 force engine to enable node dragging
 				.forceEngine('d3')
-				.d3AlphaDecay(0.02) // Slower decay for smoother physics
-				.d3VelocityDecay(0.4) // Standard velocity damping
-				.numDimensions(3)
+				.d3AlphaDecay(0.01) // Even slower decay for better settling
+				.d3VelocityDecay(0.3) // Reduced damping for more movement
+				.numDimensions(2)
 				// Link styling
 				.linkWidth((link: any) => Math.sqrt(link.value || 1) * 0.3)
 				.linkColor(() => 'rgba(150,150,255,0.4)')
-				.linkOpacity(0.4)
+				.linkOpacity(0.2)
 				// Canvas settings
 				.backgroundColor(backgroundColor)
 				.width(width)
@@ -165,21 +165,56 @@
 				.onNodeHover(handleNodeHover)
 				.onNodeClick(handleNodeClick)
 				.onNodeDragEnd((node: any) => {
-					// Pin node position after dragging
+					// Pin node position after dragging (2D only)
 					node.fx = node.x;
 					node.fy = node.y;
-					node.fz = node.z;
+					// Don't set fz since we're in 2D mode
 				});
+
+			// Configure d3 forces for better node spacing after initialization
+			const linkForce = forceGraphInstance.d3Force('link');
+			if (linkForce) {
+				linkForce.distance(400).strength(0.1); // Increased distance, reduced strength
+			}
+			
+			const chargeForce = forceGraphInstance.d3Force('charge');
+			if (chargeForce) {
+				chargeForce.strength(-400).distanceMax(600); // Stronger repulsion, larger range
+			}
+			
+			const centerForce = forceGraphInstance.d3Force('center');
+			if (centerForce) {
+				centerForce.strength(0.05); // Weaker centering force
+			}
 
 			isInitialized = true;
 			
-			// Tune the controls similar to the original
+			// Set initial camera position for 2D view
+			setTimeout(() => {
+				const bbox = forceGraphInstance.getGraphBbox();
+				if (bbox) {
+					// Position camera directly above for 2D view
+					const distance = Math.max(800, Math.max(bbox.x[1] - bbox.x[0], bbox.y[1] - bbox.y[0]) * 1.5);
+					forceGraphInstance.cameraPosition(
+						{ x: 0, y: 0, z: distance },
+						{ x: 0, y: 0, z: 0 },
+						1000
+					);
+				}
+			}, 500);
+			
+			// Tune the controls for 2D-like navigation
 			const controls: any = forceGraphInstance.controls();
 			controls.enableDamping = true;
 			controls.dampingFactor = 0.1;
 			controls.screenSpacePanning = true;
-			controls.minDistance = 50;
-			controls.maxDistance = 8000;
+			controls.minDistance = 200; // Minimum distance for 2D view
+			controls.maxDistance = 5000; // Maximum distance
+			
+			// Constrain rotation for 2D-like behavior
+			controls.maxPolarAngle = Math.PI * 0.1; // Limit vertical rotation (almost top-down)
+			controls.minPolarAngle = 0; // Prevent going below horizontal
+			
 			if ('zoomToCursor' in controls) controls.zoomToCursor = true;
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Failed to initialize graph';

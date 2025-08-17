@@ -98,11 +98,11 @@
 </script>
 
 <!-- Main Dashboard Layout -->
-<div class="container mx-auto max-w-7xl space-y-8 p-4">
+<div class="container mx-auto max-w-7xl space-y-6 px-4 py-4 md:space-y-8 md:px-6">
 	<!-- Header Section -->
-	<header class="space-y-4 text-center">
-		<h1 class="gradient-heading h1">Category Analytics Dashboard</h1>
-		<p class="text-surface-600-300-token text-lg">
+	<header class="space-y-4 text-center px-2">
+		<h1 class="gradient-heading h1 leading-tight">Category Analytics Dashboard</h1>
+		<p class="text-surface-600-300-token text-base md:text-lg leading-relaxed">
 			Explore Substack categories ranked by subscriber metrics and recommendation patterns
 		</p>
 	</header>
@@ -146,22 +146,22 @@
 		<!-- Main Content Area -->
 		<main class="space-y-8">
 			<!-- Statistics Cards -->
-			<section class="grid grid-cols-1 gap-6 md:grid-cols-3">
-				<div class="card preset-tonal-surface p-6 shadow-lg">
-					<h3 class="text-surface-800-100-token mb-2 h4">Total Categories</h3>
-					<p class="text-primary-600-300-token text-3xl font-bold">
+			<section class="grid grid-cols-1 gap-4 md:gap-6 md:grid-cols-3">
+				<div class="card preset-tonal-surface p-4 md:p-6 shadow-lg">
+					<h3 class="text-surface-800-100-token mb-2 h5 md:h4">Total Categories</h3>
+					<p class="text-primary-600-300-token text-2xl md:text-3xl font-bold">
 						{data.stats?.totalCategories || 0}
 					</p>
 				</div>
-				<div class="card preset-tonal-surface p-6 shadow-lg">
-					<h3 class="text-surface-800-100-token mb-2 h4">Total Outgoing</h3>
-					<p class="text-warning-600-300-token text-3xl font-bold">
+				<div class="card preset-tonal-surface p-4 md:p-6 shadow-lg">
+					<h3 class="text-surface-800-100-token mb-2 h5 md:h4">Total Outgoing</h3>
+					<p class="text-warning-600-300-token text-2xl md:text-3xl font-bold">
 						{formatSubscriberCount(data.stats?.totalOutgoing || 0)}
 					</p>
 				</div>
-				<div class="card preset-tonal-surface p-6 shadow-lg">
-					<h3 class="text-surface-800-100-token mb-2 h4">Total Incoming</h3>
-					<p class="text-success-600-300-token text-3xl font-bold">
+				<div class="card preset-tonal-surface p-4 md:p-6 shadow-lg">
+					<h3 class="text-surface-800-100-token mb-2 h5 md:h4">Total Incoming</h3>
+					<p class="text-success-600-300-token text-2xl md:text-3xl font-bold">
 						{formatSubscriberCount(data.stats?.totalIncoming || 0)}
 					</p>
 				</div>
@@ -179,8 +179,39 @@
 						</p>
 					</div>
 				{:else}
+					<!-- Mobile Sort Controls -->
+					<div class="md:hidden p-4 border-b border-surface-300-700">
+						<div class="space-y-3">
+							<label class="text-surface-800-100-token text-sm font-medium" for="mobile-sort">
+								Sort by:
+							</label>
+							<div class="flex gap-2">
+								<select
+									id="mobile-sort"
+									class="select flex-1 text-sm"
+									bind:value={sortBy}
+								>
+									<option value="mean">Mean Subscribers</option>
+									<option value="median">Median Subscribers</option>
+									<option value="min">Min Subscribers</option>
+									<option value="max">Max Subscribers</option>
+									<option value="stddev">Standard Deviation</option>
+									<option value="incoming">Incoming Recommendations</option>
+									<option value="outgoing">Outgoing Recommendations</option>
+								</select>
+								<button
+									class="btn preset-tonal-surface px-3 py-2"
+									onclick={() => sortDirection = sortDirection === 'desc' ? 'asc' : 'desc'}
+									aria-label="Toggle sort direction"
+								>
+									{sortDirection === 'desc' ? '↓' : '↑'}
+								</button>
+							</div>
+						</div>
+					</div>
+
 					<!-- Desktop Table -->
-					<div class="hidden p-6 md:block">
+					<div class="hidden p-4 md:p-6 md:block">
 						<div class="table-container">
 							<table class="table-hover table" aria-label="Category leaderboard rankings">
 								<thead>
@@ -339,7 +370,7 @@
 					</div>
 
 					<!-- Mobile Card Layout -->
-					<div class="space-y-4 p-6 md:hidden">
+					<div class="space-y-3 p-4 md:hidden">
 						{#each paginatedData as category, index}
 							{@const absoluteIndex = (currentPage - 1) * pageSize + index}
 							<div
@@ -363,43 +394,48 @@
 								</h3>
 
 								<div class="space-y-3">
-									<div class="grid grid-cols-2 gap-3 text-sm">
-										<div>
-											<span class="text-surface-500-400-token block">Mean Subscribers</span>
-											<span class="font-mono font-semibold"
+									<!-- Primary Metrics -->
+									<div class="grid grid-cols-2 gap-2 text-sm">
+										<div class="bg-surface-50-950 rounded-lg p-2">
+											<span class="text-surface-500-400-token text-xs block">Mean</span>
+											<span class="font-mono font-bold text-sm"
 												>{formatSubscriberCount(Math.round(category.mean_subscriber_count))}</span
 											>
 										</div>
-										<div>
-											<span class="text-surface-500-400-token block">Median Subscribers</span>
-											<span class="font-mono font-semibold"
+										<div class="bg-surface-50-950 rounded-lg p-2">
+											<span class="text-surface-500-400-token text-xs block">Median</span>
+											<span class="font-mono font-bold text-sm"
 												>{formatSubscriberCount(Math.round(category.median_subscriber_count))}</span
 											>
 										</div>
+									</div>
+									<!-- Range Metrics -->
+									<div class="grid grid-cols-2 gap-2 text-sm">
 										<div>
-											<span class="text-surface-500-400-token block">Min Subscribers</span>
-											<span class="font-mono font-semibold"
-												>{formatSubscriberCount(category.min_subscriber_count)}</span
-											>
+											<span class="text-surface-500-400-token text-xs block">Min - Max</span>
+											<span class="font-mono text-xs">
+												{formatSubscriberCount(category.min_subscriber_count)} - {formatSubscriberCount(category.max_subscriber_count)}
+											</span>
 										</div>
 										<div>
-											<span class="text-surface-500-400-token block">Max Subscribers</span>
-											<span class="font-mono font-semibold"
-												>{formatSubscriberCount(category.max_subscriber_count)}</span
-											>
+											<span class="text-surface-500-400-token text-xs block">Std Dev</span>
+											<span class="font-mono text-xs">
+												{formatSubscriberCount(Math.round(category.stddev_subscriber_count))}
+											</span>
 										</div>
 									</div>
-									<div class="mt-3">
-										<span class="text-surface-500-400-token block text-sm">Recommendations</span>
-										<div class="mt-1 flex gap-1">
+									<!-- Recommendations -->
+									<div class="mt-2">
+										<span class="text-surface-500-400-token block text-xs mb-1">Recommendations</span>
+										<div class="flex gap-1">
 											<span
-												class="badge preset-tonal-success text-xs"
+												class="badge preset-tonal-success text-xs flex-1 text-center"
 												title="Incoming recommendations"
 											>
 												↓{formatSubscriberCount(category.incoming)}
 											</span>
 											<span
-												class="badge preset-tonal-warning text-xs"
+												class="badge preset-tonal-warning text-xs flex-1 text-center"
 												title="Outgoing recommendations"
 											>
 												↑{formatSubscriberCount(category.outgoing)}
@@ -414,7 +450,7 @@
 
 				<!-- Pagination Controls -->
 				{#if sortedData.length > 0}
-					<section class="flex flex-col gap-6 p-6 md:flex-row md:items-center md:justify-between">
+					<section class="flex flex-col gap-4 p-4 md:gap-6 md:p-6 md:flex-row md:items-center md:justify-between">
 						<!-- Page Size Selector -->
 						<div class="flex items-center gap-3">
 							<label for="page-size" class="text-surface-800-100-token text-sm font-medium">
@@ -433,7 +469,7 @@
 						</div>
 
 						<!-- Pagination Component -->
-						<div class="flex flex-1 justify-center md:justify-end">
+						<div class="flex flex-1 justify-center md:justify-end overflow-x-auto">
 							<Pagination
 								data={sortedData}
 								page={currentPage}
@@ -463,28 +499,6 @@
 				{/if}
 			</section>
 		</main>
-
-		<!-- Footer Section -->
-		<footer class="mt-16 space-y-4 text-center">
-			<div class="mx-auto max-w-2xl card preset-tonal-surface p-6">
-				<p class="text-surface-600-300-token text-sm">
-					📊 Category analytics from Substack publication data
-					{#if data?.stats}
-						<br />
-						<span class="text-surface-700-200-token font-medium">
-							{data.stats.totalCategories} categories analyzed
-						</span>
-					{/if}
-				</p>
-				<div class="text-surface-500-400-token mt-4 flex justify-center gap-4 text-xs">
-					<span>🔄 Updated regularly</span>
-					<span>•</span>
-					<span>📱 Mobile optimized</span>
-					<span>•</span>
-					<span>♿ Accessible design</span>
-				</div>
-			</div>
-		</footer>
 	{/if}
 </div>
 
