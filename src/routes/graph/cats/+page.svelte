@@ -2,6 +2,9 @@
     import ForceGraph3DCats from "$lib/components/3d-networks/ForceGraph3DCats.svelte";
     import type { PageProps } from './$types';
     
+    // Disable SSR - no serialization overhead!
+    export const ssr = false;
+    
     let { data } = $props<PageProps>();
 </script>
 

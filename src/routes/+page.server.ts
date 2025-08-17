@@ -10,6 +10,14 @@ export const config = {
 };
 
 export const load: PageServerLoad = async () => {
-  // Just return the pre-computed data - no processing at all!
-  return mergedData;
+  // Return only essential data for SSR (reduce serialization overhead)
+  // Client will fetch full dataset if needed
+  return {
+    // Only top 100 publications for initial render
+    publications: mergedData.publications.slice(0, 100),
+    stats: mergedData.stats,
+    // Flag to indicate more data available
+    hasMore: mergedData.publications.length > 100,
+    totalCount: mergedData.publications.length
+  };
 };
