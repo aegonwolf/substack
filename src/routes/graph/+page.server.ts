@@ -1,11 +1,12 @@
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ fetch }) => {
-    // Load the pre-optimized graph data
-    const response = await fetch('/jsons/graph_data_optimized.json');
-    const graphData = await response.json();
-    
+export const load: PageServerLoad = async () => {
+    // Return minimal metadata - actual graph data will be loaded client-side
     return {
-        graphData
+        graphMetadata: {
+            dataUrl: '/jsons/graph_data_optimized.json',
+            expectedNodes: 10000, // approximate
+            expectedLinks: 50000  // approximate
+        }
     };
 };
