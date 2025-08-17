@@ -1,12 +1,9 @@
 import type { PageServerLoad } from './$types';
+import graphData from '$lib/files/graph_data_optimized.json';
 
 export const load: PageServerLoad = async () => {
-    // Return minimal metadata - actual graph data will be loaded client-side
+    // Data is bundled at build time, no runtime fetch needed
     return {
-        graphMetadata: {
-            dataUrl: '/jsons/graph_data_optimized.json',
-            expectedNodes: 10000, // approximate
-            expectedLinks: 50000  // approximate
-        }
+        graphData
     };
 };

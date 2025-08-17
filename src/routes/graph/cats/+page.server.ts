@@ -1,15 +1,11 @@
 import type { PageServerLoad } from './$types';
+import graphData from '$lib/../../../static/jsons/category_graph_data_optimized.json';
+import categoryStats from '$lib/../../../static/jsons/categories.json';
 
-export const load: PageServerLoad = async ({ fetch }) => {
-    // Load only the small category statistics server-side
-    // Graph data will be loaded client-side
-    const categoriesResponse = await fetch('/jsons/categories.json');
-    const categoryStats = await categoriesResponse.json();
-    
+export const load: PageServerLoad = async () => {
+    // Both files are bundled at build time
     return {
-        graphMetadata: {
-            dataUrl: '/jsons/category_graph_data_optimized.json'
-        },
+        graphData,
         categoryStats
     };
 };
