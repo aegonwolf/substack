@@ -27,8 +27,15 @@
 	let categoryStatsMap = $derived(() => {
 		const map = new Map();
 		categoryStats?.forEach(cat => {
+			// Map both the category name and the potential node ID format
+			map.set(cat.category, cat);
 			map.set(`category_${cat.category}`, cat);
+			// Also try lowercase version since the node has 'business' but category might be 'Business'
+			map.set(cat.category.toLowerCase(), cat);
+			map.set(`category_${cat.category.toLowerCase()}`, cat);
 		});
+		console.log('CategoryStatsMap created with keys:', Array.from(map.keys()));
+		console.log('CategoryStats received:', categoryStats);
 		return map;
 	});
 
@@ -44,34 +51,60 @@
 		(() => {
 			if (!hoveredNode) return { show: false };
 			
-			const stats = categoryStatsMap.get(hoveredNode.id);
+			// Try multiple lookup strategies to find the category stats
+			let stats = categoryStatsMap.get(hoveredNode.id) || 
+						categoryStatsMap.get(hoveredNode.name) ||
+						categoryStatsMap.get(hoveredNode.category);
+			
+			// Debug logging
+			console.log('Tooltip derivation:', {
+				hoveredNodeId: hoveredNode.id,
+				hoveredNodeName: hoveredNode.name,
+				hoveredNodeCategory: hoveredNode.category,
+				statsFound: !!stats,
+				categoryStatsMapKeys: Array.from(categoryStatsMap.keys()),
+				stats
+			});
+			
 			const medianSubs = stats?.median_subscriber_count || 0;
 			const meanSubs = stats?.mean_subscriber_count || 0;
 			const maxSubs = stats?.max_subscriber_count || 0;
+			const minSubs = stats?.min_subscriber_count || 0;
+			const stddevSubs = stats?.stddev_subscriber_count || 0;
 			const outgoing = stats?.outgoing || hoveredNode?.outgoing_connections || 0;
 			const incoming = stats?.incoming || hoveredNode?.incoming_connections || 0;
 			
-			return {
+			const content = {
 				show: true,
-				name: hoveredNode?.name || '',
+				name: hoveredNode?.name || hoveredNode?.id || '',
 				medianText: medianSubs >= 1000 
 					? `${Math.round(medianSubs / 1000)}k median` 
 					: `${Math.round(medianSubs)} median`,
 				meanText: meanSubs >= 1000 
 					? `${Math.round(meanSubs / 1000)}k average` 
 					: `${Math.round(meanSubs)} average`,
+				minText: minSubs >= 1000 
+					? `${Math.round(minSubs / 1000)}k min` 
+					: `${Math.round(minSubs)} min`,
 				maxText: maxSubs >= 1000 
 					? `${Math.round(maxSubs / 1000)}k max` 
 					: `${Math.round(maxSubs)} max`,
+				stddevText: stddevSubs >= 1000 
+					? `${Math.round(stddevSubs / 1000)}k std dev` 
+					: `${Math.round(stddevSubs)} std dev`,
 				outgoingConnections: outgoing,
 				incomingConnections: incoming,
 				totalConnections: hoveredNode?.inDegree + hoveredNode?.outDegree || 0
 			};
+			
+			console.log('Tooltip content:', content);
+			return content;
 		})()
 	);
 
 	// Event handlers
 	const handleNodeHover = (node: any) => {
+		console.log('Node hovered:', node);
 		hoveredNode = node;
 	};
 
@@ -143,10 +176,10 @@
 				.forceEngine('d3')
 				.d3AlphaDecay(0.01) // Even slower decay for better settling
 				.d3VelocityDecay(0.3) // Reduced damping for more movement
-				.numDimensions(2)
+				.numDimensions(3)
 				// Link styling
 				.linkWidth((link: any) => Math.sqrt(link.value || 1) * 0.3)
-				.linkColor(() => 'rgba(150,150,255,0.4)')
+				.linkColor(() => 'rgba(255,200, 200, 0.2)')
 				.linkOpacity(0.2)
 				// Canvas settings
 				.backgroundColor(backgroundColor)
@@ -165,10 +198,10 @@
 				.onNodeHover(handleNodeHover)
 				.onNodeClick(handleNodeClick)
 				.onNodeDragEnd((node: any) => {
-					// Pin node position after dragging (2D only)
+					// Pin node position after dragging
 					node.fx = node.x;
 					node.fy = node.y;
-					// Don't set fz since we're in 2D mode
+					node.fz = node.z;
 				});
 
 			// Configure d3 forces for better node spacing after initialization
@@ -189,32 +222,27 @@
 
 			isInitialized = true;
 			
-			// Set initial camera position for 2D view
+			// Set initial camera position for better view
 			setTimeout(() => {
 				const bbox = forceGraphInstance.getGraphBbox();
 				if (bbox) {
-					// Position camera directly above for 2D view
-					const distance = Math.max(800, Math.max(bbox.x[1] - bbox.x[0], bbox.y[1] - bbox.y[0]) * 1.5);
+					// Position camera further back and slightly elevated
+					const distance = Math.max(600, (bbox.x[1] - bbox.x[0]));
 					forceGraphInstance.cameraPosition(
-						{ x: 0, y: 0, z: distance },
+						{ x: 0, y: distance * 0.5, z: distance },
 						{ x: 0, y: 0, z: 0 },
 						1000
 					);
 				}
 			}, 500);
 			
-			// Tune the controls for 2D-like navigation
+			// Tune the controls for better navigation
 			const controls: any = forceGraphInstance.controls();
 			controls.enableDamping = true;
 			controls.dampingFactor = 0.1;
 			controls.screenSpacePanning = true;
-			controls.minDistance = 200; // Minimum distance for 2D view
-			controls.maxDistance = 5000; // Maximum distance
-			
-			// Constrain rotation for 2D-like behavior
-			controls.maxPolarAngle = Math.PI * 0.1; // Limit vertical rotation (almost top-down)
-			controls.minPolarAngle = 0; // Prevent going below horizontal
-			
+			controls.minDistance = 100; // Increased minimum distance
+			controls.maxDistance = 5000; // Increased maximum distance
 			if ('zoomToCursor' in controls) controls.zoomToCursor = true;
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Failed to initialize graph';
@@ -278,7 +306,7 @@
 		{/if}
 	</div>
 
-	<!-- Enhanced tooltip for categories -->
+	<!-- Enhanced tooltip for categories - inside container like working version -->
 	{#if tooltipContent.show}
 		<div
 			class="pointer-events-none fixed z-[9999]"
@@ -301,8 +329,16 @@
 							<span class="text-sm font-medium">{tooltipContent.meanText}</span>
 						</div>
 						<div class="flex items-center justify-between">
+							<span class="text-sm opacity-75">Minimum:</span>
+							<span class="text-sm font-medium">{tooltipContent.minText}</span>
+						</div>
+						<div class="flex items-center justify-between">
 							<span class="text-sm opacity-75">Maximum:</span>
 							<span class="text-sm font-medium">{tooltipContent.maxText}</span>
+						</div>
+						<div class="flex items-center justify-between">
+							<span class="text-sm opacity-75">Std Dev:</span>
+							<span class="text-sm font-medium">{tooltipContent.stddevText}</span>
 						</div>
 					</div>
 					
