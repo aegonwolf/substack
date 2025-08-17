@@ -1,0 +1,142 @@
+# Fundamentals
+An introduction to the core concepts of Skeleton.
+
+{
+
+<p className="text-xl">
+	Skeleton is comprised of three pillars - the design system, our extensions to Tailwind, and an optional suite of framework-specific
+	components. Together these form a comprehensive solution for designing and implementing complex web interfaces at scale.
+</p>
+
+}
+
+---
+
+## Design System
+
+### Figma UI Kit
+
+A fully featured [Figma UI Kit](/figma) is available to designers, allowing them to quickly draft visual concept of your project.
+
+### Iconography
+
+Skeleton is icon agnostic, meaning you may bring your own iconography solution. However, we highly recommend [Lucide](https://lucide.dev/) and utilize it for all examples in our documentation. Refer to our integration guides for [React](/docs/integrations/iconography/react) and [Svelte](/docs/integrations/iconography/svelte).
+
+### Core Features
+
+The following features fall under the umbrella of our design system. Provided via the Skeleton core.
+
+<NavGrid collection="docs" path="design/" classes="md:grid-cols-2" />
+
+---
+
+## Tailwind
+
+Tailwind components that act as primitives for creating complex interfaces. Provided via the Skeleton core.
+
+<NavGrid collection="docs" path="tailwind/" classes="md:grid-cols-2" />
+
+---
+
+## Components
+
+Skeleton also offers optional component packages for select frameworks, each component automatically adapt to Skeleton's design system.
+
+| Framework | NPM Package                     | Description                                      |
+| --------- | ------------------------------- | ------------------------------------------------ |
+| React     | `@skeletonlabs/skeleton-react`  | Contains all components and features for React.  |
+| Svelte    | `@skeletonlabs/skeleton-svelte` | Contains all components and features for Svelte. |
+
+### Powered by Zag.js
+
+Skeleton's components are built on **Zag.js**, which provides a collection of framework-agnostic UI component patterns to manage logic and state. Zag was founded and maintained by industry veterans, such Segun Adebayo - the creator and core maintainer for [Chakra UI](https://www.chakra-ui.com/).
+
+<figure class="linker bg-noise">
+	<a class="btn preset-filled" href="https://zagjs.com/" target="_blank">
+		View Zag.js
+	</a>
+</figure>
+
+### Importing Component
+
+Import the component you wish to use from your framework package of choice, then insert it into your page template.
+
+```ts
+```
+
+```ts
+<Avatar />
+```
+
+### Component Props
+
+Skeleton components properties (aka "props") are loosely defined into the following categories:
+
+- **Functional Props** - directly affect the functionality of the component, such as an `open` or `src`.
+- **Style Props** - accept Tailwind utility classes to affect styling, such as `background` for background color.
+- **Event Props** - callback functions that trigger upon interaction, such as `onclick`, `onkeypress`, and more.
+
+In the example below, we set functional props for `src` and `alt`, while also including a style prop for `background`.
+
+```ts
+<Avatar src={someUrl} alt="Jane" background="bg-red-500" />
+```
+
+### Style Props
+
+Skeleton components are styled by default out of the box. However, if you wish to customize the look and feel, then you may do so utilizing Style Props. These fall into a few sub-categories.
+
+- `base` - the default styles for each component template element, implemented by default.
+- `{property}` - take individual utility classes to customize styling, such as `background`, `padding`, or `margin`.
+- `classes` - allows you to pass any arbitrary utility classes and extend the class list. Note this is plural.
+
+Imagine the Avatar component was created like so:
+
+```ts title="Example Props"
+{
+	src = './some-placeholder.jpg',
+	alt = '',
+	// ...
+	base = 'flex justify-center items-center overflow-hidden',
+	background = 'bg-slate-500',
+	rounded = 'rounded-full',
+	// ...
+	classes = '',
+}
+```
+
+```svelte title="Example Template"
+<figure class="{base} {background} {size} {font} {border} {rounded} {shadow} {classes}">
+	<img {src} alt={name} class="{imageBase} {imageClasses}" />
+</figure>
+```
+
+We can use the `background` style prop to replace the default background color.
+
+```svelte
+<Avatar background="bg-blue-500">Sk</Avatar>
+```
+
+Since the component doesn't have a dedicated `border` prop, we can extend our class list using `classes`.
+
+```svelte
+<Avatar classes="border-4 border-green-500">Sk</Avatar>
+```
+
+And we can optionally replace the default `base` styles like so. Just remember our other `{property}` styles will remain.
+
+```svelte
+<Avatar base="flex justify-center items-center overflow-visible">Sk</Avatar>
+```
+
+Additionally, child elements within the template use these same conventions, but prefixed like `imageBase` and `imageClasses`.
+
+```svelte
+<Avatar ... imageClasses="grayscale" />
+```
+
+Consult each component's [API reference](/docs/components/accordion/react#api-reference) for a complete list of available properties.
+
+### Learn More
+
+For a comprehensive understanding of how Skeleton implements our components, please refer to our [contribution guidelines](/docs/resources/contribute/components).

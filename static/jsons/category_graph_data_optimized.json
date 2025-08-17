@@ -1,0 +1,2744 @@
+{
+  "nodes": [
+    {
+      "id": "category_art",
+      "name": "Art",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 623,
+      "incoming_connections": 143,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "Art",
+      "inDegree": 20,
+      "outDegree": 19,
+      "inWeight": 143,
+      "outWeight": 132,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_bestseller",
+      "name": "Bestseller",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 298,
+      "incoming_connections": 45,
+      "val": 8,
+      "color": "#4ecdc4",
+      "label": "Bestseller",
+      "inDegree": 17,
+      "outDegree": 19,
+      "inWeight": 45,
+      "outWeight": 72,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_business",
+      "name": "Business",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 936,
+      "incoming_connections": 193,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "Business",
+      "inDegree": 20,
+      "outDegree": 22,
+      "inWeight": 193,
+      "outWeight": 176,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_comics",
+      "name": "Comics",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 808,
+      "incoming_connections": 133,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "Comics",
+      "inDegree": 14,
+      "outDegree": 13,
+      "inWeight": 133,
+      "outWeight": 154,
+      "group": "connector-category"
+    },
+    {
+      "id": "category_crypto",
+      "name": "Crypto",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 356,
+      "incoming_connections": 61,
+      "val": 8,
+      "color": "#4ecdc4",
+      "label": "Crypto",
+      "inDegree": 5,
+      "outDegree": 10,
+      "inWeight": 61,
+      "outWeight": 68,
+      "group": "source-category"
+    },
+    {
+      "id": "category_culture",
+      "name": "Culture",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 978,
+      "incoming_connections": 307,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "Culture",
+      "inDegree": 23,
+      "outDegree": 23,
+      "inWeight": 307,
+      "outWeight": 283,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_education",
+      "name": "Education",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 576,
+      "incoming_connections": 64,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "Education",
+      "inDegree": 18,
+      "outDegree": 20,
+      "inWeight": 64,
+      "outWeight": 103,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_faith",
+      "name": "Faith",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 504,
+      "incoming_connections": 77,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "Faith",
+      "inDegree": 18,
+      "outDegree": 13,
+      "inWeight": 77,
+      "outWeight": 81,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_fashionandbeauty",
+      "name": "Fashionandbeauty",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 756,
+      "incoming_connections": 243,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "Fashionandbeauty",
+      "inDegree": 17,
+      "outDegree": 21,
+      "inWeight": 243,
+      "outWeight": 215,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_fiction",
+      "name": "Fiction",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 374,
+      "incoming_connections": 34,
+      "val": 8,
+      "color": "#4ecdc4",
+      "label": "Fiction",
+      "inDegree": 12,
+      "outDegree": 12,
+      "inWeight": 34,
+      "outWeight": 51,
+      "group": "connector-category"
+    },
+    {
+      "id": "category_finance",
+      "name": "Finance",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 1181,
+      "incoming_connections": 297,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "Finance",
+      "inDegree": 14,
+      "outDegree": 15,
+      "inWeight": 297,
+      "outWeight": 290,
+      "group": "connector-category"
+    },
+    {
+      "id": "category_food",
+      "name": "Food",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 776,
+      "incoming_connections": 236,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "Food",
+      "inDegree": 16,
+      "outDegree": 15,
+      "inWeight": 236,
+      "outWeight": 231,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_health-politics",
+      "name": "Health Politics",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 700,
+      "incoming_connections": 203,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "Health Politics",
+      "inDegree": 15,
+      "outDegree": 13,
+      "inWeight": 203,
+      "outWeight": 171,
+      "group": "connector-category"
+    },
+    {
+      "id": "category_humor",
+      "name": "Humor",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 664,
+      "incoming_connections": 102,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "Humor",
+      "inDegree": 21,
+      "outDegree": 22,
+      "inWeight": 102,
+      "outWeight": 161,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_international",
+      "name": "International",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 650,
+      "incoming_connections": 58,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "International",
+      "inDegree": 17,
+      "outDegree": 22,
+      "inWeight": 58,
+      "outWeight": 123,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_literature",
+      "name": "Literature",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 859,
+      "incoming_connections": 229,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "Literature",
+      "inDegree": 24,
+      "outDegree": 22,
+      "inWeight": 229,
+      "outWeight": 171,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_music",
+      "name": "Music",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 383,
+      "incoming_connections": 124,
+      "val": 8,
+      "color": "#4ecdc4",
+      "label": "Music",
+      "inDegree": 21,
+      "outDegree": 15,
+      "inWeight": 124,
+      "outWeight": 124,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_news",
+      "name": "News",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 756,
+      "incoming_connections": 129,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "News",
+      "inDegree": 22,
+      "outDegree": 19,
+      "inWeight": 129,
+      "outWeight": 164,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_parenting",
+      "name": "Parenting",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 699,
+      "incoming_connections": 89,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "Parenting",
+      "inDegree": 18,
+      "outDegree": 21,
+      "inWeight": 89,
+      "outWeight": 174,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_philosophy",
+      "name": "Philosophy",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 490,
+      "incoming_connections": 86,
+      "val": 8,
+      "color": "#4ecdc4",
+      "label": "Philosophy",
+      "inDegree": 20,
+      "outDegree": 20,
+      "inWeight": 86,
+      "outWeight": 92,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_science",
+      "name": "Science",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 784,
+      "incoming_connections": 148,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "Science",
+      "inDegree": 18,
+      "outDegree": 21,
+      "inWeight": 148,
+      "outWeight": 192,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_sports",
+      "name": "Sports",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 469,
+      "incoming_connections": 93,
+      "val": 8,
+      "color": "#4ecdc4",
+      "label": "Sports",
+      "inDegree": 15,
+      "outDegree": 15,
+      "inWeight": 93,
+      "outWeight": 90,
+      "group": "connector-category"
+    },
+    {
+      "id": "category_technology",
+      "name": "Technology",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 749,
+      "incoming_connections": 158,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "Technology",
+      "inDegree": 16,
+      "outDegree": 16,
+      "inWeight": 158,
+      "outWeight": 149,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_travel",
+      "name": "Travel",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 585,
+      "incoming_connections": 104,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "Travel",
+      "inDegree": 13,
+      "outDegree": 18,
+      "inWeight": 104,
+      "outWeight": 134,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_us-politics",
+      "name": "Us Politics",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 1293,
+      "incoming_connections": 670,
+      "val": 8,
+      "color": "#ff6b35",
+      "label": "Us Politics",
+      "inDegree": 26,
+      "outDegree": 22,
+      "inWeight": 670,
+      "outWeight": 435,
+      "group": "hub-category"
+    },
+    {
+      "id": "category_world-politics",
+      "name": "World Politics",
+      "category": "Category",
+      "node_type": "category",
+      "subscriber_count": 0,
+      "outgoing_connections": 361,
+      "incoming_connections": 60,
+      "val": 8,
+      "color": "#4ecdc4",
+      "label": "World Politics",
+      "inDegree": 18,
+      "outDegree": 10,
+      "inWeight": 60,
+      "outWeight": 50,
+      "group": "connector-category"
+    }
+  ],
+  "links": [
+    {
+      "source": "category_bestseller",
+      "target": "category_business",
+      "value": 3
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_news",
+      "value": 3
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_world-politics",
+      "value": 1
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_culture",
+      "value": 3
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_fiction",
+      "value": 1
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_us-politics",
+      "value": 10
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_bestseller",
+      "value": 9
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_sports",
+      "value": 6
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_health-politics",
+      "value": 11
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_international",
+      "value": 1
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_technology",
+      "value": 3
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_fashionandbeauty",
+      "value": 4
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_travel",
+      "value": 1
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_literature",
+      "value": 2
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_finance",
+      "value": 5
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_art",
+      "value": 3
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_faith",
+      "value": 2
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_humor",
+      "value": 3
+    },
+    {
+      "source": "category_bestseller",
+      "target": "category_science",
+      "value": 1
+    },
+    {
+      "source": "category_culture",
+      "target": "category_literature",
+      "value": 21
+    },
+    {
+      "source": "category_culture",
+      "target": "category_art",
+      "value": 8
+    },
+    {
+      "source": "category_culture",
+      "target": "category_fashionandbeauty",
+      "value": 29
+    },
+    {
+      "source": "category_culture",
+      "target": "category_culture",
+      "value": 70
+    },
+    {
+      "source": "category_culture",
+      "target": "category_us-politics",
+      "value": 47
+    },
+    {
+      "source": "category_culture",
+      "target": "category_parenting",
+      "value": 9
+    },
+    {
+      "source": "category_culture",
+      "target": "category_science",
+      "value": 15
+    },
+    {
+      "source": "category_culture",
+      "target": "category_technology",
+      "value": 14
+    },
+    {
+      "source": "category_culture",
+      "target": "category_news",
+      "value": 7
+    },
+    {
+      "source": "category_culture",
+      "target": "category_humor",
+      "value": 14
+    },
+    {
+      "source": "category_culture",
+      "target": "category_comics",
+      "value": 3
+    },
+    {
+      "source": "category_culture",
+      "target": "category_fiction",
+      "value": 6
+    },
+    {
+      "source": "category_culture",
+      "target": "category_food",
+      "value": 7
+    },
+    {
+      "source": "category_culture",
+      "target": "category_philosophy",
+      "value": 7
+    },
+    {
+      "source": "category_culture",
+      "target": "category_travel",
+      "value": 3
+    },
+    {
+      "source": "category_culture",
+      "target": "category_business",
+      "value": 6
+    },
+    {
+      "source": "category_culture",
+      "target": "category_education",
+      "value": 1
+    },
+    {
+      "source": "category_culture",
+      "target": "category_faith",
+      "value": 2
+    },
+    {
+      "source": "category_culture",
+      "target": "category_sports",
+      "value": 2
+    },
+    {
+      "source": "category_culture",
+      "target": "category_music",
+      "value": 3
+    },
+    {
+      "source": "category_culture",
+      "target": "category_world-politics",
+      "value": 1
+    },
+    {
+      "source": "category_culture",
+      "target": "category_bestseller",
+      "value": 4
+    },
+    {
+      "source": "category_culture",
+      "target": "category_health-politics",
+      "value": 4
+    },
+    {
+      "source": "category_technology",
+      "target": "category_technology",
+      "value": 74
+    },
+    {
+      "source": "category_technology",
+      "target": "category_business",
+      "value": 26
+    },
+    {
+      "source": "category_technology",
+      "target": "category_science",
+      "value": 4
+    },
+    {
+      "source": "category_technology",
+      "target": "category_us-politics",
+      "value": 7
+    },
+    {
+      "source": "category_technology",
+      "target": "category_finance",
+      "value": 12
+    },
+    {
+      "source": "category_technology",
+      "target": "category_world-politics",
+      "value": 3
+    },
+    {
+      "source": "category_technology",
+      "target": "category_music",
+      "value": 3
+    },
+    {
+      "source": "category_technology",
+      "target": "category_news",
+      "value": 1
+    },
+    {
+      "source": "category_technology",
+      "target": "category_health-politics",
+      "value": 4
+    },
+    {
+      "source": "category_technology",
+      "target": "category_fashionandbeauty",
+      "value": 1
+    },
+    {
+      "source": "category_technology",
+      "target": "category_culture",
+      "value": 4
+    },
+    {
+      "source": "category_technology",
+      "target": "category_humor",
+      "value": 1
+    },
+    {
+      "source": "category_technology",
+      "target": "category_literature",
+      "value": 1
+    },
+    {
+      "source": "category_technology",
+      "target": "category_education",
+      "value": 3
+    },
+    {
+      "source": "category_technology",
+      "target": "category_philosophy",
+      "value": 3
+    },
+    {
+      "source": "category_technology",
+      "target": "category_bestseller",
+      "value": 2
+    },
+    {
+      "source": "category_business",
+      "target": "category_technology",
+      "value": 26
+    },
+    {
+      "source": "category_business",
+      "target": "category_business",
+      "value": 46
+    },
+    {
+      "source": "category_business",
+      "target": "category_finance",
+      "value": 32
+    },
+    {
+      "source": "category_business",
+      "target": "category_education",
+      "value": 10
+    },
+    {
+      "source": "category_business",
+      "target": "category_science",
+      "value": 6
+    },
+    {
+      "source": "category_business",
+      "target": "category_philosophy",
+      "value": 3
+    },
+    {
+      "source": "category_business",
+      "target": "category_food",
+      "value": 1
+    },
+    {
+      "source": "category_business",
+      "target": "category_fashionandbeauty",
+      "value": 2
+    },
+    {
+      "source": "category_business",
+      "target": "category_culture",
+      "value": 4
+    },
+    {
+      "source": "category_business",
+      "target": "category_us-politics",
+      "value": 13
+    },
+    {
+      "source": "category_business",
+      "target": "category_sports",
+      "value": 3
+    },
+    {
+      "source": "category_business",
+      "target": "category_news",
+      "value": 3
+    },
+    {
+      "source": "category_business",
+      "target": "category_crypto",
+      "value": 10
+    },
+    {
+      "source": "category_business",
+      "target": "category_humor",
+      "value": 1
+    },
+    {
+      "source": "category_business",
+      "target": "category_art",
+      "value": 2
+    },
+    {
+      "source": "category_business",
+      "target": "category_travel",
+      "value": 4
+    },
+    {
+      "source": "category_business",
+      "target": "category_health-politics",
+      "value": 1
+    },
+    {
+      "source": "category_business",
+      "target": "category_parenting",
+      "value": 2
+    },
+    {
+      "source": "category_business",
+      "target": "category_music",
+      "value": 1
+    },
+    {
+      "source": "category_business",
+      "target": "category_international",
+      "value": 3
+    },
+    {
+      "source": "category_business",
+      "target": "category_faith",
+      "value": 2
+    },
+    {
+      "source": "category_business",
+      "target": "category_literature",
+      "value": 1
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_us-politics",
+      "value": 259
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_humor",
+      "value": 13
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_literature",
+      "value": 9
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_culture",
+      "value": 37
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_news",
+      "value": 35
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_finance",
+      "value": 9
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_business",
+      "value": 13
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_world-politics",
+      "value": 7
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_science",
+      "value": 9
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_health-politics",
+      "value": 1
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_music",
+      "value": 5
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_sports",
+      "value": 2
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_philosophy",
+      "value": 3
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_parenting",
+      "value": 6
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_technology",
+      "value": 10
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_international",
+      "value": 7
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_art",
+      "value": 3
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_food",
+      "value": 1
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_comics",
+      "value": 2
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_bestseller",
+      "value": 2
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_faith",
+      "value": 1
+    },
+    {
+      "source": "category_us-politics",
+      "target": "category_education",
+      "value": 1
+    },
+    {
+      "source": "category_finance",
+      "target": "category_finance",
+      "value": 205
+    },
+    {
+      "source": "category_finance",
+      "target": "category_sports",
+      "value": 1
+    },
+    {
+      "source": "category_finance",
+      "target": "category_news",
+      "value": 10
+    },
+    {
+      "source": "category_finance",
+      "target": "category_us-politics",
+      "value": 11
+    },
+    {
+      "source": "category_finance",
+      "target": "category_business",
+      "value": 29
+    },
+    {
+      "source": "category_finance",
+      "target": "category_technology",
+      "value": 10
+    },
+    {
+      "source": "category_finance",
+      "target": "category_crypto",
+      "value": 11
+    },
+    {
+      "source": "category_finance",
+      "target": "category_world-politics",
+      "value": 4
+    },
+    {
+      "source": "category_finance",
+      "target": "category_international",
+      "value": 2
+    },
+    {
+      "source": "category_finance",
+      "target": "category_fiction",
+      "value": 1
+    },
+    {
+      "source": "category_finance",
+      "target": "category_bestseller",
+      "value": 1
+    },
+    {
+      "source": "category_finance",
+      "target": "category_health-politics",
+      "value": 2
+    },
+    {
+      "source": "category_finance",
+      "target": "category_education",
+      "value": 1
+    },
+    {
+      "source": "category_finance",
+      "target": "category_humor",
+      "value": 1
+    },
+    {
+      "source": "category_finance",
+      "target": "category_travel",
+      "value": 1
+    },
+    {
+      "source": "category_food",
+      "target": "category_food",
+      "value": 161
+    },
+    {
+      "source": "category_food",
+      "target": "category_travel",
+      "value": 15
+    },
+    {
+      "source": "category_food",
+      "target": "category_fashionandbeauty",
+      "value": 15
+    },
+    {
+      "source": "category_food",
+      "target": "category_culture",
+      "value": 11
+    },
+    {
+      "source": "category_food",
+      "target": "category_literature",
+      "value": 7
+    },
+    {
+      "source": "category_food",
+      "target": "category_parenting",
+      "value": 1
+    },
+    {
+      "source": "category_food",
+      "target": "category_art",
+      "value": 4
+    },
+    {
+      "source": "category_food",
+      "target": "category_us-politics",
+      "value": 3
+    },
+    {
+      "source": "category_food",
+      "target": "category_humor",
+      "value": 3
+    },
+    {
+      "source": "category_food",
+      "target": "category_news",
+      "value": 3
+    },
+    {
+      "source": "category_food",
+      "target": "category_music",
+      "value": 1
+    },
+    {
+      "source": "category_food",
+      "target": "category_business",
+      "value": 3
+    },
+    {
+      "source": "category_food",
+      "target": "category_international",
+      "value": 2
+    },
+    {
+      "source": "category_food",
+      "target": "category_faith",
+      "value": 1
+    },
+    {
+      "source": "category_food",
+      "target": "category_fiction",
+      "value": 1
+    },
+    {
+      "source": "category_sports",
+      "target": "category_sports",
+      "value": 65
+    },
+    {
+      "source": "category_sports",
+      "target": "category_comics",
+      "value": 1
+    },
+    {
+      "source": "category_sports",
+      "target": "category_business",
+      "value": 2
+    },
+    {
+      "source": "category_sports",
+      "target": "category_parenting",
+      "value": 2
+    },
+    {
+      "source": "category_sports",
+      "target": "category_bestseller",
+      "value": 1
+    },
+    {
+      "source": "category_sports",
+      "target": "category_music",
+      "value": 2
+    },
+    {
+      "source": "category_sports",
+      "target": "category_travel",
+      "value": 3
+    },
+    {
+      "source": "category_sports",
+      "target": "category_culture",
+      "value": 2
+    },
+    {
+      "source": "category_sports",
+      "target": "category_us-politics",
+      "value": 3
+    },
+    {
+      "source": "category_sports",
+      "target": "category_literature",
+      "value": 1
+    },
+    {
+      "source": "category_sports",
+      "target": "category_news",
+      "value": 2
+    },
+    {
+      "source": "category_sports",
+      "target": "category_science",
+      "value": 3
+    },
+    {
+      "source": "category_sports",
+      "target": "category_education",
+      "value": 1
+    },
+    {
+      "source": "category_sports",
+      "target": "category_world-politics",
+      "value": 1
+    },
+    {
+      "source": "category_sports",
+      "target": "category_technology",
+      "value": 1
+    },
+    {
+      "source": "category_art",
+      "target": "category_us-politics",
+      "value": 12
+    },
+    {
+      "source": "category_art",
+      "target": "category_comics",
+      "value": 14
+    },
+    {
+      "source": "category_art",
+      "target": "category_humor",
+      "value": 5
+    },
+    {
+      "source": "category_art",
+      "target": "category_bestseller",
+      "value": 3
+    },
+    {
+      "source": "category_art",
+      "target": "category_faith",
+      "value": 3
+    },
+    {
+      "source": "category_art",
+      "target": "category_art",
+      "value": 49
+    },
+    {
+      "source": "category_art",
+      "target": "category_parenting",
+      "value": 4
+    },
+    {
+      "source": "category_art",
+      "target": "category_education",
+      "value": 2
+    },
+    {
+      "source": "category_art",
+      "target": "category_culture",
+      "value": 8
+    },
+    {
+      "source": "category_art",
+      "target": "category_literature",
+      "value": 14
+    },
+    {
+      "source": "category_art",
+      "target": "category_philosophy",
+      "value": 3
+    },
+    {
+      "source": "category_art",
+      "target": "category_food",
+      "value": 4
+    },
+    {
+      "source": "category_art",
+      "target": "category_science",
+      "value": 2
+    },
+    {
+      "source": "category_art",
+      "target": "category_music",
+      "value": 4
+    },
+    {
+      "source": "category_art",
+      "target": "category_fiction",
+      "value": 1
+    },
+    {
+      "source": "category_art",
+      "target": "category_fashionandbeauty",
+      "value": 1
+    },
+    {
+      "source": "category_art",
+      "target": "category_sports",
+      "value": 1
+    },
+    {
+      "source": "category_art",
+      "target": "category_news",
+      "value": 1
+    },
+    {
+      "source": "category_art",
+      "target": "category_travel",
+      "value": 1
+    },
+    {
+      "source": "category_world-politics",
+      "target": "category_us-politics",
+      "value": 19
+    },
+    {
+      "source": "category_world-politics",
+      "target": "category_world-politics",
+      "value": 5
+    },
+    {
+      "source": "category_world-politics",
+      "target": "category_fiction",
+      "value": 1
+    },
+    {
+      "source": "category_world-politics",
+      "target": "category_international",
+      "value": 9
+    },
+    {
+      "source": "category_world-politics",
+      "target": "category_culture",
+      "value": 3
+    },
+    {
+      "source": "category_world-politics",
+      "target": "category_news",
+      "value": 7
+    },
+    {
+      "source": "category_world-politics",
+      "target": "category_literature",
+      "value": 1
+    },
+    {
+      "source": "category_world-politics",
+      "target": "category_business",
+      "value": 3
+    },
+    {
+      "source": "category_world-politics",
+      "target": "category_humor",
+      "value": 1
+    },
+    {
+      "source": "category_world-politics",
+      "target": "category_philosophy",
+      "value": 1
+    },
+    {
+      "source": "category_health-politics",
+      "target": "category_health-politics",
+      "value": 112
+    },
+    {
+      "source": "category_health-politics",
+      "target": "category_world-politics",
+      "value": 7
+    },
+    {
+      "source": "category_health-politics",
+      "target": "category_us-politics",
+      "value": 16
+    },
+    {
+      "source": "category_health-politics",
+      "target": "category_science",
+      "value": 11
+    },
+    {
+      "source": "category_health-politics",
+      "target": "category_international",
+      "value": 3
+    },
+    {
+      "source": "category_health-politics",
+      "target": "category_finance",
+      "value": 1
+    },
+    {
+      "source": "category_health-politics",
+      "target": "category_news",
+      "value": 8
+    },
+    {
+      "source": "category_health-politics",
+      "target": "category_education",
+      "value": 2
+    },
+    {
+      "source": "category_health-politics",
+      "target": "category_culture",
+      "value": 5
+    },
+    {
+      "source": "category_health-politics",
+      "target": "category_philosophy",
+      "value": 2
+    },
+    {
+      "source": "category_health-politics",
+      "target": "category_bestseller",
+      "value": 2
+    },
+    {
+      "source": "category_health-politics",
+      "target": "category_business",
+      "value": 1
+    },
+    {
+      "source": "category_health-politics",
+      "target": "category_humor",
+      "value": 1
+    },
+    {
+      "source": "category_news",
+      "target": "category_news",
+      "value": 19
+    },
+    {
+      "source": "category_news",
+      "target": "category_business",
+      "value": 6
+    },
+    {
+      "source": "category_news",
+      "target": "category_us-politics",
+      "value": 68
+    },
+    {
+      "source": "category_news",
+      "target": "category_bestseller",
+      "value": 1
+    },
+    {
+      "source": "category_news",
+      "target": "category_art",
+      "value": 1
+    },
+    {
+      "source": "category_news",
+      "target": "category_science",
+      "value": 2
+    },
+    {
+      "source": "category_news",
+      "target": "category_technology",
+      "value": 5
+    },
+    {
+      "source": "category_news",
+      "target": "category_culture",
+      "value": 13
+    },
+    {
+      "source": "category_news",
+      "target": "category_humor",
+      "value": 1
+    },
+    {
+      "source": "category_news",
+      "target": "category_world-politics",
+      "value": 8
+    },
+    {
+      "source": "category_news",
+      "target": "category_international",
+      "value": 7
+    },
+    {
+      "source": "category_news",
+      "target": "category_health-politics",
+      "value": 15
+    },
+    {
+      "source": "category_news",
+      "target": "category_sports",
+      "value": 2
+    },
+    {
+      "source": "category_news",
+      "target": "category_food",
+      "value": 4
+    },
+    {
+      "source": "category_news",
+      "target": "category_philosophy",
+      "value": 2
+    },
+    {
+      "source": "category_news",
+      "target": "category_literature",
+      "value": 2
+    },
+    {
+      "source": "category_news",
+      "target": "category_education",
+      "value": 1
+    },
+    {
+      "source": "category_news",
+      "target": "category_finance",
+      "value": 6
+    },
+    {
+      "source": "category_news",
+      "target": "category_faith",
+      "value": 1
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_fashionandbeauty",
+      "value": 126
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_travel",
+      "value": 12
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_culture",
+      "value": 27
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_literature",
+      "value": 6
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_international",
+      "value": 1
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_parenting",
+      "value": 4
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_business",
+      "value": 9
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_bestseller",
+      "value": 5
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_food",
+      "value": 6
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_us-politics",
+      "value": 2
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_news",
+      "value": 2
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_humor",
+      "value": 1
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_sports",
+      "value": 1
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_art",
+      "value": 2
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_philosophy",
+      "value": 4
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_technology",
+      "value": 1
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_music",
+      "value": 1
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_faith",
+      "value": 2
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_education",
+      "value": 1
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_finance",
+      "value": 1
+    },
+    {
+      "source": "category_fashionandbeauty",
+      "target": "category_comics",
+      "value": 1
+    },
+    {
+      "source": "category_music",
+      "target": "category_music",
+      "value": 75
+    },
+    {
+      "source": "category_music",
+      "target": "category_humor",
+      "value": 3
+    },
+    {
+      "source": "category_music",
+      "target": "category_art",
+      "value": 4
+    },
+    {
+      "source": "category_music",
+      "target": "category_faith",
+      "value": 4
+    },
+    {
+      "source": "category_music",
+      "target": "category_culture",
+      "value": 10
+    },
+    {
+      "source": "category_music",
+      "target": "category_literature",
+      "value": 10
+    },
+    {
+      "source": "category_music",
+      "target": "category_parenting",
+      "value": 1
+    },
+    {
+      "source": "category_music",
+      "target": "category_sports",
+      "value": 2
+    },
+    {
+      "source": "category_music",
+      "target": "category_bestseller",
+      "value": 2
+    },
+    {
+      "source": "category_music",
+      "target": "category_us-politics",
+      "value": 5
+    },
+    {
+      "source": "category_music",
+      "target": "category_fashionandbeauty",
+      "value": 2
+    },
+    {
+      "source": "category_music",
+      "target": "category_news",
+      "value": 3
+    },
+    {
+      "source": "category_music",
+      "target": "category_business",
+      "value": 1
+    },
+    {
+      "source": "category_music",
+      "target": "category_technology",
+      "value": 1
+    },
+    {
+      "source": "category_music",
+      "target": "category_comics",
+      "value": 1
+    },
+    {
+      "source": "category_faith",
+      "target": "category_literature",
+      "value": 17
+    },
+    {
+      "source": "category_faith",
+      "target": "category_faith",
+      "value": 23
+    },
+    {
+      "source": "category_faith",
+      "target": "category_culture",
+      "value": 8
+    },
+    {
+      "source": "category_faith",
+      "target": "category_philosophy",
+      "value": 4
+    },
+    {
+      "source": "category_faith",
+      "target": "category_art",
+      "value": 3
+    },
+    {
+      "source": "category_faith",
+      "target": "category_comics",
+      "value": 2
+    },
+    {
+      "source": "category_faith",
+      "target": "category_us-politics",
+      "value": 12
+    },
+    {
+      "source": "category_faith",
+      "target": "category_fashionandbeauty",
+      "value": 4
+    },
+    {
+      "source": "category_faith",
+      "target": "category_parenting",
+      "value": 2
+    },
+    {
+      "source": "category_faith",
+      "target": "category_world-politics",
+      "value": 2
+    },
+    {
+      "source": "category_faith",
+      "target": "category_health-politics",
+      "value": 2
+    },
+    {
+      "source": "category_faith",
+      "target": "category_music",
+      "value": 1
+    },
+    {
+      "source": "category_faith",
+      "target": "category_science",
+      "value": 1
+    },
+    {
+      "source": "category_science",
+      "target": "category_us-politics",
+      "value": 36
+    },
+    {
+      "source": "category_science",
+      "target": "category_business",
+      "value": 8
+    },
+    {
+      "source": "category_science",
+      "target": "category_science",
+      "value": 70
+    },
+    {
+      "source": "category_science",
+      "target": "category_technology",
+      "value": 5
+    },
+    {
+      "source": "category_science",
+      "target": "category_music",
+      "value": 2
+    },
+    {
+      "source": "category_science",
+      "target": "category_news",
+      "value": 3
+    },
+    {
+      "source": "category_science",
+      "target": "category_culture",
+      "value": 18
+    },
+    {
+      "source": "category_science",
+      "target": "category_health-politics",
+      "value": 21
+    },
+    {
+      "source": "category_science",
+      "target": "category_food",
+      "value": 2
+    },
+    {
+      "source": "category_science",
+      "target": "category_art",
+      "value": 1
+    },
+    {
+      "source": "category_science",
+      "target": "category_literature",
+      "value": 3
+    },
+    {
+      "source": "category_science",
+      "target": "category_bestseller",
+      "value": 4
+    },
+    {
+      "source": "category_science",
+      "target": "category_faith",
+      "value": 2
+    },
+    {
+      "source": "category_science",
+      "target": "category_philosophy",
+      "value": 7
+    },
+    {
+      "source": "category_science",
+      "target": "category_education",
+      "value": 2
+    },
+    {
+      "source": "category_science",
+      "target": "category_international",
+      "value": 1
+    },
+    {
+      "source": "category_science",
+      "target": "category_sports",
+      "value": 1
+    },
+    {
+      "source": "category_science",
+      "target": "category_parenting",
+      "value": 3
+    },
+    {
+      "source": "category_science",
+      "target": "category_world-politics",
+      "value": 1
+    },
+    {
+      "source": "category_science",
+      "target": "category_finance",
+      "value": 1
+    },
+    {
+      "source": "category_science",
+      "target": "category_fiction",
+      "value": 1
+    },
+    {
+      "source": "category_literature",
+      "target": "category_fiction",
+      "value": 7
+    },
+    {
+      "source": "category_literature",
+      "target": "category_technology",
+      "value": 1
+    },
+    {
+      "source": "category_literature",
+      "target": "category_culture",
+      "value": 15
+    },
+    {
+      "source": "category_literature",
+      "target": "category_education",
+      "value": 2
+    },
+    {
+      "source": "category_literature",
+      "target": "category_faith",
+      "value": 4
+    },
+    {
+      "source": "category_literature",
+      "target": "category_literature",
+      "value": 58
+    },
+    {
+      "source": "category_literature",
+      "target": "category_science",
+      "value": 6
+    },
+    {
+      "source": "category_literature",
+      "target": "category_humor",
+      "value": 5
+    },
+    {
+      "source": "category_literature",
+      "target": "category_art",
+      "value": 17
+    },
+    {
+      "source": "category_literature",
+      "target": "category_music",
+      "value": 6
+    },
+    {
+      "source": "category_literature",
+      "target": "category_us-politics",
+      "value": 12
+    },
+    {
+      "source": "category_literature",
+      "target": "category_international",
+      "value": 1
+    },
+    {
+      "source": "category_literature",
+      "target": "category_world-politics",
+      "value": 2
+    },
+    {
+      "source": "category_literature",
+      "target": "category_fashionandbeauty",
+      "value": 11
+    },
+    {
+      "source": "category_literature",
+      "target": "category_comics",
+      "value": 3
+    },
+    {
+      "source": "category_literature",
+      "target": "category_news",
+      "value": 3
+    },
+    {
+      "source": "category_literature",
+      "target": "category_parenting",
+      "value": 3
+    },
+    {
+      "source": "category_literature",
+      "target": "category_food",
+      "value": 5
+    },
+    {
+      "source": "category_literature",
+      "target": "category_travel",
+      "value": 3
+    },
+    {
+      "source": "category_literature",
+      "target": "category_bestseller",
+      "value": 2
+    },
+    {
+      "source": "category_literature",
+      "target": "category_philosophy",
+      "value": 4
+    },
+    {
+      "source": "category_literature",
+      "target": "category_health-politics",
+      "value": 1
+    },
+    {
+      "source": "category_fiction",
+      "target": "category_literature",
+      "value": 24
+    },
+    {
+      "source": "category_fiction",
+      "target": "category_fiction",
+      "value": 12
+    },
+    {
+      "source": "category_fiction",
+      "target": "category_art",
+      "value": 2
+    },
+    {
+      "source": "category_fiction",
+      "target": "category_humor",
+      "value": 1
+    },
+    {
+      "source": "category_fiction",
+      "target": "category_world-politics",
+      "value": 1
+    },
+    {
+      "source": "category_fiction",
+      "target": "category_culture",
+      "value": 3
+    },
+    {
+      "source": "category_fiction",
+      "target": "category_faith",
+      "value": 1
+    },
+    {
+      "source": "category_fiction",
+      "target": "category_fashionandbeauty",
+      "value": 1
+    },
+    {
+      "source": "category_fiction",
+      "target": "category_us-politics",
+      "value": 3
+    },
+    {
+      "source": "category_fiction",
+      "target": "category_philosophy",
+      "value": 1
+    },
+    {
+      "source": "category_fiction",
+      "target": "category_music",
+      "value": 1
+    },
+    {
+      "source": "category_fiction",
+      "target": "category_education",
+      "value": 1
+    },
+    {
+      "source": "category_travel",
+      "target": "category_humor",
+      "value": 3
+    },
+    {
+      "source": "category_travel",
+      "target": "category_travel",
+      "value": 58
+    },
+    {
+      "source": "category_travel",
+      "target": "category_sports",
+      "value": 2
+    },
+    {
+      "source": "category_travel",
+      "target": "category_business",
+      "value": 6
+    },
+    {
+      "source": "category_travel",
+      "target": "category_fashionandbeauty",
+      "value": 14
+    },
+    {
+      "source": "category_travel",
+      "target": "category_philosophy",
+      "value": 2
+    },
+    {
+      "source": "category_travel",
+      "target": "category_crypto",
+      "value": 2
+    },
+    {
+      "source": "category_travel",
+      "target": "category_food",
+      "value": 23
+    },
+    {
+      "source": "category_travel",
+      "target": "category_comics",
+      "value": 2
+    },
+    {
+      "source": "category_travel",
+      "target": "category_art",
+      "value": 4
+    },
+    {
+      "source": "category_travel",
+      "target": "category_culture",
+      "value": 2
+    },
+    {
+      "source": "category_travel",
+      "target": "category_us-politics",
+      "value": 6
+    },
+    {
+      "source": "category_travel",
+      "target": "category_international",
+      "value": 1
+    },
+    {
+      "source": "category_travel",
+      "target": "category_literature",
+      "value": 3
+    },
+    {
+      "source": "category_travel",
+      "target": "category_music",
+      "value": 1
+    },
+    {
+      "source": "category_travel",
+      "target": "category_parenting",
+      "value": 2
+    },
+    {
+      "source": "category_travel",
+      "target": "category_news",
+      "value": 2
+    },
+    {
+      "source": "category_travel",
+      "target": "category_science",
+      "value": 1
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_parenting",
+      "value": 36
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_us-politics",
+      "value": 23
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_fashionandbeauty",
+      "value": 22
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_faith",
+      "value": 15
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_food",
+      "value": 6
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_literature",
+      "value": 11
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_finance",
+      "value": 2
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_philosophy",
+      "value": 6
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_culture",
+      "value": 26
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_bestseller",
+      "value": 2
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_education",
+      "value": 3
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_music",
+      "value": 1
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_news",
+      "value": 1
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_sports",
+      "value": 3
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_fiction",
+      "value": 1
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_science",
+      "value": 7
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_comics",
+      "value": 2
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_humor",
+      "value": 4
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_art",
+      "value": 1
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_world-politics",
+      "value": 1
+    },
+    {
+      "source": "category_parenting",
+      "target": "category_international",
+      "value": 1
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_literature",
+      "value": 6
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_fashionandbeauty",
+      "value": 5
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_us-politics",
+      "value": 10
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_culture",
+      "value": 12
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_international",
+      "value": 1
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_humor",
+      "value": 2
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_bestseller",
+      "value": 1
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_parenting",
+      "value": 3
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_philosophy",
+      "value": 20
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_faith",
+      "value": 6
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_art",
+      "value": 3
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_education",
+      "value": 4
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_news",
+      "value": 3
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_science",
+      "value": 4
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_health-politics",
+      "value": 3
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_business",
+      "value": 3
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_comics",
+      "value": 1
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_food",
+      "value": 2
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_world-politics",
+      "value": 2
+    },
+    {
+      "source": "category_philosophy",
+      "target": "category_music",
+      "value": 1
+    },
+    {
+      "source": "category_comics",
+      "target": "category_art",
+      "value": 24
+    },
+    {
+      "source": "category_comics",
+      "target": "category_humor",
+      "value": 6
+    },
+    {
+      "source": "category_comics",
+      "target": "category_comics",
+      "value": 94
+    },
+    {
+      "source": "category_comics",
+      "target": "category_culture",
+      "value": 5
+    },
+    {
+      "source": "category_comics",
+      "target": "category_literature",
+      "value": 6
+    },
+    {
+      "source": "category_comics",
+      "target": "category_us-politics",
+      "value": 8
+    },
+    {
+      "source": "category_comics",
+      "target": "category_technology",
+      "value": 1
+    },
+    {
+      "source": "category_comics",
+      "target": "category_fiction",
+      "value": 1
+    },
+    {
+      "source": "category_comics",
+      "target": "category_music",
+      "value": 5
+    },
+    {
+      "source": "category_comics",
+      "target": "category_food",
+      "value": 1
+    },
+    {
+      "source": "category_comics",
+      "target": "category_parenting",
+      "value": 1
+    },
+    {
+      "source": "category_comics",
+      "target": "category_travel",
+      "value": 1
+    },
+    {
+      "source": "category_comics",
+      "target": "category_fashionandbeauty",
+      "value": 1
+    },
+    {
+      "source": "category_international",
+      "target": "category_world-politics",
+      "value": 10
+    },
+    {
+      "source": "category_international",
+      "target": "category_us-politics",
+      "value": 37
+    },
+    {
+      "source": "category_international",
+      "target": "category_literature",
+      "value": 7
+    },
+    {
+      "source": "category_international",
+      "target": "category_news",
+      "value": 8
+    },
+    {
+      "source": "category_international",
+      "target": "category_business",
+      "value": 6
+    },
+    {
+      "source": "category_international",
+      "target": "category_international",
+      "value": 15
+    },
+    {
+      "source": "category_international",
+      "target": "category_culture",
+      "value": 2
+    },
+    {
+      "source": "category_international",
+      "target": "category_humor",
+      "value": 2
+    },
+    {
+      "source": "category_international",
+      "target": "category_fashionandbeauty",
+      "value": 2
+    },
+    {
+      "source": "category_international",
+      "target": "category_health-politics",
+      "value": 11
+    },
+    {
+      "source": "category_international",
+      "target": "category_education",
+      "value": 2
+    },
+    {
+      "source": "category_international",
+      "target": "category_technology",
+      "value": 3
+    },
+    {
+      "source": "category_international",
+      "target": "category_music",
+      "value": 3
+    },
+    {
+      "source": "category_international",
+      "target": "category_parenting",
+      "value": 2
+    },
+    {
+      "source": "category_international",
+      "target": "category_art",
+      "value": 1
+    },
+    {
+      "source": "category_international",
+      "target": "category_food",
+      "value": 6
+    },
+    {
+      "source": "category_international",
+      "target": "category_faith",
+      "value": 1
+    },
+    {
+      "source": "category_international",
+      "target": "category_fiction",
+      "value": 1
+    },
+    {
+      "source": "category_international",
+      "target": "category_comics",
+      "value": 1
+    },
+    {
+      "source": "category_international",
+      "target": "category_philosophy",
+      "value": 1
+    },
+    {
+      "source": "category_international",
+      "target": "category_finance",
+      "value": 1
+    },
+    {
+      "source": "category_international",
+      "target": "category_sports",
+      "value": 1
+    },
+    {
+      "source": "category_crypto",
+      "target": "category_crypto",
+      "value": 37
+    },
+    {
+      "source": "category_crypto",
+      "target": "category_finance",
+      "value": 20
+    },
+    {
+      "source": "category_crypto",
+      "target": "category_philosophy",
+      "value": 1
+    },
+    {
+      "source": "category_crypto",
+      "target": "category_travel",
+      "value": 1
+    },
+    {
+      "source": "category_crypto",
+      "target": "category_business",
+      "value": 2
+    },
+    {
+      "source": "category_crypto",
+      "target": "category_music",
+      "value": 1
+    },
+    {
+      "source": "category_crypto",
+      "target": "category_us-politics",
+      "value": 1
+    },
+    {
+      "source": "category_crypto",
+      "target": "category_technology",
+      "value": 2
+    },
+    {
+      "source": "category_crypto",
+      "target": "category_science",
+      "value": 2
+    },
+    {
+      "source": "category_crypto",
+      "target": "category_literature",
+      "value": 1
+    },
+    {
+      "source": "category_humor",
+      "target": "category_humor",
+      "value": 31
+    },
+    {
+      "source": "category_humor",
+      "target": "category_literature",
+      "value": 17
+    },
+    {
+      "source": "category_humor",
+      "target": "category_food",
+      "value": 6
+    },
+    {
+      "source": "category_humor",
+      "target": "category_fashionandbeauty",
+      "value": 3
+    },
+    {
+      "source": "category_humor",
+      "target": "category_culture",
+      "value": 19
+    },
+    {
+      "source": "category_humor",
+      "target": "category_comics",
+      "value": 6
+    },
+    {
+      "source": "category_humor",
+      "target": "category_us-politics",
+      "value": 38
+    },
+    {
+      "source": "category_humor",
+      "target": "category_science",
+      "value": 2
+    },
+    {
+      "source": "category_humor",
+      "target": "category_business",
+      "value": 6
+    },
+    {
+      "source": "category_humor",
+      "target": "category_art",
+      "value": 7
+    },
+    {
+      "source": "category_humor",
+      "target": "category_education",
+      "value": 1
+    },
+    {
+      "source": "category_humor",
+      "target": "category_music",
+      "value": 4
+    },
+    {
+      "source": "category_humor",
+      "target": "category_philosophy",
+      "value": 5
+    },
+    {
+      "source": "category_humor",
+      "target": "category_bestseller",
+      "value": 2
+    },
+    {
+      "source": "category_humor",
+      "target": "category_news",
+      "value": 2
+    },
+    {
+      "source": "category_humor",
+      "target": "category_finance",
+      "value": 1
+    },
+    {
+      "source": "category_humor",
+      "target": "category_world-politics",
+      "value": 2
+    },
+    {
+      "source": "category_humor",
+      "target": "category_health-politics",
+      "value": 1
+    },
+    {
+      "source": "category_humor",
+      "target": "category_faith",
+      "value": 2
+    },
+    {
+      "source": "category_humor",
+      "target": "category_international",
+      "value": 2
+    },
+    {
+      "source": "category_humor",
+      "target": "category_parenting",
+      "value": 3
+    },
+    {
+      "source": "category_humor",
+      "target": "category_travel",
+      "value": 1
+    },
+    {
+      "source": "category_education",
+      "target": "category_education",
+      "value": 26
+    },
+    {
+      "source": "category_education",
+      "target": "category_news",
+      "value": 3
+    },
+    {
+      "source": "category_education",
+      "target": "category_music",
+      "value": 3
+    },
+    {
+      "source": "category_education",
+      "target": "category_faith",
+      "value": 5
+    },
+    {
+      "source": "category_education",
+      "target": "category_technology",
+      "value": 1
+    },
+    {
+      "source": "category_education",
+      "target": "category_business",
+      "value": 14
+    },
+    {
+      "source": "category_education",
+      "target": "category_us-politics",
+      "value": 9
+    },
+    {
+      "source": "category_education",
+      "target": "category_parenting",
+      "value": 5
+    },
+    {
+      "source": "category_education",
+      "target": "category_finance",
+      "value": 1
+    },
+    {
+      "source": "category_education",
+      "target": "category_art",
+      "value": 4
+    },
+    {
+      "source": "category_education",
+      "target": "category_sports",
+      "value": 1
+    },
+    {
+      "source": "category_education",
+      "target": "category_philosophy",
+      "value": 7
+    },
+    {
+      "source": "category_education",
+      "target": "category_health-politics",
+      "value": 14
+    },
+    {
+      "source": "category_education",
+      "target": "category_bestseller",
+      "value": 2
+    },
+    {
+      "source": "category_education",
+      "target": "category_literature",
+      "value": 1
+    },
+    {
+      "source": "category_education",
+      "target": "category_science",
+      "value": 2
+    },
+    {
+      "source": "category_education",
+      "target": "category_international",
+      "value": 1
+    },
+    {
+      "source": "category_education",
+      "target": "category_world-politics",
+      "value": 2
+    },
+    {
+      "source": "category_education",
+      "target": "category_food",
+      "value": 1
+    },
+    {
+      "source": "category_education",
+      "target": "category_crypto",
+      "value": 1
+    }
+  ],
+  "metadata": {
+    "total_nodes": 26,
+    "total_links": 458,
+    "categories_count": 26,
+    "total_recommendations": 458
+  }
+}

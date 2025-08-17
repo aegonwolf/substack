@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+
+@import '@skeletonlabs/skeleton';
+@import '@skeletonlabs/skeleton/optional/presets';
+@import '@skeletonlabs/skeleton/themes/hamlindigo';
+
+@source '../node_modules/@skeletonlabs/skeleton-svelte/dist';
+
+/* Glass presets for overlay effects */
+.preset-glass-surface {
+	background: color-mix(in oklab, var(--color-surface-500) 40%, transparent);
+	box-shadow: 0 0px 30px color-mix(in oklab, var(--color-surface-500) 50%, transparent) inset;
+	backdrop-filter: blur(16px);
+}
