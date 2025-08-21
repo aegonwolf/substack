@@ -1,9 +1,9 @@
 <script lang="ts">
     import ForceGraph3D from "$lib/components/3d-networks/ForceGraph3D.svelte";
     import type { PageProps } from './$types';
-    import { Search } from '@lucide-svelte';
+    import { Search } from '@lucide/svelte';
     
-    let { data } = $props<PageProps>();
+    let { data }: PageProps = $props();
     
     // Search state
     let searchQuery = $state('');

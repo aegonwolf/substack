@@ -11,7 +11,7 @@
 		{ href: '/cats', label: 'Cats' },
 		// { href: '/graph', label: 'Graph' }, // stashed for now
 		{ href: '/graph/cats', label: 'Graph Cats' },
-		{ href: '/graph/recommendation-map', label: 'Recommendation Map' }
+		{ href: '/graph/recommendation-map', label: 'Substack Galaxy' }
 	];
 
 	let mobileMenuOpen = false;
