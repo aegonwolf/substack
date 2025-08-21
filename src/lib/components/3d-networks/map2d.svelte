@@ -26,6 +26,11 @@
 	let hoveredNode = $state<any>(null);
 	let tooltipPosition = $state({ x: 0, y: 0 });
 	let draggingNode: any = null;
+	
+	// Highlighting state for search
+	let highlightedNodeIds = $state<Set<string>>(new Set());
+	let focusedNodeId = $state<string | null>(null);
+	let connectedNodeIds = $state<Set<string>>(new Set());
 
 	// quadtree for hittest
 	let Quadtree: any;
@@ -34,6 +39,9 @@
 	// size / DPR
 	let width = 0, height = 0, dpr = 1;
 	let resizeObserver: ResizeObserver;
+	
+	// Starfield effect
+	let stars: Array<{x: number, y: number, size: number, brightness: number}> = [];
 
 	let isInitialized = $state(false);
 	let error = $state<string | null>(null);
@@ -145,6 +153,14 @@
 		ctx.clearRect(0, 0, width * dpr, height * dpr);
 		ctx.fillStyle = backgroundColor;
 		ctx.fillRect(0, 0, width * dpr, height * dpr);
+		
+		// Draw starfield
+		for (const star of stars) {
+			ctx.beginPath();
+			ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+			ctx.fillStyle = `rgba(255, 255, 255, ${star.brightness * 0.6})`;
+			ctx.fill();
+		}
 
 		// apply zoom transform
 		ctx.setTransform(transform.k, 0, 0, transform.k, transform.x, transform.y);
@@ -156,6 +172,8 @@
 		const strokePx = linkWidthPxForK(k);
 
 		if (frac > 0 && renderLinks.length) {
+			const hasHighlight = highlightedNodeIds.size > 0;
+			
 			ctx.beginPath();
 			let drawn = 0;
 			const maxPerFrame = 20000; // hard cap for perf
@@ -164,13 +182,20 @@
 				const s: any = l.source, t: any = l.target;
 				if (!s || !t || s.x == null || t.x == null) continue;
 
+				// Check if this link connects highlighted nodes
+				const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
+				const targetId = typeof l.target === 'object' ? l.target.id : l.target;
+				const isHighlightedLink = hasHighlight && 
+					(highlightedNodeIds.has(sourceId) && highlightedNodeIds.has(targetId));
+
 				// stable sampling
 				if (l._r == null) {
 					const sid = typeof l.source === 'object' ? l.source.id : l.source;
 					const tid = typeof l.target === 'object' ? l.target.id : l.target;
 					l._r = hash01(String(sid) + '|' + String(tid));
 				}
-				if (l._r > frac) continue;
+				// Skip sampling for highlighted links, otherwise apply normal sampling
+				if (!isHighlightedLink && l._r > frac) continue;
 
 				// when far out, skip trimming (cheaper)
 				if (k < 1.5) {
@@ -197,16 +222,81 @@
 			ctx.lineWidth = strokePx / k; // constant in screen px
 			ctx.strokeStyle = LINK.COLOR;
 			ctx.stroke();
+			
+			// Draw highlighted links with glow
+			if (hasHighlight) {
+				ctx.beginPath();
+				for (let i = 0; i < renderLinks.length; i++) {
+					const l: any = renderLinks[i];
+					const s: any = l.source, t: any = l.target;
+					if (!s || !t || s.x == null || t.x == null) continue;
+					
+					const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
+					const targetId = typeof l.target === 'object' ? l.target.id : l.target;
+					const isHighlightedLink = highlightedNodeIds.has(sourceId) && highlightedNodeIds.has(targetId);
+					
+					if (!isHighlightedLink) continue;
+					
+					// Draw with trimming for clean connections
+					const dx = t.x - s.x, dy = t.y - s.y;
+					const len = Math.hypot(dx, dy);
+					if (!len || !isFinite(len)) continue;
+					const rs = nodeRadius(s);
+					const rt = nodeRadius(t);
+					if (len <= rs + rt) continue;
+					const ux = dx / len, uy = dy / len;
+					const x1 = s.x + ux * rs, y1 = s.y + uy * rs;
+					const x2 = t.x - ux * rt, y2 = t.y - uy * rt;
+					ctx.moveTo(x1, y1);
+					ctx.lineTo(x2, y2);
+				}
+				ctx.globalAlpha = 0.8;
+				ctx.lineWidth = (strokePx + 1) / k;
+				ctx.strokeStyle = '#9333ea';
+				ctx.stroke();
+			}
+			
 			ctx.globalAlpha = 1;
 		}
 
 		// ------ NODES ------
+		const hasHighlight = highlightedNodeIds.size > 0;
+		
 		for (const n of graphData.nodes) {
 			const r = nodeRadius(n);
+			const isHighlighted = highlightedNodeIds.has(n.id);
+			const isFocused = n.id === focusedNodeId;
+			
+			// Apply opacity for non-highlighted nodes when highlighting is active
+			if (hasHighlight && !isHighlighted) {
+				ctx.globalAlpha = 0.15;
+			} else {
+				ctx.globalAlpha = 1;
+			}
+			
+			// Draw node
 			ctx.beginPath();
 			ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
 			ctx.fillStyle = n.color ?? '#ccc';
 			ctx.fill();
+			
+			// Add glow effect for focused node
+			if (isFocused) {
+				ctx.globalAlpha = 0.6;
+				ctx.beginPath();
+				ctx.arc(n.x, n.y, r + 6 / transform.k, 0, Math.PI * 2);
+				ctx.strokeStyle = '#9333ea';
+				ctx.lineWidth = 3 / transform.k;
+				ctx.stroke();
+				ctx.globalAlpha = 0.3;
+				ctx.beginPath();
+				ctx.arc(n.x, n.y, r + 10 / transform.k, 0, Math.PI * 2);
+				ctx.strokeStyle = '#9333ea';
+				ctx.lineWidth = 2 / transform.k;
+				ctx.stroke();
+			}
+			
+			ctx.globalAlpha = 1;
 		}
 
 		// ------ LABELS ------
@@ -241,6 +331,58 @@
 		const ty = cy - n.y * targetK;
 		animateTransform({ k: targetK, x: tx, y: ty }, duration);
 	}
+	
+	// Public methods for search integration
+	export function highlightNodes(nodeIds: string[]) {
+		highlightedNodeIds = new Set(nodeIds);
+		scheduleDraw();
+	}
+	
+	export function highlightNode(nodeId: string) {
+		focusedNodeId = nodeId;
+		// Find connected nodes
+		const connected = new Set<string>();
+		for (const link of renderLinks) {
+			const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+			const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+			if (sourceId === nodeId) connected.add(targetId);
+			if (targetId === nodeId) connected.add(sourceId);
+		}
+		connectedNodeIds = connected;
+		highlightedNodeIds = new Set([nodeId, ...connected]);
+		scheduleDraw();
+	}
+	
+	// Expand the highlight network to include a node's connections
+	function expandHighlightNetwork(nodeId: string) {
+		// Find new connections for this node
+		const newConnections = new Set<string>();
+		for (const link of renderLinks) {
+			const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+			const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+			if (sourceId === nodeId) newConnections.add(targetId);
+			if (targetId === nodeId) newConnections.add(sourceId);
+		}
+		
+		// Add the clicked node's connections to the highlight set
+		for (const connectedId of newConnections) {
+			highlightedNodeIds.add(connectedId);
+			connectedNodeIds.add(connectedId);
+		}
+		
+		// Update the focused node
+		focusedNodeId = nodeId;
+		scheduleDraw();
+	}
+	
+	export function clearHighlight() {
+		highlightedNodeIds.clear();
+		focusedNodeId = null;
+		connectedNodeIds.clear();
+		scheduleDraw();
+	}
+	
+	export { focusNode };
 
 	function animateTransform(end: {k:number;x:number;y:number}, duration=600) {
 		const start = { ...transform };
@@ -294,7 +436,17 @@
 	const handleClick = (ev: MouseEvent) => {
 		const p = toGraphCoords(ev);
 		updateHover(p.x, p.y);
-		if (hoveredNode) focusNode(hoveredNode, 800);
+		if (hoveredNode) {
+			// Check if the clicked node is already part of the highlighted network
+			if (highlightedNodeIds.has(hoveredNode.id)) {
+				// Expand the network to include this node's connections
+				expandHighlightNetwork(hoveredNode.id);
+			} else {
+				// Switch to highlight the new node and its network
+				highlightNode(hoveredNode.id);
+			}
+			focusNode(hoveredNode, 800);
+		}
 	};
 
 	function onPointerDown(ev: PointerEvent) {
@@ -348,7 +500,21 @@
 		canvasEl.style.width = `${width}px`;
 		canvasEl.style.height = `${height}px`;
 		if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+		generateStars();
 		scheduleDraw();
+	}
+	
+	function generateStars() {
+		stars = [];
+		const numStars = Math.floor((width * height) / 3000); // Density of stars
+		for (let i = 0; i < numStars; i++) {
+			stars.push({
+				x: Math.random() * width * dpr,
+				y: Math.random() * height * dpr,
+				size: Math.random() * 1.5 + 0.5,
+				brightness: Math.random() * 0.8 + 0.2
+			});
+		}
 	}
 
 	onMount(async () => {

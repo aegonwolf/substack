@@ -9,7 +9,7 @@
 	const navItems: NavItem[] = [
 		{ href: '/', label: 'Home' },
 		{ href: '/cats', label: 'Cats' },
-		{ href: '/graph', label: 'Graph' },
+		// { href: '/graph', label: 'Graph' }, // stashed for now
 		{ href: '/graph/cats', label: 'Graph Cats' },
 		{ href: '/graph/recommendation-map', label: 'Recommendation Map' }
 	];

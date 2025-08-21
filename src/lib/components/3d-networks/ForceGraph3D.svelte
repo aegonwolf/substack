@@ -20,6 +20,11 @@
 	// Single reactive tooltip state with mouse tracking
 	let hoveredNode = $state<any>(null);
 	let tooltipPosition = $state({ x: 0, y: 0 });
+	
+	// Highlighting state
+	let highlightedNodeIds = new Set<string>();
+	let focusedNodeId: string | null = null;
+	let connectedNodeIds = new Set<string>();
 
 	// Track mouse position for tooltip
 	function handleMouseMove(event: MouseEvent) {
@@ -52,32 +57,130 @@
 	};
 
 	const focusNode = (node: any, ms = 800) => {
-  if (!node || !forceGraphInstance) return;
+  		if (!node || !forceGraphInstance) return;
 
-  const ctrls: any = forceGraphInstance.controls();
+		const ctrls: any = forceGraphInstance.controls();
 
-  // robust current coords (works for both d3 & ngraph engines)
-  const p = node.__threeObj?.position ?? { x: node.x, y: node.y, z: node.z };
-  const x = p?.x ?? 0, y = p?.y ?? 0, z = p?.z ?? 0;
+		// robust current coords (works for both d3 & ngraph engines)
+		const p = node.__threeObj?.position ?? { x: node.x, y: node.y, z: node.z };
+		const x = p?.x ?? 0, y = p?.y ?? 0, z = p?.z ?? 0;
 
-  // same idea as the official example: move along the node->camera ray
-  const distance = Math.max(40, (forceGraphInstance.getGraphBbox()?.x[1] ?? 200) * 0.2);
-  const denom = Math.hypot(x || 1, y || 1, z || 1); // avoid 0/0
-  const distRatio = 1 + distance / denom;
+		// same idea as the official example: move along the node->camera ray
+		const distance = Math.max(40, (forceGraphInstance.getGraphBbox()?.x[1] ?? 200) * 0.2);
+		const denom = Math.hypot(x || 1, y || 1, z || 1); // avoid 0/0
+		const distRatio = 1 + distance / denom;
 
-  forceGraphInstance.cameraPosition(
-    { x: x * distRatio, y: y * distRatio, z: z * distRatio },
-    { x, y, z },
-    ms
-  );
+		forceGraphInstance.cameraPosition(
+			{ x: x * distRatio, y: y * distRatio, z: z * distRatio },
+			{ x, y, z },
+			ms
+		);
 
   // ensure orbit/zoom revolves around the node
   ctrls.target.set(x, y, z);
   if (typeof ctrls.update === 'function') ctrls.update();
 };
 
+	// Helper function to get connected node IDs
+	function getConnectedNodes(nodeId: string): Set<string> {
+		const connected = new Set<string>();
+		for (const link of graphData.links) {
+			const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+			const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+			if (sourceId === nodeId) connected.add(targetId);
+			if (targetId === nodeId) connected.add(sourceId);
+		}
+		return connected;
+	}
+	
+	// Update node colors based on highlight state
+	function updateNodeColors() {
+		if (!forceGraphInstance || !isInitialized) return;
+		
+		forceGraphInstance.nodeColor((node: any) => {
+			if (focusedNodeId === node.id) {
+				// Focused node - bright color
+				return '#ff6b6b';
+			} else if (connectedNodeIds.has(node.id)) {
+				// Connected nodes - slightly dimmed highlight
+				return '#ffd43b';
+			} else if (highlightedNodeIds.size > 0 && !highlightedNodeIds.has(node.id)) {
+				// Non-highlighted nodes when something is highlighted - very dim
+				return 'rgba(100, 100, 100, 0.2)';
+			} else {
+				// Default color from the node data
+				return node.color || '#888888';
+			}
+		});
+		
+		// Update link visibility
+		forceGraphInstance.linkOpacity((link: any) => {
+			if (highlightedNodeIds.size === 0) return 0.4;
+			
+			const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+			const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+			
+			if (highlightedNodeIds.has(sourceId) && highlightedNodeIds.has(targetId)) {
+				return 0.8;
+			}
+			return 0.05;
+		});
+	}
+	
+	// Highlight a single node and its connections
+	export function highlightNode(nodeId: string) {
+		focusedNodeId = nodeId;
+		connectedNodeIds = getConnectedNodes(nodeId);
+		highlightedNodeIds = new Set([nodeId, ...connectedNodeIds]);
+		updateNodeColors();
+	}
+	
+	// Expand the highlight network to include a node's connections
+	function expandHighlightNetwork(nodeId: string) {
+		const newConnections = getConnectedNodes(nodeId);
+		
+		// Add the clicked node's connections to the highlight set
+		for (const connectedId of newConnections) {
+			highlightedNodeIds.add(connectedId);
+			connectedNodeIds.add(connectedId);
+		}
+		
+		// Update the focused node
+		focusedNodeId = nodeId;
+		updateNodeColors();
+	}
+	
+	// Clear all highlighting
+	export function clearHighlight() {
+		highlightedNodeIds.clear();
+		focusedNodeId = null;
+		connectedNodeIds.clear();
+		updateNodeColors();
+	}
+	
+	// Highlight multiple nodes (for search results)
+	export function highlightNodes(nodeIds: string[]) {
+		highlightedNodeIds = new Set(nodeIds);
+		focusedNodeId = null;
+		connectedNodeIds.clear();
+		updateNodeColors();
+	}
+	
+	// Export focusNode for external use
+	export { focusNode }
+	
 	const handleNodeClick = (node: any) => {
 		console.log('Node clicked:', node.name, node);
+		
+		// Check if the clicked node is already part of the highlighted network
+		if (highlightedNodeIds.has(node.id)) {
+			// Expand the network to include this node's connections
+			expandHighlightNetwork(node.id);
+		} else {
+			// Switch to highlight the new node and its network
+			highlightNode(node.id);
+		}
+		
 		focusNode(node, 800, 140);
 	};
 
@@ -113,10 +216,10 @@
 				// Use ngraph for better performance with good clustering
 				.forceEngine('ngraph')
 				.ngraphPhysics({
-					springLength: 100,
-					springCoefficient: 0.0005,
-					gravity: -0.8,
-					theta: 0.8,
+					springLength: 200,
+					springCoefficient: 0.0001,
+					gravity: -1.0,
+					theta: 1.2,
 					dragCoefficient: 0.01,
 					timeStep: 20
 				})
