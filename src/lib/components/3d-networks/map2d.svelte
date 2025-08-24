@@ -23,16 +23,12 @@
 		is_bestseller?: boolean;
 	};
 	type LinkT = { source: string | NodeT; target: string | NodeT; _r?: number };
-	type GraphDataT = { nodes: NodeT[]; links: LinkT[]; metadata: any };
 
-	// Props: either pass graphData directly, or a dataUrl to fetch it
 	let {
 		graphData,
-		dataUrl,
 		backgroundColor = '#000000'
 	}: {
-		graphData?: GraphDataT;
-		dataUrl?: string;
+		graphData: { nodes: NodeT[]; links: LinkT[]; metadata: any };
 		backgroundColor?: string;
 	} = $props();
 
@@ -117,6 +113,7 @@
 	}
 
 	// Level-of-detail: fraction of links to draw at a given zoom
+	// (0 when far out, 100% when zoomed in)
 	function linkFractionForK(k: number) {
 		if (k < 0.5) return 0.0;
 		if (k < 1.0) return 0.12;
@@ -156,7 +153,7 @@
 	}
 
 	function rebuildQuadtree() {
-		if (!Quadtree || !graphData) return;
+		if (!Quadtree) return;
 		qt = Quadtree.quadtree(
 			graphData.nodes,
 			(d: NodeT) => d.x,
@@ -177,7 +174,7 @@
 	}
 
 	function draw() {
-		if (!ctx || !graphData) return;
+		if (!ctx) return;
 
 		// clear + background
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -235,8 +232,8 @@
 					ctx.lineTo(t.x!, t.y!);
 				} else {
 					// trim to node edges (nicer when zoomed in)
-					const dx = t.x! - s.x!;
-					const dy = t.y! - s.y!;
+					const dx = (t.x! - s.x!);
+					const dy = (t.y! - s.y!);
 					const len = Math.hypot(dx, dy);
 					if (!len || !isFinite(len)) continue;
 					const rs = nodeRadius(s);
@@ -275,8 +272,8 @@
 
 					if (!isHighlightedLink) continue;
 
-					const dx = t.x! - s.x!;
-					const dy = t.y! - s.y!;
+					const dx = (t.x! - s.x!);
+					const dy = (t.y! - s.y!);
 					const len = Math.hypot(dx, dy);
 					if (!len || !isFinite(len)) continue;
 					const rs = nodeRadius(s);
@@ -458,7 +455,7 @@
 	}
 
 	function zoomToFit(padding = 60, duration = 600) {
-		const nodes = graphData?.nodes ?? [];
+		const nodes = graphData.nodes;
 		if (!nodes.length) return;
 
 		const xs = nodes.map((n) => n.x ?? 0);
@@ -587,22 +584,11 @@
 		if (e.key.toLowerCase() === 'f') zoomToFit(60, 500);
 	};
 
-	// Fetch data (if needed) + load D3 in parallel
 	onMount(async () => {
 		if (!browser) return;
 
 		try {
-			const dataP: Promise<GraphDataT> = graphData
-				? Promise.resolve(graphData)
-				: (async () => {
-						if (!dataUrl) throw new Error('No dataUrl provided for graph data');
-						const res = await fetch(dataUrl, { cache: 'force-cache' });
-						if (!res.ok) throw new Error(`Failed to load graph data (${res.status})`);
-						return (await res.json()) as GraphDataT;
-				  })();
-
-			const [data, [force, zoomMod, selectionMod, Q]] = await Promise.all([dataP, loadD3()]);
-			graphData = data;
+			const [force, zoomMod, selectionMod, Q] = await loadD3();
 
 			Quadtree = Q;
 			d3select = selectionMod.select;

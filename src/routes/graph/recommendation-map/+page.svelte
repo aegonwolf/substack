@@ -198,7 +198,7 @@
     <div class="w-full h-full">
         <Map2d 
             bind:this={mapComponent}
-            dataUrl={data.graphDataUrl}
+            graphData={data.graphData}
             backgroundColor="#000011"
         />
     </div>
