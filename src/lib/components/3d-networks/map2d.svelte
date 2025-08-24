@@ -2,11 +2,37 @@
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 
+	// ——— Types only (erased at build) ———
+	import type { Simulation } from 'd3-force';
+	import type { ZoomBehavior, ZoomTransform } from 'd3-zoom';
+	import type { Selection } from 'd3-selection';
+
+	// ——— Local graph types ———
+	type NodeT = {
+		id: string;
+		x?: number;
+		y?: number;
+		fx?: number | null;
+		fy?: number | null;
+		val?: number;
+		color?: string;
+		label?: string;
+		name?: string;
+		category?: string;
+		subscriber_count?: number;
+		is_bestseller?: boolean;
+	};
+	type LinkT = { source: string | NodeT; target: string | NodeT; _r?: number };
+	type GraphDataT = { nodes: NodeT[]; links: LinkT[]; metadata: any };
+
+	// Props: either pass graphData directly, or a dataUrl to fetch it
 	let {
 		graphData,
+		dataUrl,
 		backgroundColor = '#000000'
 	}: {
-		graphData: { nodes: any[]; links: any[]; metadata: any };
+		graphData?: GraphDataT;
+		dataUrl?: string;
 		backgroundColor?: string;
 	} = $props();
 
@@ -14,19 +40,21 @@
 	let canvasEl: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D | null = null;
 
-	let sim: any = null;
-	let d3zoom: any;
-	let d3select: any;
-	let zoomIdentity: any;
+	let sim: Simulation<NodeT, LinkT> | null = null;
+	let d3zoom: ZoomBehavior<HTMLCanvasElement, unknown> | null = null;
+	let d3select: ((node: any) => Selection<any, unknown, null, undefined>) | null = null;
+	let zoomIdentity: ZoomTransform;
+	let canvasSelection: Selection<HTMLCanvasElement, unknown, null, undefined> | null = null;
 
 	// zoom/pan transform in **device-pixel** space
 	let transform = { x: 0, y: 0, k: 1 };
 
 	// hover/drag
-	let hoveredNode = $state<any>(null);
+	let hoveredNode = $state<NodeT | null>(null);
 	let tooltipPosition = $state({ x: 0, y: 0 });
-	let draggingNode: any = null;
-	
+	let draggingNode: NodeT | null = null;
+	let lastPointerId: number | null = null;
+
 	// Highlighting state for search
 	let highlightedNodeIds = $state<Set<string>>(new Set());
 	let focusedNodeId = $state<string | null>(null);
@@ -37,11 +65,13 @@
 	let qt: any = null;
 
 	// size / DPR
-	let width = 0, height = 0, dpr = 1;
-	let resizeObserver: ResizeObserver;
-	
+	let width = 0,
+		height = 0,
+		dpr = 1;
+	let resizeObserver: ResizeObserver | undefined;
+
 	// Starfield effect
-	let stars: Array<{x: number, y: number, size: number, brightness: number}> = [];
+	let stars: Array<{ x: number; y: number; size: number; brightness: number }> = [];
 
 	let isInitialized = $state(false);
 	let error = $state<string | null>(null);
@@ -58,17 +88,17 @@
 	};
 
 	// links used for rendering (mutated by d3-force to hold node refs)
-	let renderLinks: any[] = [];
+	let renderLinks: LinkT[] = [];
 
 	// --- Styling / helpers ---
-	const nodeRadius = (n: any) => 2 + Math.sqrt(n?.val ?? 1) * 1.6;
+	const nodeRadius = (n: NodeT) => 2 + Math.sqrt(n?.val ?? 1) * 1.6;
 	const showLabels = () => transform.k > 1.5;
 
 	// Link style that adapts to zoom
 	const LINK = {
 		COLOR: '#c6cad3',
-		FAR_ALPHA: 0.06,     // very faint when zoomed out
-		NEAR_ALPHA: 0.28,    // still subtle when zoomed in
+		FAR_ALPHA: 0.06, // very faint when zoomed out
+		NEAR_ALPHA: 0.28, // still subtle when zoomed in
 		BASE_PX: 0.9,
 		MAX_PX: 1.6
 	};
@@ -78,7 +108,7 @@
 	// Smooth alpha as we zoom (k ∈ [0.6, 3] ramps)
 	function linkAlphaForK(k: number) {
 		if (k <= 0.6) return LINK.FAR_ALPHA;
-		if (k >= 3)   return LINK.NEAR_ALPHA;
+		if (k >= 3) return LINK.NEAR_ALPHA;
 		return lerp(LINK.FAR_ALPHA, LINK.NEAR_ALPHA, (k - 0.6) / (3 - 0.6));
 	}
 	// Line thickness in screen pixels
@@ -87,7 +117,6 @@
 	}
 
 	// Level-of-detail: fraction of links to draw at a given zoom
-	// (0 when far out, 100% when zoomed in)
 	function linkFractionForK(k: number) {
 		if (k < 0.5) return 0.0;
 		if (k < 1.0) return 0.12;
@@ -104,7 +133,8 @@
 			h = Math.imul(h, 16777619);
 		}
 		// xorshift
-		h ^= h >>> 13; h = Math.imul(h, 0x5bd1e995);
+		h ^= h >>> 13;
+		h = Math.imul(h, 0x5bd1e995);
 		h ^= h >>> 15;
 		return (h >>> 0) / 4294967296;
 	}
@@ -126,34 +156,35 @@
 	}
 
 	function rebuildQuadtree() {
-		if (!Quadtree) return;
+		if (!Quadtree || !graphData) return;
 		qt = Quadtree.quadtree(
 			graphData.nodes,
-			(d: any) => d.x,
-			(d: any) => d.y
+			(d: NodeT) => d.x,
+			(d: NodeT) => d.y
 		);
 	}
 
 	function updateHover(x: number, y: number) {
 		if (!qt) return;
 		const searchR = 12 / Math.max(0.1, transform.k);
-		const cand = qt.find(x, y, searchR);
+		const cand = qt.find(x, y, searchR) as NodeT | undefined;
 		if (cand) {
 			const r = nodeRadius(cand);
-			const dx = cand.x - x, dy = cand.y - y;
+			const dx = (cand.x ?? 0) - x,
+				dy = (cand.y ?? 0) - y;
 			hoveredNode = dx * dx + dy * dy <= r * r ? cand : null;
 		} else hoveredNode = null;
 	}
 
 	function draw() {
-		if (!ctx) return;
+		if (!ctx || !graphData) return;
 
 		// clear + background
 		ctx.setTransform(1, 0, 0, 1, 0, 0);
 		ctx.clearRect(0, 0, width * dpr, height * dpr);
 		ctx.fillStyle = backgroundColor;
 		ctx.fillRect(0, 0, width * dpr, height * dpr);
-		
+
 		// Draw starfield
 		for (const star of stars) {
 			ctx.beginPath();
@@ -173,25 +204,26 @@
 
 		if (frac > 0 && renderLinks.length) {
 			const hasHighlight = highlightedNodeIds.size > 0;
-			
+
 			ctx.beginPath();
 			let drawn = 0;
 			const maxPerFrame = 20000; // hard cap for perf
 			for (let i = 0; i < renderLinks.length; i++) {
-				const l: any = renderLinks[i];
-				const s: any = l.source, t: any = l.target;
+				const l = renderLinks[i] as any;
+				const s = l.source as NodeT,
+					t = l.target as NodeT;
 				if (!s || !t || s.x == null || t.x == null) continue;
 
 				// Check if this link connects highlighted nodes
-				const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
-				const targetId = typeof l.target === 'object' ? l.target.id : l.target;
-				const isHighlightedLink = hasHighlight && 
-					(highlightedNodeIds.has(sourceId) && highlightedNodeIds.has(targetId));
+				const sourceId = typeof l.source === 'object' ? (l.source as NodeT).id : l.source;
+				const targetId = typeof l.target === 'object' ? (l.target as NodeT).id : l.target;
+				const isHighlightedLink =
+					hasHighlight && highlightedNodeIds.has(sourceId) && highlightedNodeIds.has(targetId);
 
 				// stable sampling
 				if (l._r == null) {
-					const sid = typeof l.source === 'object' ? l.source.id : l.source;
-					const tid = typeof l.target === 'object' ? l.target.id : l.target;
+					const sid = typeof l.source === 'object' ? (l.source as NodeT).id : l.source;
+					const tid = typeof l.target === 'object' ? (l.target as NodeT).id : l.target;
 					l._r = hash01(String(sid) + '|' + String(tid));
 				}
 				// Skip sampling for highlighted links, otherwise apply normal sampling
@@ -199,19 +231,23 @@
 
 				// when far out, skip trimming (cheaper)
 				if (k < 1.5) {
-					ctx.moveTo(s.x, s.y);
-					ctx.lineTo(t.x, t.y);
+					ctx.moveTo(s.x!, s.y!);
+					ctx.lineTo(t.x!, t.y!);
 				} else {
 					// trim to node edges (nicer when zoomed in)
-					const dx = t.x - s.x, dy = t.y - s.y;
+					const dx = t.x! - s.x!;
+					const dy = t.y! - s.y!;
 					const len = Math.hypot(dx, dy);
 					if (!len || !isFinite(len)) continue;
 					const rs = nodeRadius(s);
 					const rt = nodeRadius(t);
 					if (len <= rs + rt) continue;
-					const ux = dx / len, uy = dy / len;
-					const x1 = s.x + ux * rs, y1 = s.y + uy * rs;
-					const x2 = t.x - ux * rt, y2 = t.y - uy * rt;
+					const ux = dx / len,
+						uy = dy / len;
+					const x1 = s.x! + ux * rs,
+						y1 = s.y! + uy * rs;
+					const x2 = t.x! - ux * rt,
+						y2 = t.y! - uy * rt;
 					ctx.moveTo(x1, y1);
 					ctx.lineTo(x2, y2);
 				}
@@ -222,31 +258,36 @@
 			ctx.lineWidth = strokePx / k; // constant in screen px
 			ctx.strokeStyle = LINK.COLOR;
 			ctx.stroke();
-			
+
 			// Draw highlighted links with glow
 			if (hasHighlight) {
 				ctx.beginPath();
 				for (let i = 0; i < renderLinks.length; i++) {
-					const l: any = renderLinks[i];
-					const s: any = l.source, t: any = l.target;
+					const l = renderLinks[i] as any;
+					const s = l.source as NodeT,
+						t = l.target as NodeT;
 					if (!s || !t || s.x == null || t.x == null) continue;
-					
-					const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
-					const targetId = typeof l.target === 'object' ? l.target.id : l.target;
-					const isHighlightedLink = highlightedNodeIds.has(sourceId) && highlightedNodeIds.has(targetId);
-					
+
+					const sourceId = typeof l.source === 'object' ? (l.source as NodeT).id : l.source;
+					const targetId = typeof l.target === 'object' ? (l.target as NodeT).id : l.target;
+					const isHighlightedLink =
+						highlightedNodeIds.has(sourceId) && highlightedNodeIds.has(targetId);
+
 					if (!isHighlightedLink) continue;
-					
-					// Draw with trimming for clean connections
-					const dx = t.x - s.x, dy = t.y - s.y;
+
+					const dx = t.x! - s.x!;
+					const dy = t.y! - s.y!;
 					const len = Math.hypot(dx, dy);
 					if (!len || !isFinite(len)) continue;
 					const rs = nodeRadius(s);
 					const rt = nodeRadius(t);
 					if (len <= rs + rt) continue;
-					const ux = dx / len, uy = dy / len;
-					const x1 = s.x + ux * rs, y1 = s.y + uy * rs;
-					const x2 = t.x - ux * rt, y2 = t.y - uy * rt;
+					const ux = dx / len,
+						uy = dy / len;
+					const x1 = s.x! + ux * rs,
+						y1 = s.y! + uy * rs;
+					const x2 = t.x! - ux * rt,
+						y2 = t.y! - uy * rt;
 					ctx.moveTo(x1, y1);
 					ctx.lineTo(x2, y2);
 				}
@@ -255,47 +296,47 @@
 				ctx.strokeStyle = '#9333ea';
 				ctx.stroke();
 			}
-			
+
 			ctx.globalAlpha = 1;
 		}
 
 		// ------ NODES ------
 		const hasHighlight = highlightedNodeIds.size > 0;
-		
+
 		for (const n of graphData.nodes) {
 			const r = nodeRadius(n);
 			const isHighlighted = highlightedNodeIds.has(n.id);
 			const isFocused = n.id === focusedNodeId;
-			
+
 			// Apply opacity for non-highlighted nodes when highlighting is active
 			if (hasHighlight && !isHighlighted) {
 				ctx.globalAlpha = 0.15;
 			} else {
 				ctx.globalAlpha = 1;
 			}
-			
+
 			// Draw node
 			ctx.beginPath();
-			ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+			ctx.arc(n.x!, n.y!, r, 0, Math.PI * 2);
 			ctx.fillStyle = n.color ?? '#ccc';
 			ctx.fill();
-			
+
 			// Add glow effect for focused node
 			if (isFocused) {
 				ctx.globalAlpha = 0.6;
 				ctx.beginPath();
-				ctx.arc(n.x, n.y, r + 6 / transform.k, 0, Math.PI * 2);
+				ctx.arc(n.x!, n.y!, r + 6 / transform.k, 0, Math.PI * 2);
 				ctx.strokeStyle = '#9333ea';
 				ctx.lineWidth = 3 / transform.k;
 				ctx.stroke();
 				ctx.globalAlpha = 0.3;
 				ctx.beginPath();
-				ctx.arc(n.x, n.y, r + 10 / transform.k, 0, Math.PI * 2);
+				ctx.arc(n.x!, n.y!, r + 10 / transform.k, 0, Math.PI * 2);
 				ctx.strokeStyle = '#9333ea';
 				ctx.lineWidth = 2 / transform.k;
 				ctx.stroke();
 			}
-			
+
 			ctx.globalAlpha = 1;
 		}
 
@@ -309,7 +350,7 @@
 				const r = nodeRadius(n);
 				const label = n.label ?? n.name ?? n.id;
 				if (!label) continue;
-				ctx.fillText(label, n.x, n.y + r + 2 / transform.k);
+				ctx.fillText(label, n.x!, n.y! + r + 2 / transform.k);
 			}
 		}
 
@@ -317,34 +358,39 @@
 		if (hoveredNode) {
 			const r = nodeRadius(hoveredNode);
 			ctx.beginPath();
-			ctx.arc(hoveredNode.x, hoveredNode.y, r + 3 / transform.k, 0, Math.PI * 2);
+			ctx.arc(hoveredNode.x!, hoveredNode.y!, r + 3 / transform.k, 0, Math.PI * 2);
 			ctx.lineWidth = 2 / transform.k;
 			ctx.strokeStyle = 'rgba(255,255,255,0.9)';
 			ctx.stroke();
 		}
 	}
 
-	function focusNode(n: any, duration = 800, targetK = Math.min(8, Math.max(2, transform.k * 1.3))) {
+	function focusNode(
+		n: NodeT,
+		duration = 800,
+		targetK = Math.min(8, Math.max(2, transform.k * 1.3))
+	) {
 		if (!n || !d3zoom) return;
-		const cx = (width * dpr) / 2, cy = (height * dpr) / 2;
-		const tx = cx - n.x * targetK;
-		const ty = cy - n.y * targetK;
+		const cx = (width * dpr) / 2,
+			cy = (height * dpr) / 2;
+		const tx = cx - n.x! * targetK;
+		const ty = cy - n.y! * targetK;
 		animateTransform({ k: targetK, x: tx, y: ty }, duration);
 	}
-	
+
 	// Public methods for search integration
 	export function highlightNodes(nodeIds: string[]) {
 		highlightedNodeIds = new Set(nodeIds);
 		scheduleDraw();
 	}
-	
+
 	export function highlightNode(nodeId: string) {
 		focusedNodeId = nodeId;
 		// Find connected nodes
 		const connected = new Set<string>();
 		for (const link of renderLinks) {
-			const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
-			const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+			const sourceId = typeof link.source === 'object' ? (link.source as NodeT).id : (link.source as string);
+			const targetId = typeof link.target === 'object' ? (link.target as NodeT).id : (link.target as string);
 			if (sourceId === nodeId) connected.add(targetId);
 			if (targetId === nodeId) connected.add(sourceId);
 		}
@@ -352,42 +398,42 @@
 		highlightedNodeIds = new Set([nodeId, ...connected]);
 		scheduleDraw();
 	}
-	
+
 	// Expand the highlight network to include a node's connections
 	function expandHighlightNetwork(nodeId: string) {
 		// Find new connections for this node
 		const newConnections = new Set<string>();
 		for (const link of renderLinks) {
-			const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
-			const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+			const sourceId = typeof link.source === 'object' ? (link.source as NodeT).id : (link.source as string);
+			const targetId = typeof link.target === 'object' ? (link.target as NodeT).id : (link.target as string);
 			if (sourceId === nodeId) newConnections.add(targetId);
 			if (targetId === nodeId) newConnections.add(sourceId);
 		}
-		
+
 		// Add the clicked node's connections to the highlight set
 		for (const connectedId of newConnections) {
 			highlightedNodeIds.add(connectedId);
 			connectedNodeIds.add(connectedId);
 		}
-		
+
 		// Update the focused node
 		focusedNodeId = nodeId;
 		scheduleDraw();
 	}
-	
+
 	export function clearHighlight() {
 		highlightedNodeIds.clear();
 		focusedNodeId = null;
 		connectedNodeIds.clear();
 		scheduleDraw();
 	}
-	
+
 	export { focusNode };
 
-	function animateTransform(end: {k:number;x:number;y:number}, duration=600) {
+	function animateTransform(end: { k: number; x: number; y: number }, duration = 600) {
 		const start = { ...transform };
 		const t0 = performance.now();
-		const ease = (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+		const ease = (t: number) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
 
 		function step(now: number) {
 			const u = Math.min(1, (now - t0) / duration);
@@ -400,31 +446,39 @@
 			scheduleDraw();
 			if (u < 1) requestAnimationFrame(step);
 			else {
-				d3select(canvasEl).call(
-					d3zoom.transform,
-					zoomIdentity.translate(end.x / dpr, end.y / dpr).scale(end.k)
-				);
+				if (d3select && d3zoom) {
+					d3select(canvasEl).call(
+						d3zoom.transform as any,
+						zoomIdentity.translate(end.x / dpr, end.y / dpr).scale(end.k)
+					);
+				}
 			}
 		}
 		requestAnimationFrame(step);
 	}
 
 	function zoomToFit(padding = 60, duration = 600) {
-		const nodes = graphData.nodes;
+		const nodes = graphData?.nodes ?? [];
 		if (!nodes.length) return;
 
-		const xs = nodes.map((n: any) => n.x ?? 0);
-		const ys = nodes.map((n: any) => n.y ?? 0);
-		let minX = Math.min(...xs), maxX = Math.max(...xs);
-		let minY = Math.min(...ys), maxY = Math.max(...ys);
+		const xs = nodes.map((n) => n.x ?? 0);
+		const ys = nodes.map((n) => n.y ?? 0);
+		let minX = Math.min(...xs),
+			maxX = Math.max(...xs);
+		let minY = Math.min(...ys),
+			maxY = Math.max(...ys);
 		if (!isFinite(minX) || !isFinite(maxX) || !isFinite(minY) || !isFinite(maxY)) return;
 
 		const dx = Math.max(1, maxX - minX);
 		const dy = Math.max(1, maxY - minY);
 
-		const k = Math.max(0.005, Math.min(64,
-			0.95 * Math.min((width * dpr) / (dx + padding * 2), (height * dpr) / (dy + padding * 2))
-		));
+		const k = Math.max(
+			0.005,
+			Math.min(
+				64,
+				0.95 * Math.min((width * dpr) / (dx + padding * 2), (height * dpr) / (dy + padding * 2))
+			)
+		);
 		const cx = (minX + maxX) / 2;
 		const cy = (minY + maxY) / 2;
 		const tx = (width * dpr) / 2 - cx * k;
@@ -455,6 +509,7 @@
 		if (!hoveredNode) return;
 		draggingNode = hoveredNode;
 		canvasEl.setPointerCapture(ev.pointerId);
+		lastPointerId = ev.pointerId;
 		draggingNode.fx = p.x;
 		draggingNode.fy = p.y;
 		sim?.alphaTarget(0.3).restart();
@@ -472,38 +527,30 @@
 		draggingNode.fx = null;
 		draggingNode.fy = null;
 		draggingNode = null;
+		if (lastPointerId != null) {
+			try {
+				canvasEl.releasePointerCapture(lastPointerId);
+			} catch {}
+			lastPointerId = null;
+		}
 		sim?.alphaTarget(0);
 	}
-
-	let tooltipContent = $derived(() => {
-		const n = hoveredNode;
-		return {
-			show: !!n,
-			name: n?.name ?? '',
-			category: n?.category ?? '',
-			subscriberText: n?.subscriber_count
-				? n.subscriber_count >= 1000
-					? `${Math.round(n.subscriber_count / 1000)}k subscribers`
-					: `${n.subscriber_count} subscribers`
-				: 'No subscriber data',
-			isBestseller: n?.is_bestseller ?? false
-		};
-	});
 
 	function setupCanvasSize() {
 		const rect = containerEl.getBoundingClientRect();
 		width = Math.max(1, Math.floor(rect.width));
 		height = Math.max(1, Math.floor(rect.height));
-		dpr = Math.max(1, Math.floor(window.devicePixelRatio || 1));
-		canvasEl.width = width * dpr;
-		canvasEl.height = height * dpr;
+		// keep fractional DPR for crispness; cap a bit for perf
+		dpr = Math.min(2, window.devicePixelRatio || 1);
+		canvasEl.width = Math.round(width * dpr);
+		canvasEl.height = Math.round(height * dpr);
 		canvasEl.style.width = `${width}px`;
 		canvasEl.style.height = `${height}px`;
 		if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 		generateStars();
 		scheduleDraw();
 	}
-	
+
 	function generateStars() {
 		stars = [];
 		const numStars = Math.floor((width * height) / 3000); // Density of stars
@@ -517,19 +564,45 @@
 		}
 	}
 
+	// ——— Dynamic import cache (per module) ———
+	let d3ModulesP:
+		| Promise<[
+				typeof import('d3-force'),
+				typeof import('d3-zoom'),
+				typeof import('d3-selection'),
+				typeof import('d3-quadtree')
+		  ]>
+		| null = null;
+	function loadD3() {
+		d3ModulesP ??= Promise.all([
+			import('d3-force'),
+			import('d3-zoom'),
+			import('d3-selection'),
+			import('d3-quadtree')
+		]);
+		return d3ModulesP;
+	}
+
+	const onKeyDown = (e: KeyboardEvent) => {
+		if (e.key.toLowerCase() === 'f') zoomToFit(60, 500);
+	};
+
+	// Fetch data (if needed) + load D3 in parallel
 	onMount(async () => {
 		if (!browser) return;
 
 		try {
-			const [{ forceSimulation, forceManyBody, forceLink, forceCenter, forceCollide },
-			       zoomMod,
-			       selectionMod,
-			       Q] = await Promise.all([
-				import('d3-force'),
-				import('d3-zoom'),
-				import('d3-selection'),
-				import('d3-quadtree')
-			]);
+			const dataP: Promise<GraphDataT> = graphData
+				? Promise.resolve(graphData)
+				: (async () => {
+						if (!dataUrl) throw new Error('No dataUrl provided for graph data');
+						const res = await fetch(dataUrl, { cache: 'force-cache' });
+						if (!res.ok) throw new Error(`Failed to load graph data (${res.status})`);
+						return (await res.json()) as GraphDataT;
+				  })();
+
+			const [data, [force, zoomMod, selectionMod, Q]] = await Promise.all([dataP, loadD3()]);
+			graphData = data;
 
 			Quadtree = Q;
 			d3select = selectionMod.select;
@@ -555,7 +628,10 @@
 					scheduleDraw();
 				});
 
-			d3select(canvasEl).call(d3zoom as any);
+			if (d3select) {
+				canvasSelection = d3select(canvasEl);
+				canvasSelection.call(d3zoom as any);
+			}
 
 			// pointer/hover/click
 			canvasEl.addEventListener('pointerdown', onPointerDown);
@@ -565,34 +641,36 @@
 			canvasEl.addEventListener('click', handleClick);
 
 			// keyboard: press "f" to zoom-to-fit
-			window.addEventListener('keydown', (e) => {
-				if (e.key.toLowerCase() === 'f') zoomToFit(60, 500);
-			});
+			window.addEventListener('keydown', onKeyDown);
 
 			// d3-force (2D)
 			const nodes = graphData.nodes;
-			const links = graphData.links.map((l: any) => ({ ...l })); // shallow copy
+			const links = graphData.links.map((l) => ({ ...l })); // shallow copy
 			renderLinks = links; // render the same (mutated) array
 
 			// give each link a stable sampling key once
 			for (const l of links) {
-				const sid = typeof l.source === 'object' ? l.source.id : l.source;
-				const tid = typeof l.target === 'object' ? l.target.id : l.target;
+				const sid = typeof l.source === 'object' ? (l.source as NodeT).id : (l.source as string);
+				const tid = typeof l.target === 'object' ? (l.target as NodeT).id : (l.target as string);
 				l._r = hash01(String(sid) + '|' + String(tid));
 			}
 
-			sim = forceSimulation(nodes)
-				.force('link', forceLink(links).id((d: any) => d.id)
-					.distance((l: any) => {
-						const sv = l.source?.val ?? 1;
-						const tv = l.target?.val ?? 1;
-						return 40 + 4 * Math.sqrt(Math.min(sv, tv));
-					})
-					.strength(0.6)
+			sim = force.forceSimulation(nodes)
+				.force(
+					'link',
+					force
+						.forceLink<NodeT, LinkT>(links)
+						.id((d: any) => d.id)
+						.distance((l: any) => {
+							const sv = (typeof l.source === 'object' ? (l.source as NodeT).val : 1) ?? 1;
+							const tv = (typeof l.target === 'object' ? (l.target as NodeT).val : 1) ?? 1;
+							return 40 + 4 * Math.sqrt(Math.min(sv, tv));
+						})
+						.strength(0.6)
 				)
-				.force('charge', forceManyBody().strength(-120))
-				.force('collide', forceCollide((n: any) => nodeRadius(n)))
-				.force('center', forceCenter(0, 0))
+				.force('charge', force.forceManyBody().strength(-120))
+				.force('collide', force.forceCollide<NodeT>((n) => nodeRadius(n)))
+				.force('center', force.forceCenter(0, 0))
 				.alphaDecay(0.02)
 				.velocityDecay(0.3)
 				.on('tick', () => {
@@ -614,12 +692,25 @@
 			try {
 				sim?.stop?.();
 				resizeObserver?.disconnect?.();
+
 				canvasEl?.removeEventListener?.('pointerdown', onPointerDown);
 				canvasEl?.removeEventListener?.('pointermove', onPointerMove);
 				canvasEl?.removeEventListener?.('pointerup', onPointerUp);
 				canvasEl?.removeEventListener?.('mousemove', handleMouseMove);
 				canvasEl?.removeEventListener?.('click', handleClick);
-				window?.removeEventListener?.('keydown', () => {});
+
+				window?.removeEventListener?.('keydown', onKeyDown);
+
+				// detach d3 zoom handlers
+				canvasSelection?.on?.('.zoom', null);
+
+				// release any lingering pointer capture
+				if (lastPointerId != null) {
+					try {
+						canvasEl.releasePointerCapture(lastPointerId);
+					} catch {}
+					lastPointerId = null;
+				}
 			} catch {}
 			sim = null;
 		};
@@ -635,14 +726,14 @@
 
 	{#if error}
 		<div class="absolute inset-0 grid place-items-center">
-			<div class="preset-filled-error-800-200 rounded-lg p-6">
+			<div class="rounded-lg preset-filled-error-800-200 p-6">
 				<h3 class="h3">Graph Error</h3>
 				<p>{error}</p>
 			</div>
 		</div>
 	{:else if !browser || !isInitialized}
 		<div class="absolute inset-0 grid place-items-center">
-			<div class="preset-filled-surface-100-900 rounded-lg p-6">
+			<div class="rounded-lg preset-filled-surface-100-900 p-6">
 				<h3 class="h3">Loading 2D Graph…</h3>
 				<p class="mt-2">Initializing tens of thousands of newsletter recommendations</p>
 			</div>
@@ -662,28 +753,30 @@
 			class="pointer-events-none fixed z-[9999]"
 			style="left: {tooltipPosition.x + 15}px; top: {tooltipPosition.y - 10}px;"
 		>
-			<div class="preset-filled-surface-100-900 max-w-sm card border border-surface-400 p-4 shadow-xl">
+			<div
+				class="min-w-64 card border border-surface-400 preset-filled-surface-100-900 p-4 shadow-xl"
+			>
 				<header class="card-header pb-2">
 					<h4 class="text-on-surface h4 font-semibold">{hoveredNode.name}</h4>
 				</header>
-				<section class="card-body space-y-2">
-					<div class="flex items-center justify-between">
+				<section class="card-body space-y-3">
+					<div class="flex items-center justify-between gap-4">
 						<span class="text-sm opacity-75">Category:</span>
-						<span class="text-sm font-medium">{hoveredNode.category}</span>
+						<span class="text-right text-sm font-medium">{hoveredNode.category}</span>
 					</div>
-					<div class="flex items-center justify-between">
+					<div class="flex items-center justify-between gap-4">
 						<span class="text-sm opacity-75">Subscribers:</span>
-						<span class="text-sm font-medium">
+						<span class="text-right text-sm font-medium">
 							{hoveredNode.subscriber_count
-								? (hoveredNode.subscriber_count >= 1000
+								? hoveredNode.subscriber_count >= 1000
 									? `${Math.round(hoveredNode.subscriber_count / 1000)}k subscribers`
-									: `${hoveredNode.subscriber_count} subscribers`)
+									: `${hoveredNode.subscriber_count} subscribers`
 								: 'No subscriber data'}
 						</span>
 					</div>
 					{#if hoveredNode.is_bestseller}
 						<div class="pt-2">
-							<span class="bg-orange-500 badge">Bestseller</span>
+							<span class="badge bg-orange-500">Bestseller</span>
 						</div>
 					{/if}
 				</section>
