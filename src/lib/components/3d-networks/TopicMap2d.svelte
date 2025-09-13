@@ -792,9 +792,7 @@
 					</div>
 					<div class="flex items-center justify-between gap-4">
 						<span class="text-sm opacity-75">Type:</span>
-						<span class="text-right text-sm font-medium">
-							{hoveredNode.topic_type === 'macro' ? 'Macro Topic' : 'Micro Topic'}
-						</span>
+						<span class="text-right text-sm font-medium">Topic</span>
 					</div>
 					{#if hoveredNode.subscriber_count && hoveredNode.subscriber_count > 0}
 						<div class="flex items-center justify-between gap-4">
@@ -812,12 +810,23 @@
 							</span>
 						</div>
 					{/if}
-					{#if hoveredNode.macro_topic}
+					{#if hoveredNode.pub_count && hoveredNode.pub_count > 0}
 						<div class="flex items-center justify-between gap-4">
-							<span class="text-sm opacity-75">Parent Topic:</span>
-							<span class="text-right text-sm font-medium">{hoveredNode.macro_topic}</span>
+							<span class="text-sm opacity-75">Publications:</span>
+							<span class="text-right text-sm font-medium">
+								{hoveredNode.pub_count.toLocaleString()}
+							</span>
 						</div>
 					{/if}
+					{#if hoveredNode.post_count && hoveredNode.post_count > 0}
+						<div class="flex items-center justify-between gap-4">
+							<span class="text-sm opacity-75">Posts:</span>
+							<span class="text-right text-sm font-medium">
+								{hoveredNode.post_count.toLocaleString()}
+							</span>
+						</div>
+					{/if}
+
 				</section>
 			</div>
 		</div>

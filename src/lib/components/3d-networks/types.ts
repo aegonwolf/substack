@@ -54,6 +54,7 @@ export type LinkClickHandler = (link: GraphLink, event: MouseEvent) => void;
 
 // 2D Map specific types
 export interface NodeT {
+	pub_count: number;
 	id: string;
 	x?: number;
 	y?: number;

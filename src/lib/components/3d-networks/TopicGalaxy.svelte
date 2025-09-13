@@ -16,26 +16,27 @@
 	// Transform topic data to match map2d expected format
 	function transformTopicData(data: any) {
 		const nodes: NodeT[] = data.nodes.map((topic: any) => {
-			// Handle different node types (macro vs micro)
-			const isMacro = topic.type === 'macro';
-			const name = isMacro ? topic.id : topic.label?.split(': ')[1] || topic.id;
+			// All nodes are now topics with consistent structure
+			const name = topic.label || topic.id;
 
 			return {
 				id: topic.id,
 				name: name,
 				label: topic.label,
-				val: isMacro ? topic.val * 2 : Math.max(1, topic.val), // Make macro topics larger
+				val: Math.max(1, topic.val), // Use val as-is for node size
 				x: Math.random() * 1000 - 500, // Random initial positions
 				y: Math.random() * 1000 - 500,
 				// Add topic-specific properties for tooltip
-				category: isMacro ? 'Macro Topic' : `Micro Topic (${topic.macro_topic})`,
+				category: 'Topic',
 				subscriber_count: topic.subscriber_sum || 0,
 				is_bestseller: false,
 				// Additional properties for knowledge graph
 				topic_type: topic.type,
-				macro_topic: topic.macro_topic,
 				// Include avg_subscriber_count for color scaling
-				avg_subscriber_count: topic.avg_subscriber_count
+				avg_subscriber_count: topic.avg_subscriber_count,
+				// Include publication and post counts
+				pub_count: topic.pub_count || 0,
+				post_count: topic.post_count || 0
 			};
 		});
 

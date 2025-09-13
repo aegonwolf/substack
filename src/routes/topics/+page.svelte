@@ -8,6 +8,9 @@
 	let error = $state<string | null>(null);
 	let galaxyRef: TopicGalaxy;
 
+	// Data source selection
+	let dataSource = $state<'co-occurrence' | 'by-publication'>('co-occurrence');
+
 	// Search functionality
 	let searchQuery = $state('');
 	let searchResults = $state<any[]>([]);
@@ -15,19 +18,34 @@
 
 	async function loadTopicData() {
 		try {
-			const response = await fetch('/jsons/topics/knowledge_graph.json');
+			loading = true;
+			error = null;
+
+			const filename =
+				dataSource === 'co-occurrence'
+					? 'knowledge_graph.json'
+					: 'knowledge_graph_by_publication.json';
+
+			const response = await fetch(`/jsons/topics/${filename}`);
 			if (!response.ok) {
 				throw new Error(`Failed to load topic data: ${response.status}`);
 			}
 			topicData = await response.json();
 			console.log(
-				`Loaded ${topicData.nodes.length} nodes:`,
+				`Loaded ${topicData.nodes.length} nodes from ${filename}:`,
 				topicData.nodes.map((n) => n.id)
 			);
 			loading = false;
 		} catch (e: any) {
 			error = e.message || 'Failed to load topic galaxy data';
 			loading = false;
+		}
+	}
+
+	function switchDataSource(newSource: 'co-occurrence' | 'by-publication') {
+		if (newSource !== dataSource) {
+			dataSource = newSource;
+			loadTopicData();
 		}
 	}
 
@@ -41,8 +59,7 @@
 		const results = topicData.nodes.filter(
 			(topic: any) =>
 				topic.id.toLowerCase().includes(query.toLowerCase()) ||
-				(topic.label && topic.label.toLowerCase().includes(query.toLowerCase())) ||
-				(topic.macro_topic && topic.macro_topic.toLowerCase().includes(query.toLowerCase()))
+				(topic.label && topic.label.toLowerCase().includes(query.toLowerCase()))
 		);
 
 		searchResults = results;
@@ -59,7 +76,7 @@
 		galaxyRef?.highlightNode(topic.id);
 		galaxyRef?.focusNode(topic.id);
 		showSearchResults = false;
-		searchQuery = topic.type === 'macro' ? topic.id : topic.label?.split(': ')[1] || topic.id;
+		searchQuery = topic.label || topic.id;
 	}
 
 	function clearSearch() {
@@ -89,6 +106,28 @@
 </svelte:head>
 
 <div class="text-on-surface h-screen w-full bg-surface-900">
+	<!-- Data Source Selection -->
+	<div class="absolute top-30 left-1/2 z-40 -translate-x-1/2 transform">
+		<div class="flex rounded-lg border border-surface-600 bg-surface-800/90 p-1 backdrop-blur-sm">
+			<button
+				onclick={() => switchDataSource('co-occurrence')}
+				class="px-4 py-2 text-sm font-medium transition-colors {dataSource === 'co-occurrence'
+					? 'rounded-md bg-primary-500 text-white'
+					: 'text-surface-300 hover:text-white'}"
+			>
+				Affinity
+			</button>
+			<button
+				onclick={() => switchDataSource('by-publication')}
+				class="px-4 py-2 text-sm font-medium transition-colors {dataSource === 'by-publication'
+					? 'rounded-md bg-primary-500 text-white'
+					: 'text-surface-300 hover:text-white'}"
+			>
+				By Publication
+			</button>
+		</div>
+	</div>
+
 	<!-- Search -->
 	<div class="absolute top-20 left-1/2 z-40 -translate-x-1/2 transform">
 		<div class="relative w-96">
@@ -118,14 +157,15 @@
 							class="w-full border-b border-surface-600 p-3 text-left last:border-b-0 hover:bg-surface-700"
 						>
 							<div class="text-on-surface text-sm font-medium">
-								{topic.type === 'macro' ? topic.id : topic.label?.split(': ')[1] || topic.id}
+								{topic.label || topic.id}
 							</div>
 							<div class="mt-1 text-xs text-surface-400">
-								{topic.type === 'macro'
-									? 'Macro Topic'
-									: `Micro Topic • Parent: ${topic.macro_topic}`}
+								Topic
 								{#if topic.subscriber_sum > 0}
 									• {topic.subscriber_sum.toLocaleString()} subscribers
+								{/if}
+								{#if topic.pub_count > 0}
+									• {topic.pub_count} publications
 								{/if}
 							</div>
 						</button>
