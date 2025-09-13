@@ -51,3 +51,32 @@ export interface ForceGraph3DProps {
 export type NodeClickHandler = (node: GraphNode, event: MouseEvent) => void;
 export type NodeHoverHandler = (node: GraphNode | null, prevNode: GraphNode | null) => void;
 export type LinkClickHandler = (link: GraphLink, event: MouseEvent) => void;
+
+// 2D Map specific types
+export interface NodeT {
+	id: string;
+	x?: number;
+	y?: number;
+	fx?: number | null;
+	fy?: number | null;
+	val?: number;
+	color?: string;
+	label?: string;
+	name?: string;
+	category?: string;
+	subscriber_count?: number;
+	avg_subscriber_count?: number;
+	is_bestseller?: boolean;
+	// Topic-specific properties
+	post_count?: number;
+	top_newsletters?: string[];
+	// Knowledge graph properties
+	topic_type?: string;
+	macro_topic?: string;
+}
+
+export interface LinkT {
+	source: string | NodeT;
+	target: string | NodeT;
+	_r?: number;
+}

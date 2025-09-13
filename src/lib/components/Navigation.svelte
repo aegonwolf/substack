@@ -9,6 +9,7 @@
 	const navItems: NavItem[] = [
 		{ href: '/', label: 'Home' },
 		{ href: '/cats', label: 'Cats' },
+		{ href: '/topics', label: 'Topics' },
 		// { href: '/graph', label: 'Graph' }, // stashed for now
 		{ href: '/graph/cats', label: 'Graph Cats' },
 		{ href: '/graph/recommendation-map', label: 'Substack Galaxy' }

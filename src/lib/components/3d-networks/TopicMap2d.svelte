@@ -13,9 +13,9 @@
 		linkFractionForK,
 		hash01,
 		toGraphCoords,
-		rebuildQuadtree,
-		isValidUrl
+		rebuildQuadtree
 	} from './map2dUtils';
+	import { createSubscriberColorScale } from './colorUtils.js';
 
 	let {
 		graphData,
@@ -51,8 +51,6 @@
 
 	// Double-click detection state
 	let clickTimeout = $state<number | null>(null);
-	let clickCount = $state(0);
-	let lastClickedNode = $state<NodeT | null>(null);
 
 	// quadtree for hittest
 	let Quadtree: any;
@@ -64,10 +62,35 @@
 		dpr = 1;
 	let resizeObserver: ResizeObserver | undefined;
 
-
-
 	let isInitialized = $state(false);
 	let error = $state<string | null>(null);
+
+	// Color legend data
+	let legendData = $derived.by(() => {
+		if (!graphData.nodes.length) return [];
+
+		const subscriberCounts = graphData.nodes
+			.map((node) => node.avg_subscriber_count)
+			.filter((count) => count != null && count > 0);
+
+		if (subscriberCounts.length === 0) return [];
+
+		const minCount = Math.min(...subscriberCounts);
+		const maxCount = Math.max(...subscriberCounts);
+		const colorScale = createSubscriberColorScale(graphData.nodes);
+
+		// Create 5 legend items across the range
+		const legendItems = [];
+		for (let i = 0; i < 5; i++) {
+			const value = minCount + (maxCount - minCount) * (i / 4);
+			legendItems.push({
+				value: Math.round(value),
+				color: colorScale(value)
+			});
+		}
+
+		return legendItems;
+	});
 
 	// Render scheduling
 	let rafPending = false;
@@ -84,16 +107,16 @@
 	let renderLinks: LinkT[] = [];
 
 	// --- Styling / helpers ---
-	const nodeRadius = (n: NodeT) => 2 + Math.sqrt(n?.val ?? 1) * 1.6;
-	const showLabels = () => transform.k > 1.5;
+	const nodeRadius = (n: NodeT) => 3 + Math.sqrt(n?.val ?? 1) * 2.2;
+	const showLabels = () => transform.k > 1.8;
 
 	// Link style that adapts to zoom
 	const LINK = {
 		COLOR: '#c6cad3',
-		FAR_ALPHA: 0.06, // very faint when zoomed out
-		NEAR_ALPHA: 0.28, // still subtle when zoomed in
-		BASE_PX: 0.9,
-		MAX_PX: 1.6
+		FAR_ALPHA: 0.08,
+		NEAR_ALPHA: 0.32,
+		BASE_PX: 1.1,
+		MAX_PX: 2.0
 	};
 
 	// Smooth alpha as we zoom (k ∈ [0.6, 3] ramps)
@@ -104,7 +127,7 @@
 	}
 	// Line thickness in screen pixels
 	function linkWidthPxForK(k: number) {
-		return clamp(LINK.BASE_PX + 0.35 * Math.log2(k + 1), LINK.BASE_PX, LINK.MAX_PX);
+		return clamp(LINK.BASE_PX + 0.4 * Math.log2(k + 1), LINK.BASE_PX, LINK.MAX_PX);
 	}
 
 	function handleMouseMove(ev: MouseEvent) {
@@ -114,15 +137,28 @@
 	}
 
 	function updateHover(x: number, y: number) {
-		if (!qt) return;
-		const searchR = 12 / Math.max(0.1, transform.k);
-		const cand = qt.find(x, y, searchR) as NodeT | undefined;
-		if (cand) {
-			const r = nodeRadius(cand);
-			const dx = (cand.x ?? 0) - x,
-				dy = (cand.y ?? 0) - y;
-			hoveredNode = dx * dx + dy * dy <= r * r ? cand : null;
-		} else hoveredNode = null;
+		if (!graphData.nodes) return;
+
+		let closestNode: NodeT | null = null;
+		let closestDistance = Infinity;
+
+		// Check all nodes to find the one we're hovering over
+		for (const node of graphData.nodes) {
+			if (node.x == null || node.y == null) continue;
+
+			const dx = node.x - x;
+			const dy = node.y - y;
+			const distance = Math.sqrt(dx * dx + dy * dy);
+			const nodeR = nodeRadius(node);
+
+			// If we're inside this node and it's closer than any previous match
+			if (distance <= nodeR && distance < closestDistance) {
+				closestNode = node;
+				closestDistance = distance;
+			}
+		}
+
+		hoveredNode = closestNode;
 	}
 
 	function draw() {
@@ -133,8 +169,6 @@
 		ctx.clearRect(0, 0, width * dpr, height * dpr);
 		ctx.fillStyle = backgroundColor;
 		ctx.fillRect(0, 0, width * dpr, height * dpr);
-
-
 
 		// apply zoom transform
 		ctx.setTransform(transform.k, 0, 0, transform.k, transform.x, transform.y);
@@ -150,7 +184,7 @@
 
 			ctx.beginPath();
 			let drawn = 0;
-			const maxPerFrame = 20000; // hard cap for perf
+			const maxPerFrame = 20000;
 			for (let i = 0; i < renderLinks.length; i++) {
 				const l = renderLinks[i] as any;
 				const s = l.source as NodeT,
@@ -198,7 +232,7 @@
 				if (++drawn >= maxPerFrame) break;
 			}
 			ctx.globalAlpha = alpha;
-			ctx.lineWidth = strokePx / k; // constant in screen px
+			ctx.lineWidth = strokePx / k;
 			ctx.strokeStyle = LINK.COLOR;
 			ctx.stroke();
 
@@ -234,9 +268,9 @@
 					ctx.moveTo(x1, y1);
 					ctx.lineTo(x2, y2);
 				}
-				ctx.globalAlpha = 0.8;
-				ctx.lineWidth = (strokePx + 1) / k;
-				ctx.strokeStyle = '#9333ea';
+				ctx.globalAlpha = 0.9;
+				ctx.lineWidth = (strokePx + 1.5) / k;
+				ctx.strokeStyle = '#a855f7';
 				ctx.stroke();
 			}
 
@@ -253,7 +287,7 @@
 
 			// Apply opacity for non-highlighted nodes when highlighting is active
 			if (hasHighlight && !isHighlighted) {
-				ctx.globalAlpha = 0.15;
+				ctx.globalAlpha = 0.12;
 			} else {
 				ctx.globalAlpha = 1;
 			}
@@ -266,17 +300,17 @@
 
 			// Add glow effect for focused node
 			if (isFocused) {
-				ctx.globalAlpha = 0.6;
+				ctx.globalAlpha = 0.7;
 				ctx.beginPath();
-				ctx.arc(n.x!, n.y!, r + 6 / transform.k, 0, Math.PI * 2);
-				ctx.strokeStyle = '#9333ea';
-				ctx.lineWidth = 3 / transform.k;
+				ctx.arc(n.x!, n.y!, r + 8 / transform.k, 0, Math.PI * 2);
+				ctx.strokeStyle = '#a855f7';
+				ctx.lineWidth = 4 / transform.k;
 				ctx.stroke();
-				ctx.globalAlpha = 0.3;
+				ctx.globalAlpha = 0.4;
 				ctx.beginPath();
-				ctx.arc(n.x!, n.y!, r + 10 / transform.k, 0, Math.PI * 2);
-				ctx.strokeStyle = '#9333ea';
-				ctx.lineWidth = 2 / transform.k;
+				ctx.arc(n.x!, n.y!, r + 14 / transform.k, 0, Math.PI * 2);
+				ctx.strokeStyle = '#a855f7';
+				ctx.lineWidth = 3 / transform.k;
 				ctx.stroke();
 			}
 
@@ -285,15 +319,22 @@
 
 		// ------ LABELS ------
 		if (showLabels()) {
-			ctx.font = `${12 / transform.k}px Sans-Serif`;
+			ctx.font = `${14 / transform.k}px Sans-Serif`;
 			ctx.textAlign = 'center';
 			ctx.textBaseline = 'top';
 			ctx.fillStyle = '#fff';
+			ctx.strokeStyle = '#000';
+			ctx.lineWidth = 3 / transform.k;
 			for (const n of graphData.nodes) {
 				const r = nodeRadius(n);
 				const label = n.label ?? n.name ?? n.id;
 				if (!label) continue;
-				ctx.fillText(label, n.x!, n.y! + r + 2 / transform.k);
+				const lines = label.split('\n');
+				for (let i = 0; i < lines.length; i++) {
+					const y = n.y! + r + (4 + i * 16) / transform.k;
+					ctx.strokeText(lines[i], n.x!, y);
+					ctx.fillText(lines[i], n.x!, y);
+				}
 			}
 		}
 
@@ -301,8 +342,8 @@
 		if (hoveredNode) {
 			const r = nodeRadius(hoveredNode);
 			ctx.beginPath();
-			ctx.arc(hoveredNode.x!, hoveredNode.y!, r + 3 / transform.k, 0, Math.PI * 2);
-			ctx.lineWidth = 2 / transform.k;
+			ctx.arc(hoveredNode.x!, hoveredNode.y!, r + 4 / transform.k, 0, Math.PI * 2);
+			ctx.lineWidth = 3 / transform.k;
 			ctx.strokeStyle = 'rgba(255,255,255,0.9)';
 			ctx.stroke();
 		}
@@ -311,7 +352,7 @@
 	function focusNode(
 		n: NodeT,
 		duration = 800,
-		targetK = Math.min(8, Math.max(2, transform.k * 1.3))
+		targetK = Math.min(6, Math.max(2.5, transform.k * 1.4))
 	) {
 		if (!n || !d3zoom) return;
 		const cx = (width * dpr) / 2,
@@ -389,15 +430,6 @@
 		focusNode(node, 800);
 	}
 
-	function handleDoubleClick(node: NodeT) {
-		console.log('Double-click detected on node:', node.id, 'isValidUrl:', isValidUrl(node.id));
-		if (!node?.id || !isValidUrl(node.id)) return;
-
-		// Open newsletter in new tab with security attributes
-		console.log('Opening URL:', node.id);
-		window.open(node.id, '_blank', 'noopener,noreferrer');
-	}
-
 	function animateTransform(end: { k: number; x: number; y: number }, duration = 600) {
 		const start = { ...transform };
 		const t0 = performance.now();
@@ -425,7 +457,7 @@
 		requestAnimationFrame(step);
 	}
 
-	function zoomToFit(padding = 60, duration = 600) {
+	function zoomToFit(padding = 80, duration = 600) {
 		const nodes = graphData.nodes;
 		if (!nodes.length) return;
 
@@ -443,8 +475,8 @@
 		const k = Math.max(
 			0.005,
 			Math.min(
-				64,
-				0.95 * Math.min((width * dpr) / (dx + padding * 2), (height * dpr) / (dy + padding * 2))
+				32,
+				0.9 * Math.min((width * dpr) / (dx + padding * 2), (height * dpr) / (dy + padding * 2))
 			)
 		);
 		const cx = (minX + maxX) / 2;
@@ -458,42 +490,30 @@
 	const handleClick = (ev: MouseEvent) => {
 		const p = toGraphCoords(ev, canvasEl, transform, dpr);
 		updateHover(p.x, p.y);
-		if (!hoveredNode) return;
+
+		// If clicking outside any node, clear highlight
+		if (!hoveredNode) {
+			clearHighlight();
+			return;
+		}
 
 		const currentNode = hoveredNode;
 
-		// Double-click detection
-		if (lastClickedNode === currentNode) {
-			clickCount++;
-			console.log('Same node clicked, count:', clickCount);
-			if (clickTimeout) {
-				clearTimeout(clickTimeout);
-				clickTimeout = null;
-			}
-
-			if (clickCount === 2) {
-				// Double-click detected
-				console.log('Double-click detected, calling handleDoubleClick');
-				handleDoubleClick(currentNode);
-				clickCount = 0;
-				lastClickedNode = null;
-				return;
-			}
-		} else {
-			clickCount = 1;
-			lastClickedNode = currentNode;
-			console.log('New node clicked:', currentNode.id);
+		// If clicking on the same focused node, deselect it
+		if (focusedNodeId === currentNode.id) {
+			clearHighlight();
+			return;
 		}
 
-		// Set timeout for single click action
-		clickTimeout = window.setTimeout(() => {
-			if (clickCount === 1) {
-				handleSingleClick(currentNode);
-			}
-			clickCount = 0;
-			lastClickedNode = null;
-			clickTimeout = null;
-		}, 300);
+		// If clicking on a node that's already highlighted (but not focused), expand the network
+		if (highlightedNodeIds.has(currentNode.id)) {
+			expandHighlightNetwork(currentNode.id);
+			focusNode(currentNode, 800);
+			return;
+		}
+
+		// Single click for topics (no double-click needed)
+		handleSingleClick(currentNode);
 	};
 
 	function onPointerDown(ev: PointerEvent) {
@@ -533,7 +553,6 @@
 		const rect = containerEl.getBoundingClientRect();
 		width = Math.max(1, Math.floor(rect.width));
 		height = Math.max(1, Math.floor(rect.height));
-		// keep fractional DPR for crispness; cap a bit for perf
 		dpr = Math.min(2, window.devicePixelRatio || 1);
 		canvasEl.width = Math.round(width * dpr);
 		canvasEl.height = Math.round(height * dpr);
@@ -563,7 +582,7 @@
 	}
 
 	const onKeyDown = (e: KeyboardEvent) => {
-		if (e.key.toLowerCase() === 'f') zoomToFit(60, 500);
+		if (e.key.toLowerCase() === 'f') zoomToFit(80, 500);
 	};
 
 	onMount(async () => {
@@ -585,7 +604,7 @@
 			resizeObserver.observe(containerEl);
 
 			d3zoom = zoom<HTMLCanvasElement, unknown>()
-				.scaleExtent([0.005, 64])
+				.scaleExtent([0.005, 32])
 				.filter((event: any) => !draggingNode || event.type === 'wheel')
 				.on('zoom', (event: any) => {
 					transform = {
@@ -633,29 +652,28 @@
 						.distance((l: any) => {
 							const sv = (typeof l.source === 'object' ? (l.source as NodeT).val : 1) ?? 1;
 							const tv = (typeof l.target === 'object' ? (l.target as NodeT).val : 1) ?? 1;
-							return 40 + 4 * Math.sqrt(Math.min(sv, tv));
+							return 100 + 50 * Math.sqrt(Math.min(sv, tv));
 						})
-						.strength(0.6)
+						.strength(0.8)
 				)
-				.force('charge', force.forceManyBody().strength(-120))
+				.force('charge', force.forceManyBody().strength(-180))
 				.force(
 					'collide',
-					force.forceCollide<NodeT>((n) => nodeRadius(n))
+					force.forceCollide<NodeT>((n) => nodeRadius(n) + 5)
 				)
 				.force('center', force.forceCenter(0, 0))
 				.alphaDecay(0.02)
 				.velocityDecay(0.3)
 				.on('tick', () => {
 					qt = rebuildQuadtree(Quadtree, graphData.nodes);
-					// throttle ticks to animation frames
 					scheduleDraw();
 				});
 
 			isInitialized = true;
 
-			setTimeout(() => zoomToFit(60, 500), 350);
+			setTimeout(() => zoomToFit(80, 500), 350);
 		} catch (e: any) {
-			error = e?.message ?? 'Failed to initialize d3-force 2D graph';
+			error = e?.message ?? 'Failed to initialize topic galaxy';
 		}
 	});
 
@@ -683,10 +701,8 @@
 
 				window?.removeEventListener?.('keydown', onKeyDown);
 
-				// detach d3 zoom handlers
 				canvasSelection?.on?.('.zoom', null);
 
-				// release any lingering pointer capture
 				if (lastPointerId != null) {
 					try {
 						canvasEl.releasePointerCapture(lastPointerId);
@@ -701,14 +717,10 @@
 	$effect(() => {
 		if (isInitialized) scheduleDraw();
 	});
-
-	$inspect('data nodes', graphData.nodes);
-	$inspect('metadata', graphData.metadata);
-	$inspect('hoveredNode', hoveredNode);
 </script>
 
 <div class="relative h-full w-full" bind:this={containerEl}>
-	<canvas bind:this={canvasEl} class="block h-full w-full" />
+	<canvas bind:this={canvasEl} class="block h-full w-full"></canvas>
 
 	{#if error}
 		<div class="absolute inset-0 grid place-items-center">
@@ -720,15 +732,43 @@
 	{:else if !browser || !isInitialized}
 		<div class="absolute inset-0 grid place-items-center">
 			<div class="rounded-lg preset-filled-surface-100-900 p-6">
-				<h3 class="h3">Loading 2D Graph…</h3>
-				<p class="mt-2">Initializing tens of thousands of newsletter recommendations</p>
+				<h3 class="h3">Loading Topic Galaxy…</h3>
+				<p class="mt-2">Mapping topic relationships across the Substack universe</p>
 			</div>
 		</div>
 	{:else}
-		<div class="absolute top-2 left-2 z-10">
-			<div class="preset-filled-surface-100-900/20f rounded-lg p-2 opacity-80">
-				<p class="text-sm">
-					Press <kbd>F</kbd> to fit
+		<!-- Color Legend -->
+		{#if legendData.length > 0}
+			<div class="absolute top-4 left-4 z-30">
+				<div
+					class="preset-filled-surface-100-900/90 rounded-lg border border-surface-300/20 p-3 backdrop-blur-sm"
+				>
+					<h4 class="mb-2 text-xs font-semibold text-surface-700-300">Average Subscribers</h4>
+					<div class="space-y-1">
+						{#each legendData as item}
+							<div class="flex items-center gap-2">
+								<div
+									class="h-3 w-3 rounded-full border border-surface-400/30"
+									style="background-color: {item.color}"
+								></div>
+								<span class="font-mono text-xs text-surface-600-400">
+									{item.value.toLocaleString()}
+								</span>
+							</div>
+						{/each}
+					</div>
+				</div>
+			</div>
+		{/if}
+
+		<!-- Controls -->
+		<div class="absolute top-4 right-4 z-30">
+			<div
+				class="preset-filled-surface-100-900/90 rounded-lg border border-surface-300/20 p-3 backdrop-blur-sm"
+			>
+				<p class="text-sm text-surface-700-300">
+					Press <kbd class="rounded border bg-surface-200-800 px-1 py-0.5 text-xs">F</kbd> to fit • Click
+					topics to explore connections
 				</p>
 			</div>
 		</div>
@@ -740,7 +780,7 @@
 			style="left: {tooltipPosition.x + 15}px; top: {tooltipPosition.y - 10}px;"
 		>
 			<div
-				class="min-w-64 card border border-surface-400 preset-filled-surface-100-900 p-4 shadow-xl"
+				class="min-w-72 card border border-surface-400 preset-filled-surface-100-900 p-4 shadow-xl"
 			>
 				<header class="card-header pb-2">
 					<h4 class="text-on-surface h4 font-semibold">{hoveredNode.name}</h4>
@@ -751,18 +791,31 @@
 						<span class="text-right text-sm font-medium">{hoveredNode.category}</span>
 					</div>
 					<div class="flex items-center justify-between gap-4">
-						<span class="text-sm opacity-75">Subscribers:</span>
+						<span class="text-sm opacity-75">Type:</span>
 						<span class="text-right text-sm font-medium">
-							{hoveredNode.subscriber_count
-								? hoveredNode.subscriber_count >= 1000
-									? `${Math.round(hoveredNode.subscriber_count / 1000)}k subscribers`
-									: `${hoveredNode.subscriber_count} subscribers`
-								: 'No subscriber data'}
+							{hoveredNode.topic_type === 'macro' ? 'Macro Topic' : 'Micro Topic'}
 						</span>
 					</div>
-					{#if hoveredNode.is_bestseller}
-						<div class="pt-2">
-							<span class="badge bg-orange-500">Bestseller</span>
+					{#if hoveredNode.subscriber_count && hoveredNode.subscriber_count > 0}
+						<div class="flex items-center justify-between gap-4">
+							<span class="text-sm opacity-75">Total Subscribers:</span>
+							<span class="text-right text-sm font-medium">
+								{hoveredNode.subscriber_count.toLocaleString()}
+							</span>
+						</div>
+					{/if}
+					{#if hoveredNode.avg_subscriber_count && hoveredNode.avg_subscriber_count > 0}
+						<div class="flex items-center justify-between gap-4">
+							<span class="text-sm opacity-75">Avg Subscribers:</span>
+							<span class="text-right text-sm font-medium">
+								{hoveredNode.avg_subscriber_count.toLocaleString()}
+							</span>
+						</div>
+					{/if}
+					{#if hoveredNode.macro_topic}
+						<div class="flex items-center justify-between gap-4">
+							<span class="text-sm opacity-75">Parent Topic:</span>
+							<span class="text-right text-sm font-medium">{hoveredNode.macro_topic}</span>
 						</div>
 					{/if}
 				</section>

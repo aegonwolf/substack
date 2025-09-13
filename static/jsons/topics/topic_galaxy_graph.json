@@ -1,0 +1,386 @@
+{
+  "nodes": [
+    {
+      "id": "topic_0",
+      "name": "Topic 0: ai, agents, intelligence, generative, artificial",
+      "post_count": 4148,
+      "top_newsletters": [
+        "msukhareva",
+        "mlearning",
+        "importai",
+        "evartology",
+        "magazine"
+      ],
+      "val": 18.471773739315893,
+      "color": "#ff6b35",
+      "label": "Topic 0 (4,148 posts)\nai, agents, intelligence, generative, artificial"
+    },
+    {
+      "id": "topic_1",
+      "name": "Topic 1: coming, soon, plan, today, september",
+      "post_count": 314,
+      "top_newsletters": [
+        "roommatethings",
+        "whatstheplan",
+        "kaylakaplowitz",
+        "hartmannprogram",
+        "thom"
+      ],
+      "val": 13.993242215158402,
+      "color": "#f7c59f",
+      "label": "Topic 1 (314 posts)\ncoming, soon, plan, today, september"
+    },
+    {
+      "id": "topic_2",
+      "name": "Topic 2: 2025, august, july, september, friday",
+      "post_count": 2474,
+      "top_newsletters": [
+        "robertglazer",
+        "lifearchitect",
+        "heathercoxrichardson",
+        "chartstorm",
+        "sumostomp"
+      ],
+      "val": 17.574300813078352,
+      "color": "#ef767a",
+      "label": "Topic 2 (2,474 posts)\n2025, august, july, september, friday"
+    },
+    {
+      "id": "topic_3",
+      "name": "Topic 3: trump, donald, epstein, news, war",
+      "post_count": 4622,
+      "top_newsletters": [
+        "www",
+        "overtonnews",
+        "sakeindustrynews",
+        "zeteo",
+        "mitchthelawyer"
+      ],
+      "val": 18.659695573752327,
+      "color": "#6a8d92",
+      "label": "Topic 3 (4,622 posts)\ntrump, donald, epstein, news, war"
+    },
+    {
+      "id": "topic_4",
+      "name": "Topic 4: week, read, things, review, ideas",
+      "post_count": 1566,
+      "top_newsletters": [
+        "episodicmedium",
+        "wolfofoakville",
+        "chamath",
+        "moneymachinenewsletter",
+        "relocateme"
+      ],
+      "val": 16.78027598587436,
+      "color": "#468189",
+      "label": "Topic 4 (1,566 posts)\nweek, read, things, review, ideas"
+    },
+    {
+      "id": "topic_5",
+      "name": "Topic 5: recipes, summer, meal, chicken, cooking",
+      "post_count": 4631,
+      "top_newsletters": [
+        "plantcookingclub",
+        "restaurantdropout",
+        "maxbaroni",
+        "pastasocialclub",
+        "mishkamakesfood"
+      ],
+      "val": 18.663074202877517,
+      "color": "#7d4f50",
+      "label": "Topic 5 (4,631 posts)\nrecipes, summer, meal, chicken, cooking"
+    },
+    {
+      "id": "topic_6",
+      "name": "Topic 6: market, stock, investing, stocks, update",
+      "post_count": 4174,
+      "top_newsletters": [
+        "astrozan",
+        "asymmetricfinance",
+        "makemoneymaketime",
+        "tyarton",
+        "chartingwithkr"
+      ],
+      "val": 18.482625919278483,
+      "color": "#d3a588",
+      "label": "Topic 6 (4,174 posts)\nmarket, stock, investing, stocks, update"
+    },
+    {
+      "id": "topic_7",
+      "name": "Topic 7: new york, year, podcast, book",
+      "post_count": 3165,
+      "top_newsletters": [
+        "kukhahil",
+        "directormoves",
+        "interisle",
+        "stephaniehmurray",
+        "petition"
+      ],
+      "val": 18.00204364210535,
+      "color": "#2a9d8f",
+      "label": "Topic 7 (3,165 posts)\nnew, york, year, podcast, book"
+    },
+    {
+      "id": "topic_8",
+      "name": "Topic 8: business, technology, culture, enterprise, engineering",
+      "post_count": 6437,
+      "top_newsletters": [
+        "21hats",
+        "businessengineer",
+        "sportsbusinesspe",
+        "thebusinessengineer",
+        "christopherpjones"
+      ],
+      "val": 19.235003889398378,
+      "color": "#e9c46a",
+      "label": "Topic 8 (6,437 posts)\nbusiness, technology, culture, enterprise, engineering"
+    },
+    {
+      "id": "topic_9",
+      "name": "Topic 9: football, live, nfl, college, 25",
+      "post_count": 4872,
+      "top_newsletters": [
+        "landiscfb",
+        "cffpurplereign",
+        "daftondraft",
+        "mrussauthentic",
+        "mikewoellert"
+      ],
+      "val": 18.751185645525176,
+      "color": "#f4a261",
+      "label": "Topic 9 (4,872 posts)\nfootball, live, nfl, college, 25"
+    }
+  ],
+  "links": [
+    {
+      "source": "topic_0",
+      "target": "topic_1",
+      "weight": 93
+    },
+    {
+      "source": "topic_0",
+      "target": "topic_2",
+      "weight": 392
+    },
+    {
+      "source": "topic_0",
+      "target": "topic_3",
+      "weight": 511
+    },
+    {
+      "source": "topic_0",
+      "target": "topic_4",
+      "weight": 333
+    },
+    {
+      "source": "topic_0",
+      "target": "topic_5",
+      "weight": 432
+    },
+    {
+      "source": "topic_0",
+      "target": "topic_6",
+      "weight": 478
+    },
+    {
+      "source": "topic_0",
+      "target": "topic_7",
+      "weight": 582
+    },
+    {
+      "source": "topic_0",
+      "target": "topic_8",
+      "weight": 657
+    },
+    {
+      "source": "topic_0",
+      "target": "topic_9",
+      "weight": 559
+    },
+    {
+      "source": "topic_1",
+      "target": "topic_2",
+      "weight": 59
+    },
+    {
+      "source": "topic_1",
+      "target": "topic_3",
+      "weight": 93
+    },
+    {
+      "source": "topic_1",
+      "target": "topic_4",
+      "weight": 50
+    },
+    {
+      "source": "topic_1",
+      "target": "topic_5",
+      "weight": 78
+    },
+    {
+      "source": "topic_1",
+      "target": "topic_6",
+      "weight": 79
+    },
+    {
+      "source": "topic_1",
+      "target": "topic_7",
+      "weight": 107
+    },
+    {
+      "source": "topic_1",
+      "target": "topic_8",
+      "weight": 108
+    },
+    {
+      "source": "topic_1",
+      "target": "topic_9",
+      "weight": 93
+    },
+    {
+      "source": "topic_2",
+      "target": "topic_3",
+      "weight": 381
+    },
+    {
+      "source": "topic_2",
+      "target": "topic_4",
+      "weight": 298
+    },
+    {
+      "source": "topic_2",
+      "target": "topic_5",
+      "weight": 352
+    },
+    {
+      "source": "topic_2",
+      "target": "topic_6",
+      "weight": 399
+    },
+    {
+      "source": "topic_2",
+      "target": "topic_7",
+      "weight": 462
+    },
+    {
+      "source": "topic_2",
+      "target": "topic_8",
+      "weight": 502
+    },
+    {
+      "source": "topic_2",
+      "target": "topic_9",
+      "weight": 477
+    },
+    {
+      "source": "topic_3",
+      "target": "topic_4",
+      "weight": 328
+    },
+    {
+      "source": "topic_3",
+      "target": "topic_5",
+      "weight": 466
+    },
+    {
+      "source": "topic_3",
+      "target": "topic_6",
+      "weight": 496
+    },
+    {
+      "source": "topic_3",
+      "target": "topic_7",
+      "weight": 623
+    },
+    {
+      "source": "topic_3",
+      "target": "topic_8",
+      "weight": 658
+    },
+    {
+      "source": "topic_3",
+      "target": "topic_9",
+      "weight": 610
+    },
+    {
+      "source": "topic_4",
+      "target": "topic_5",
+      "weight": 321
+    },
+    {
+      "source": "topic_4",
+      "target": "topic_6",
+      "weight": 333
+    },
+    {
+      "source": "topic_4",
+      "target": "topic_7",
+      "weight": 409
+    },
+    {
+      "source": "topic_4",
+      "target": "topic_8",
+      "weight": 437
+    },
+    {
+      "source": "topic_4",
+      "target": "topic_9",
+      "weight": 391
+    },
+    {
+      "source": "topic_5",
+      "target": "topic_6",
+      "weight": 413
+    },
+    {
+      "source": "topic_5",
+      "target": "topic_7",
+      "weight": 548
+    },
+    {
+      "source": "topic_5",
+      "target": "topic_8",
+      "weight": 584
+    },
+    {
+      "source": "topic_5",
+      "target": "topic_9",
+      "weight": 533
+    },
+    {
+      "source": "topic_6",
+      "target": "topic_7",
+      "weight": 558
+    },
+    {
+      "source": "topic_6",
+      "target": "topic_8",
+      "weight": 611
+    },
+    {
+      "source": "topic_6",
+      "target": "topic_9",
+      "weight": 546
+    },
+    {
+      "source": "topic_7",
+      "target": "topic_8",
+      "weight": 766
+    },
+    {
+      "source": "topic_7",
+      "target": "topic_9",
+      "weight": 693
+    },
+    {
+      "source": "topic_8",
+      "target": "topic_9",
+      "weight": 743
+    }
+  ],
+  "metadata": {
+    "total_nodes": 10,
+    "total_links": 45,
+    "description": "A network graph of Substack topics. Node size is proportional to post volume. Link weight represents the number of newsletters that cover both topics."
+  }
+}
