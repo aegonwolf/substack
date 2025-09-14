@@ -54,30 +54,30 @@ export type LinkClickHandler = (link: GraphLink, event: MouseEvent) => void;
 
 // 2D Map specific types
 export interface NodeT {
-	pub_count: number;
-	id: string;
-	x?: number;
-	y?: number;
-	fx?: number | null;
-	fy?: number | null;
-	val?: number;
-	color?: string;
-	label?: string;
-	name?: string;
-	category?: string;
-	subscriber_count?: number;
-	avg_subscriber_count?: number;
-	is_bestseller?: boolean;
-	// Topic-specific properties
-	post_count?: number;
-	top_newsletters?: string[];
-	// Knowledge graph properties
-	topic_type?: string;
-	macro_topic?: string;
+  pub_count: number;
+  id: string;
+  x?: number;
+  y?: number;
+  fx?: number | null;
+  fy?: number | null;
+  val?: number;
+  color?: string;
+  label?: string;
+  name?: string;
+  category?: string;
+  subscriber_count?: number;
+  avg_subscriber_count?: number;
+  avg_comments?: number;
+  avg_restacks?: number;
+  avg_reactions?: number;
+  // Topic-specific properties
+  post_count?: number;
+  // Knowledge graph properties
+  topic_type?: string;
 }
 
 export interface LinkT {
-	source: string | NodeT;
-	target: string | NodeT;
-	_r?: number;
+  source: string | NodeT;
+  target: string | NodeT;
+  _r?: number;
 }

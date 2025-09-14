@@ -1,0 +1,26 @@
+{
+  "feature": "has_exclamation",
+  "metric": "engagement_score",
+  "with_feature": {
+    "count": 1333,
+    "percentage": 3.6617861165288574,
+    "mean_engagement": 244.32958739684955,
+    "mean_reactions": 85.48237059264817,
+    "mean_comments": 18.74234058514634,
+    "mean_restacks": 11.308327081770443
+  },
+  "without_feature": {
+    "count": 35070,
+    "percentage": 96.33821388347114,
+    "mean_engagement": 214.33996464214448,
+    "mean_reactions": 90.080125463359,
+    "mean_comments": 15.965758768177963,
+    "mean_restacks": 12.107185628742515
+  },
+  "effect_percentage": 13.99161505171227,
+  "statistical_significance": {
+    "t_statistic": 1.756518114785147,
+    "p_value": 0.07900838872395115,
+    "significant": false
+  }
+}

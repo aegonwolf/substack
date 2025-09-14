@@ -1,0 +1,73 @@
+{
+  "chart_type": "content_length_analysis",
+  "bins": [
+    "<1K",
+    "1-5K",
+    "5-10K",
+    "10-20K",
+    "20-50K",
+    "50K+"
+  ],
+  "data": [
+    {
+      "length_bin": "<1K",
+      "count": 4070,
+      "percentage": 11.18039722000934,
+      "mean_engagement": 124.69306142506152,
+      "median_engagement": 22.0,
+      "mean_reactions": 51.20982800982801,
+      "mean_comments": 9.848810810810825,
+      "mean_restacks": 5.256019656019656
+    },
+    {
+      "length_bin": "1-5K",
+      "count": 5555,
+      "percentage": 15.25973134082356,
+      "mean_engagement": 165.68617461746192,
+      "median_engagement": 29.0,
+      "mean_reactions": 67.0005400540054,
+      "mean_comments": 12.805422142214248,
+      "mean_restacks": 7.711431143114312
+    },
+    {
+      "length_bin": "5-10K",
+      "count": 7941,
+      "percentage": 21.814136197566132,
+      "mean_engagement": 188.54949502581565,
+      "median_engagement": 28.0,
+      "mean_reactions": 77.99030348822566,
+      "mean_comments": 14.67969021533815,
+      "mean_restacks": 10.254879738068253
+    },
+    {
+      "length_bin": "10-20K",
+      "count": 7898,
+      "percentage": 21.696014064774882,
+      "mean_engagement": 258.50313243859233,
+      "median_engagement": 40.0,
+      "mean_reactions": 110.75955938212206,
+      "mean_comments": 18.224748037477884,
+      "mean_restacks": 16.25778678146366
+    },
+    {
+      "length_bin": "20-50K",
+      "count": 8285,
+      "percentage": 22.759113259896164,
+      "mean_engagement": 272.3615908267956,
+      "median_engagement": 60.0,
+      "mean_reactions": 112.83814121907061,
+      "mean_comments": 19.942662643331364,
+      "mean_restacks": 15.91937235968618
+    },
+    {
+      "length_bin": "50K+",
+      "count": 2323,
+      "percentage": 6.381342197071669,
+      "mean_engagement": 254.50437365475705,
+      "median_engagement": 72.0,
+      "mean_reactions": 107.90529487731382,
+      "mean_comments": 20.022160998708603,
+      "mean_restacks": 13.695652173913043
+    }
+  ]
+}

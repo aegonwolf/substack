@@ -1,0 +1,50 @@
+{
+  "feature1": "has_images",
+  "feature2": "has_question",
+  "combinations": [
+    {
+      "combination": "Neither",
+      "feature1_value": 0,
+      "feature2_value": 0,
+      "count": 8711,
+      "percentage": 23.929346482432766,
+      "mean_engagement": 161.74309493743567,
+      "mean_reactions": 69.1406267937091,
+      "mean_comments": 11.88632992767767,
+      "mean_restacks": 8.910228446791413
+    },
+    {
+      "combination": "has_images_only",
+      "feature1_value": 1,
+      "feature2_value": 0,
+      "count": 24885,
+      "percentage": 68.35975057000798,
+      "mean_engagement": 234.8582407072536,
+      "mean_reactions": 98.7683745228049,
+      "mean_comments": 17.240806108097285,
+      "mean_restacks": 13.408519188266023
+    },
+    {
+      "combination": "has_question_only",
+      "feature1_value": 0,
+      "feature2_value": 1,
+      "count": 775,
+      "percentage": 2.128945416586545,
+      "mean_engagement": 159.58250322580656,
+      "mean_reactions": 52.60516129032258,
+      "mean_comments": 14.637264516129058,
+      "mean_restacks": 5.941935483870968
+    },
+    {
+      "combination": "Both",
+      "feature1_value": 1,
+      "feature2_value": 1,
+      "count": 2032,
+      "percentage": 5.581957530972722,
+      "mean_engagement": 229.09746062992141,
+      "mean_reactions": 84.72145669291339,
+      "mean_comments": 20.16709645669295,
+      "mean_restacks": 11.702755905511811
+    }
+  ]
+}

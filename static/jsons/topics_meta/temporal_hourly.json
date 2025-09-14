@@ -1,0 +1,199 @@
+{
+  "chart_type": "hourly_patterns",
+  "best_hour": 22,
+  "worst_hour": 9,
+  "data": [
+    {
+      "hour": 0,
+      "count": 919,
+      "mean_engagement": 213.87318824809603,
+      "mean_reactions": 93.01088139281828,
+      "mean_comments": 13.708226332970645,
+      "mean_restacks": 12.93253536452666
+    },
+    {
+      "hour": 1,
+      "count": 679,
+      "mean_engagement": 238.48603829160555,
+      "mean_reactions": 109.19587628865979,
+      "mean_comments": 14.97042709867454,
+      "mean_restacks": 15.743740795287186
+    },
+    {
+      "hour": 2,
+      "count": 588,
+      "mean_engagement": 235.07680272108868,
+      "mean_reactions": 103.08163265306122,
+      "mean_comments": 15.156360544217703,
+      "mean_restacks": 14.229591836734693
+    },
+    {
+      "hour": 3,
+      "count": 532,
+      "mean_engagement": 214.65496240601522,
+      "mean_reactions": 94.87781954887218,
+      "mean_comments": 13.708533834586484,
+      "mean_restacks": 14.024436090225564
+    },
+    {
+      "hour": 4,
+      "count": 622,
+      "mean_engagement": 175.0994855305469,
+      "mean_reactions": 71.23954983922829,
+      "mean_comments": 14.309935691318385,
+      "mean_restacks": 8.610932475884244
+    },
+    {
+      "hour": 5,
+      "count": 526,
+      "mean_engagement": 223.42319391635024,
+      "mean_reactions": 82.53041825095058,
+      "mean_comments": 19.626882129277647,
+      "mean_restacks": 10.330798479087452
+    },
+    {
+      "hour": 6,
+      "count": 775,
+      "mean_engagement": 115.13125161290328,
+      "mean_reactions": 49.468387096774194,
+      "mean_comments": 9.7263741935484,
+      "mean_restacks": 5.389677419354839
+    },
+    {
+      "hour": 7,
+      "count": 825,
+      "mean_engagement": 157.68225454545455,
+      "mean_reactions": 72.64363636363636,
+      "mean_comments": 11.969648484848493,
+      "mean_restacks": 7.653333333333333
+    },
+    {
+      "hour": 8,
+      "count": 680,
+      "mean_engagement": 261.8679411764712,
+      "mean_reactions": 110.36764705882354,
+      "mean_comments": 19.50226470588246,
+      "mean_restacks": 15.41764705882353
+    },
+    {
+      "hour": 9,
+      "count": 935,
+      "mean_engagement": 108.80855614973262,
+      "mean_reactions": 45.207486631016046,
+      "mean_comments": 10.198887700534765,
+      "mean_restacks": 3.9614973262032085
+    },
+    {
+      "hour": 10,
+      "count": 1751,
+      "mean_engagement": 280.9653569388923,
+      "mean_reactions": 111.48486579097658,
+      "mean_comments": 21.614117647058887,
+      "mean_restacks": 16.583666476299257
+    },
+    {
+      "hour": 11,
+      "count": 2454,
+      "mean_engagement": 193.0688997555015,
+      "mean_reactions": 76.98736756316218,
+      "mean_comments": 15.960643846780805,
+      "mean_restacks": 9.780766096169518
+    },
+    {
+      "hour": 12,
+      "count": 2953,
+      "mean_engagement": 222.21626820182885,
+      "mean_reactions": 85.71791398577717,
+      "mean_comments": 18.00958347443282,
+      "mean_restacks": 10.837792075855063
+    },
+    {
+      "hour": 13,
+      "count": 3095,
+      "mean_engagement": 192.2112374798063,
+      "mean_reactions": 77.50210016155089,
+      "mean_comments": 15.227980613893397,
+      "mean_restacks": 10.921163166397415
+    },
+    {
+      "hour": 14,
+      "count": 2853,
+      "mean_engagement": 185.8776936558011,
+      "mean_reactions": 77.3154574132492,
+      "mean_comments": 14.307255520504754,
+      "mean_restacks": 11.00385559060638
+    },
+    {
+      "hour": 15,
+      "count": 2727,
+      "mean_engagement": 248.7005500550058,
+      "mean_reactions": 106.12504583791713,
+      "mean_comments": 17.370473047304774,
+      "mean_restacks": 14.131646497983132
+    },
+    {
+      "hour": 16,
+      "count": 2504,
+      "mean_engagement": 215.5419648562303,
+      "mean_reactions": 85.64137380191693,
+      "mean_comments": 15.437899361022396,
+      "mean_restacks": 11.524760383386582
+    },
+    {
+      "hour": 17,
+      "count": 2013,
+      "mean_engagement": 212.26969696969712,
+      "mean_reactions": 91.73770491803279,
+      "mean_comments": 15.430044709388998,
+      "mean_restacks": 11.844510680576255
+    },
+    {
+      "hour": 18,
+      "count": 1940,
+      "mean_engagement": 210.02638144329913,
+      "mean_reactions": 88.49896907216495,
+      "mean_comments": 15.551927835051568,
+      "mean_restacks": 11.914432989690722
+    },
+    {
+      "hour": 19,
+      "count": 1692,
+      "mean_engagement": 187.96911347517744,
+      "mean_reactions": 83.61583924349881,
+      "mean_comments": 13.61397163120569,
+      "mean_restacks": 10.46631205673759
+    },
+    {
+      "hour": 20,
+      "count": 1613,
+      "mean_engagement": 201.59093614383156,
+      "mean_reactions": 88.11407315561067,
+      "mean_comments": 13.583856168629906,
+      "mean_restacks": 11.871047737135772
+    },
+    {
+      "hour": 21,
+      "count": 1407,
+      "mean_engagement": 266.16289978678066,
+      "mean_reactions": 112.91897654584221,
+      "mean_comments": 20.30679459843643,
+      "mean_restacks": 15.191186922530207
+    },
+    {
+      "hour": 22,
+      "count": 1181,
+      "mean_engagement": 306.7057578323459,
+      "mean_reactions": 127.07112616426757,
+      "mean_comments": 22.547569856054235,
+      "mean_restacks": 18.228619813717188
+    },
+    {
+      "hour": 23,
+      "count": 1139,
+      "mean_engagement": 286.5447585601408,
+      "mean_reactions": 130.43810359964883,
+      "mean_comments": 18.39485513608432,
+      "mean_restacks": 18.833187006145742
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 
 	import TopicMap2d from './TopicMap2d.svelte';
 	import type { NodeT, LinkT } from './types.js';
-	import { applySubscriberColors } from './colorUtils.js';
+	import { applyGenericColors } from './colorUtils.js';
 
 	let {
 		topicData,
@@ -15,6 +15,15 @@
 	let map2dRef: TopicMap2d;
 	// Transform topic data to match map2d expected format
 	function transformTopicData(data: any) {
+		// Box-Muller transform for normal distribution
+		function normalRandom(mean = 0, stdDev = 1) {
+			let u = 0, v = 0;
+			while(u === 0) u = Math.random(); // Converting [0,1) to (0,1)
+			while(v === 0) v = Math.random();
+			const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+			return z * stdDev + mean;
+		}
+
 		const nodes: NodeT[] = data.nodes.map((topic: any) => {
 			// All nodes are now topics with consistent structure
 			const name = topic.label || topic.id;
@@ -24,8 +33,8 @@
 				name: name,
 				label: topic.label,
 				val: Math.max(1, topic.val), // Use val as-is for node size
-				x: Math.random() * 1000 - 500, // Random initial positions
-				y: Math.random() * 1000 - 500,
+				x: normalRandom(0, 500), // Wider normal distribution for more spread
+				y: normalRandom(0, 500), // Creates more natural circular clustering
 				// Add topic-specific properties for tooltip
 				category: 'Topic',
 				subscriber_count: topic.subscriber_sum || 0,
@@ -36,12 +45,16 @@
 				avg_subscriber_count: topic.avg_subscriber_count,
 				// Include publication and post counts
 				pub_count: topic.pub_count || 0,
-				post_count: topic.post_count || 0
+				post_count: topic.post_count || 0,
+				// Include engagement metrics
+				avg_reactions: topic.avg_reactions || 0,
+				avg_comments: topic.avg_comments || 0,
+				avg_restacks: topic.avg_restacks || 0
 			};
 		});
 
-		// Apply D3 interpolate oranges color scale based on avg_subscriber_count
-		const coloredNodes = applySubscriberColors(nodes);
+		// Apply D3 interpolate oranges color scale based on avg_subscriber_count (default)
+		const coloredNodes = applyGenericColors(nodes, 'avg_subscriber_count');
 
 		const links: LinkT[] = data.links.map((link: any) => ({
 			source: link.source,

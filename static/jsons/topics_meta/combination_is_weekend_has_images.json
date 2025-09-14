@@ -1,0 +1,50 @@
+{
+  "feature1": "is_weekend",
+  "feature2": "has_images",
+  "combinations": [
+    {
+      "combination": "Neither",
+      "feature1_value": 0,
+      "feature2_value": 0,
+      "count": 7736,
+      "percentage": 21.250995797049693,
+      "mean_engagement": 159.66432264736318,
+      "mean_reactions": 66.55416235780766,
+      "mean_comments": 11.978164426059998,
+      "mean_restacks": 8.48771975180972
+    },
+    {
+      "combination": "is_weekend_only",
+      "feature1_value": 1,
+      "feature2_value": 0,
+      "count": 1750,
+      "percentage": 4.807296101969618,
+      "mean_engagement": 169.9756228571431,
+      "mean_reactions": 73.25142857142858,
+      "mean_comments": 12.698640000000035,
+      "mean_restacks": 9.46342857142857
+    },
+    {
+      "combination": "has_images_only",
+      "feature1_value": 0,
+      "feature2_value": 1,
+      "count": 21377,
+      "percentage": 58.72318215531686,
+      "mean_engagement": 232.4878111989524,
+      "mean_reactions": 95.51630256818075,
+      "mean_comments": 17.501095570005184,
+      "mean_restacks": 13.077326098142864
+    },
+    {
+      "combination": "Both",
+      "feature1_value": 1,
+      "feature2_value": 1,
+      "count": 5540,
+      "percentage": 15.218525945663819,
+      "mean_engagement": 241.89195306859222,
+      "mean_reactions": 106.16480144404332,
+      "mean_comments": 17.309761732852014,
+      "mean_restacks": 14.060830324909748
+    }
+  ]
+}

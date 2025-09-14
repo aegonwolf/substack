@@ -20,7 +20,7 @@
 	// Extract unique categories from the data for filter options
 	const categories = $derived.by(() => {
 		if (!data?.publications) return ['All Categories'];
-		const uniqueCategories = [...new Set(data.publications.map((pub) => pub.category))];
+		const uniqueCategories = [...new Set(data.publications.map((pub) => pub.leaderboard_category))];
 		return ['All Categories', ...uniqueCategories.sort()];
 	});
 
@@ -40,7 +40,7 @@
 		// If selectedBoard === 'all', no filtering is applied
 
 		if (selectedCategory !== 'All Categories') {
-			filtered = filtered.filter((pub) => pub.category === selectedCategory);
+			filtered = filtered.filter((pub) => pub.leaderboard_category === selectedCategory);
 		}
 
 		// Maintain subscriber count ordering (descending)
@@ -320,7 +320,7 @@
 											</td>
 											<td class="text-surface-600-300-token capitalize">
 												<span class="badge preset-tonal-secondary text-xs">
-													{publication.category}
+													{publication.leaderboard_category}
 												</span>
 											</td>
 											<td class="text-surface-600-300-token text-center font-mono">
@@ -376,7 +376,7 @@
 								<div class="flex items-center justify-between">
 									<div class="flex flex-col gap-1">
 										<span class="badge preset-tonal-tertiary text-xs capitalize">
-											{publication.category}
+											{publication.leaderboard_category}
 										</span>
 										<div class="flex gap-1">
 											<span class="badge preset-tonal-success text-xs" title="Incoming recommendations">

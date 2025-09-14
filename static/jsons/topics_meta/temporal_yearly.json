@@ -1,0 +1,69 @@
+{
+  "chart_type": "yearly_trend",
+  "data": [
+    {
+      "year": 2018,
+      "count": 21,
+      "mean_engagement": 2.238095238095238,
+      "mean_reactions": 2.238095238095238,
+      "mean_comments": 0.0,
+      "mean_restacks": 0.0
+    },
+    {
+      "year": 2019,
+      "count": 61,
+      "mean_engagement": 0.819672131147541,
+      "mean_reactions": 0.819672131147541,
+      "mean_comments": 0.0,
+      "mean_restacks": 0.0
+    },
+    {
+      "year": 2020,
+      "count": 169,
+      "mean_engagement": 7.242603550295858,
+      "mean_reactions": 2.06508875739645,
+      "mean_comments": 1.017751479289941,
+      "mean_restacks": 0.029585798816568046
+    },
+    {
+      "year": 2021,
+      "count": 252,
+      "mean_engagement": 44.51190476190476,
+      "mean_reactions": 20.047619047619047,
+      "mean_comments": 4.273809523809524,
+      "mean_restacks": 1.0317460317460319
+    },
+    {
+      "year": 2022,
+      "count": 330,
+      "mean_engagement": 96.08484848484848,
+      "mean_reactions": 35.236363636363635,
+      "mean_comments": 11.208969696969717,
+      "mean_restacks": 0.9545454545454546
+    },
+    {
+      "year": 2023,
+      "count": 784,
+      "mean_engagement": 89.49071428571435,
+      "mean_reactions": 46.267857142857146,
+      "mean_comments": 6.405586734693881,
+      "mean_restacks": 3.454081632653061
+    },
+    {
+      "year": 2024,
+      "count": 2154,
+      "mean_engagement": 192.45479108635112,
+      "mean_reactions": 94.99628597957289,
+      "mean_comments": 12.823064066852377,
+      "mean_restacks": 9.84447539461467
+    },
+    {
+      "year": 2025,
+      "count": 32632,
+      "mean_engagement": 224.1247720029421,
+      "mean_reactions": 92.39507232164746,
+      "mean_comments": 16.772244422652644,
+      "mean_restacks": 12.723093895562638
+    }
+  ]
+}

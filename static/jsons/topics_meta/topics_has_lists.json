@@ -1,0 +1,26 @@
+{
+  "feature": "has_lists",
+  "metric": "engagement_score",
+  "with_feature": {
+    "count": 12088,
+    "percentage": 33.20605444606214,
+    "mean_engagement": 138.61650066181343,
+    "mean_reactions": 60.89609530112508,
+    "mean_comments": 10.209480476505636,
+    "mean_restacks": 7.772915287888815
+  },
+  "without_feature": {
+    "count": 24315,
+    "percentage": 66.79394555393786,
+    "mean_engagement": 253.62934978408424,
+    "mean_reactions": 104.33666461032284,
+    "mean_comments": 18.97966275961345,
+    "mean_restacks": 14.218136952498458
+  },
+  "effect_percentage": -45.34682173817097,
+  "statistical_significance": {
+    "t_statistic": -16.957020817826123,
+    "p_value": 3.016328574400239e-64,
+    "significant": true
+  }
+}

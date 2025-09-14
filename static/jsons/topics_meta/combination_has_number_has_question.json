@@ -1,0 +1,50 @@
+{
+  "feature1": "has_number",
+  "feature2": "has_question",
+  "combinations": [
+    {
+      "combination": "Neither",
+      "feature1_value": 0,
+      "feature2_value": 0,
+      "count": 24707,
+      "percentage": 67.87077988077905,
+      "mean_engagement": 250.69603189379555,
+      "mean_reactions": 106.32711377342453,
+      "mean_comments": 18.064487796980647,
+      "mean_restacks": 14.643623264661837
+    },
+    {
+      "combination": "has_number_only",
+      "feature1_value": 1,
+      "feature2_value": 0,
+      "count": 8889,
+      "percentage": 24.418317171661677,
+      "mean_engagement": 119.18602317471043,
+      "mean_reactions": 48.72437844526944,
+      "mean_comments": 9.704126448419412,
+      "mean_restacks": 5.567330408369895
+    },
+    {
+      "combination": "has_question_only",
+      "feature1_value": 0,
+      "feature2_value": 1,
+      "count": 2202,
+      "percentage": 6.048952009449771,
+      "mean_engagement": 238.9393642143508,
+      "mean_reactions": 84.49000908265214,
+      "mean_comments": 21.300826521344273,
+      "mean_restacks": 11.539963669391462
+    },
+    {
+      "combination": "Both",
+      "feature1_value": 1,
+      "feature2_value": 1,
+      "count": 605,
+      "percentage": 1.6619509381094966,
+      "mean_engagement": 104.22809917355372,
+      "mean_reactions": 44.42314049586777,
+      "mean_comments": 8.95702479338843,
+      "mean_restacks": 4.915702479338843
+    }
+  ]
+}

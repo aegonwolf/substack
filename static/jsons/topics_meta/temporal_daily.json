@@ -1,0 +1,78 @@
+{
+  "chart_type": "daily_patterns",
+  "weekend_vs_weekday": {
+    "weekend_better": true
+  },
+  "data": [
+    {
+      "day_of_week": 0,
+      "day_name": "Monday",
+      "count": 5283,
+      "mean_engagement": 223.98597387847843,
+      "mean_reactions": 93.74976339201211,
+      "mean_comments": 16.048987317811886,
+      "mean_restacks": 12.843838727995458,
+      "is_weekend": false
+    },
+    {
+      "day_of_week": 1,
+      "day_name": "Tuesday",
+      "count": 5493,
+      "mean_engagement": 213.3332860003643,
+      "mean_reactions": 90.0724558529037,
+      "mean_comments": 15.881674858911369,
+      "mean_restacks": 12.136173311487347,
+      "is_weekend": false
+    },
+    {
+      "day_of_week": 2,
+      "day_name": "Wednesday",
+      "count": 6002,
+      "mean_engagement": 217.08476174608487,
+      "mean_reactions": 87.11962679106965,
+      "mean_comments": 16.399490169943384,
+      "mean_restacks": 11.786904365211596,
+      "is_weekend": false
+    },
+    {
+      "day_of_week": 3,
+      "day_name": "Thursday",
+      "count": 6179,
+      "mean_engagement": 203.58542158925417,
+      "mean_reactions": 84.97345848842855,
+      "mean_comments": 15.260695905486354,
+      "mean_restacks": 11.84269299239359,
+      "is_weekend": false
+    },
+    {
+      "day_of_week": 4,
+      "day_name": "Friday",
+      "count": 6156,
+      "mean_engagement": 209.38928525016266,
+      "mean_reactions": 84.26315789473684,
+      "mean_comments": 16.574655620532848,
+      "mean_restacks": 10.847303443794672,
+      "is_weekend": false
+    },
+    {
+      "day_of_week": 5,
+      "day_name": "Saturday",
+      "count": 3177,
+      "mean_engagement": 226.21918791312578,
+      "mean_reactions": 98.59584513692162,
+      "mean_comments": 16.283405728674882,
+      "mean_restacks": 13.465848284545169,
+      "is_weekend": true
+    },
+    {
+      "day_of_week": 6,
+      "day_name": "Sunday",
+      "count": 4113,
+      "mean_engagement": 223.3990761001704,
+      "mean_reactions": 98.0072939460248,
+      "mean_comments": 16.140607828835428,
+      "mean_restacks": 12.564308290785315,
+      "is_weekend": true
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "generated": "2025-09-14",
+    "total_posts": 36403,
+    "unique_publications": 1494,
+    "date_range": {
+      "start": "2018-03-25",
+      "end": "2025-09-13"
+    },
+    "files_count": 21
+  },
+  "categories": {
+    "feature_impact": {
+      "description": "Binary feature impact on engagement metrics",
+      "files": [
+        "topics_has_images.json",
+        "topics_has_number.json",
+        "topics_has_question.json",
+        "topics_has_exclamation.json",
+        "topics_has_lists.json",
+        "topics_is_weekend.json",
+        "topics_is_morning.json",
+        "topics_is_evening.json"
+      ],
+      "chart_types": ["bar_chart", "comparison_chart"],
+      "metrics": ["mean_engagement", "mean_reactions", "mean_comments", "mean_restacks", "count", "percentage"]
+    },
+    "temporal_patterns": {
+      "description": "Time-based engagement analysis",
+      "files": [
+        "temporal_hourly.json",
+        "temporal_daily.json",
+        "temporal_monthly.json",
+        "temporal_yearly.json"
+      ],
+      "chart_types": ["line_chart", "bar_chart", "area_chart"],
+      "metrics": ["mean_engagement", "count", "hour", "day_of_week", "month", "year"]
+    },
+    "viral_analysis": {
+      "description": "High-performing content analysis (top 5%)",
+      "files": [
+        "viral_posts_analysis.json"
+      ],
+      "chart_types": ["scatter_plot", "bar_chart", "table"],
+      "metrics": ["feature_comparison", "top_viral_posts", "threshold_score"]
+    },
+    "statistical_analysis": {
+      "description": "Correlations and descriptive statistics",
+      "files": [
+        "correlation_analysis.json",
+        "basic_statistics.json"
+      ],
+      "chart_types": ["heatmap", "correlation_matrix", "histogram"],
+      "metrics": ["correlation", "mean", "std", "min", "max", "percentiles"]
+    },
+    "content_analysis": {
+      "description": "Content-focused metrics and publication performance",
+      "files": [
+        "content_length_analysis.json",
+        "publication_performance.json"
+      ],
+      "chart_types": ["bar_chart", "histogram", "scatter_plot"],
+      "metrics": ["length_bins", "publication_stats", "performance_distribution"]
+    },
+    "feature_combinations": {
+      "description": "Interaction analysis between feature pairs",
+      "files": [
+        "combination_has_images_has_question.json",
+        "combination_has_images_has_lists.json",
+        "combination_has_number_has_question.json",
+        "combination_is_weekend_has_images.json"
+      ],
+      "chart_types": ["grouped_bar_chart", "matrix_chart"],
+      "metrics": ["combination_stats", "interaction_effects"]
+    }
+  },
+  "quick_access": {
+    "most_impactful_features": [
+      "has_images (+45.1% engagement)",
+      "has_lists (-52.2% engagement)",
+      "has_number (-47.1% engagement)"
+    ],
+    "best_posting_times": {
+      "hour": 22,
+      "day": "varies by publication",
+      "weekend_effect": "mixed"
+    },
+    "viral_characteristics": {
+      "longer_content": true,
+      "more_images": true,
+      "fewer_lists": true,
+      "fewer_numbers_in_titles": true
+    }
+  },
+  "usage_examples": {
+    "load_feature_impact": "fetch('topics_meta/topics_has_images.json')",
+    "load_temporal": "fetch('topics_meta/temporal_hourly.json')",
+    "load_correlations": "fetch('topics_meta/correlation_analysis.json')"
+  }
+}

@@ -6,7 +6,7 @@
 	import type { Simulation } from 'd3-force';
 	import type { ZoomBehavior, ZoomTransform } from 'd3-zoom';
 	import type { Selection } from 'd3-selection';
-	import type { NodeT, LinkT } from './types.js';
+	import type { NodeT, LinkT } from './types';
 	import {
 		clamp,
 		lerp,
@@ -15,7 +15,7 @@
 		toGraphCoords,
 		rebuildQuadtree
 	} from './map2dUtils';
-	import { createSubscriberColorScale } from './colorUtils.js';
+	import { createSubscriberColorScale, createGenericColorScale } from './colorUtils.js';
 
 	let {
 		graphData,
@@ -49,6 +49,18 @@
 	let focusedNodeId = $state<string | null>(null);
 	let connectedNodeIds = $state<Set<string>>(new Set());
 
+	// Color metric selection
+	let selectedMetric = $state<string>('avg_subscriber_count');
+	
+	const colorMetrics = [
+		{ value: 'avg_subscriber_count', label: 'Average Subscribers' },
+		{ value: 'avg_reactions', label: 'Average Reactions' },
+		{ value: 'avg_comments', label: 'Average Comments' },
+		{ value: 'avg_restacks', label: 'Average Restacks' },
+		{ value: 'pub_count', label: 'Publication Count' },
+		{ value: 'post_count', label: 'Post Count' }
+	];
+
 	// Double-click detection state
 	let clickTimeout = $state<number | null>(null);
 
@@ -69,27 +81,43 @@
 	let legendData = $derived.by(() => {
 		if (!graphData.nodes.length) return [];
 
-		const subscriberCounts = graphData.nodes
-			.map((node) => node.avg_subscriber_count)
-			.filter((count) => count != null && count > 0);
+		const metricValues = graphData.nodes
+			.map((node) => node[selectedMetric as keyof NodeT])
+			.filter((value): value is number => value != null && value > 0);
 
-		if (subscriberCounts.length === 0) return [];
+		if (metricValues.length === 0) return [];
 
-		const minCount = Math.min(...subscriberCounts);
-		const maxCount = Math.max(...subscriberCounts);
-		const colorScale = createSubscriberColorScale(graphData.nodes);
+		const minValue = Math.min(...metricValues);
+		const maxValue = Math.max(...metricValues);
+		const colorScale = createGenericColorScale(graphData.nodes, selectedMetric);
 
 		// Create 5 legend items across the range
 		const legendItems = [];
 		for (let i = 0; i < 5; i++) {
-			const value = minCount + (maxCount - minCount) * (i / 4);
+			const value = minValue + (maxValue - minValue) * (i / 4);
 			legendItems.push({
-				value: Math.round(value),
+				value: selectedMetric.includes('avg_') ? Number(value.toFixed(1)) : Math.round(value),
 				color: colorScale(value)
 			});
 		}
 
 		return legendItems;
+	});
+
+	// Function to recolor nodes based on selected metric
+	function recolorNodes() {
+		const colorScale = createGenericColorScale(graphData.nodes, selectedMetric);
+		graphData.nodes.forEach(node => {
+			node.color = colorScale(node[selectedMetric as keyof NodeT] as number);
+		});
+		scheduleDraw();
+	}
+
+	// Watch for metric changes and recolor nodes
+	$effect(() => {
+		if (isInitialized && selectedMetric) {
+			recolorNodes();
+		}
 	});
 
 	// Render scheduling
@@ -300,17 +328,17 @@
 
 			// Add glow effect for focused node
 			if (isFocused) {
-				ctx.globalAlpha = 0.7;
+				ctx.globalAlpha = 0.5;
 				ctx.beginPath();
-				ctx.arc(n.x!, n.y!, r + 8 / transform.k, 0, Math.PI * 2);
+				ctx.arc(n.x!, n.y!, r + 6 / transform.k, 0, Math.PI * 2);
 				ctx.strokeStyle = '#a855f7';
-				ctx.lineWidth = 4 / transform.k;
+				ctx.lineWidth = 2 / transform.k;
 				ctx.stroke();
-				ctx.globalAlpha = 0.4;
+				ctx.globalAlpha = 0.25;
 				ctx.beginPath();
-				ctx.arc(n.x!, n.y!, r + 14 / transform.k, 0, Math.PI * 2);
+				ctx.arc(n.x!, n.y!, r + 10 / transform.k, 0, Math.PI * 2);
 				ctx.strokeStyle = '#a855f7';
-				ctx.lineWidth = 3 / transform.k;
+				ctx.lineWidth = 1.5 / transform.k;
 				ctx.stroke();
 			}
 
@@ -342,9 +370,9 @@
 		if (hoveredNode) {
 			const r = nodeRadius(hoveredNode);
 			ctx.beginPath();
-			ctx.arc(hoveredNode.x!, hoveredNode.y!, r + 4 / transform.k, 0, Math.PI * 2);
-			ctx.lineWidth = 3 / transform.k;
-			ctx.strokeStyle = 'rgba(255,255,255,0.9)';
+			ctx.arc(hoveredNode.x!, hoveredNode.y!, r + 3 / transform.k, 0, Math.PI * 2);
+			ctx.lineWidth = 2 / transform.k;
+			ctx.strokeStyle = 'rgba(255,255,255,0.8)';
 			ctx.stroke();
 		}
 	}
@@ -525,7 +553,8 @@
 		lastPointerId = ev.pointerId;
 		draggingNode.fx = p.x;
 		draggingNode.fy = p.y;
-		sim?.alphaTarget(0.3).restart();
+		// Gentler restart for dragging
+		sim?.alphaTarget(0.1).restart();
 		ev.preventDefault();
 	}
 	function onPointerMove(ev: PointerEvent) {
@@ -546,7 +575,8 @@
 			} catch {}
 			lastPointerId = null;
 		}
-		sim?.alphaTarget(0);
+		// Return to low-energy state more gradually
+		sim?.alphaTarget(0.01);
 	}
 
 	function setupCanvasSize() {
@@ -642,6 +672,24 @@
 				l._r = hash01(String(sid) + '|' + String(tid));
 			}
 
+			// Pre-calculate node connections once (not in tick loop!)
+			const connectedNodeIds = new Set<string>();
+			const nodeConnections = new Map<string, number>();
+
+			// Count connections for each node
+			nodes.forEach((node) => nodeConnections.set(node.id, 0));
+
+			links.forEach((link: any) => {
+				const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
+				const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+				connectedNodeIds.add(sourceId);
+				connectedNodeIds.add(targetId);
+
+				// Increment connection count
+				nodeConnections.set(sourceId, (nodeConnections.get(sourceId) || 0) + 1);
+				nodeConnections.set(targetId, (nodeConnections.get(targetId) || 0) + 1);
+			});
+
 			sim = force
 				.forceSimulation(nodes)
 				.force(
@@ -652,19 +700,79 @@
 						.distance((l: any) => {
 							const sv = (typeof l.source === 'object' ? (l.source as NodeT).val : 1) ?? 1;
 							const tv = (typeof l.target === 'object' ? (l.target as NodeT).val : 1) ?? 1;
-							return 100 + 50 * Math.sqrt(Math.min(sv, tv));
+							return 120 + 50 * Math.sqrt(Math.min(sv, tv)); // Longer links for more spread
 						})
-						.strength(0.8)
+						.strength((l: any) => {
+							// Use pre-calculated connection counts (much faster!)
+							const sourceId = typeof l.source === 'object' ? l.source.id : l.source;
+							const targetId = typeof l.target === 'object' ? l.target.id : l.target;
+
+							const sourceConnections = nodeConnections.get(sourceId) || 0;
+							const targetConnections = nodeConnections.get(targetId) || 0;
+
+							// Reduce strength for highly connected nodes (hub dampening)
+							const maxConnections = Math.max(sourceConnections, targetConnections);
+							if (maxConnections > 20) return 0.15; // Very weak for super hubs
+							if (maxConnections > 10) return 0.25; // Weak for hubs
+							if (maxConnections > 5) return 0.35; // Slightly weak for connected nodes
+							return 0.4; // Normal strength for regular nodes
+						})
 				)
-				.force('charge', force.forceManyBody().strength(-180))
 				.force(
-					'collide',
-					force.forceCollide<NodeT>((n) => nodeRadius(n) + 5)
+					'charge',
+					force
+						.forceManyBody()
+						.strength((d: any) => {
+							// Stronger repulsion to spread nodes out more
+							return connectedNodeIds.has(d.id) ? -200 : -100;
+						})
+						.distanceMax(800)
 				)
-				.force('center', force.forceCenter(0, 0))
-				.alphaDecay(0.02)
-				.velocityDecay(0.3)
+				.force('collide', force.forceCollide<NodeT>((n) => nodeRadius(n) + 12).strength(0.8))
+				// Remove center force entirely - let nodes find natural positions
+				.force(
+					'x',
+					force.forceX(0).strength((d: any) => {
+						// Very weak centering only for isolated nodes
+						return connectedNodeIds.has(d.id) ? 0 : 0.005;
+					})
+				)
+				.force(
+					'y',
+					force.forceY(0).strength((d: any) => {
+						// Very weak centering only for isolated nodes
+						return connectedNodeIds.has(d.id) ? 0 : 0.005;
+					})
+				)
+				.alphaDecay(0.04) // Faster settling
+				.velocityDecay(0.9) // Stronger overall damping
+				.alphaTarget(0.005) // Lower energy target for more stability
 				.on('tick', () => {
+					// Simple velocity damping (no expensive calculations in tick loop!)
+					for (const node of nodes) {
+						// Use pre-calculated connection count
+						const connections = nodeConnections.get(node.id) || 0;
+
+						// Progressive damping based on connectivity
+						let dampingFactor = 0.8;
+						if (connections > 20)
+							dampingFactor = 0.95; // Heavy damping for super hubs
+						else if (connections > 10)
+							dampingFactor = 0.9; // Strong damping for hubs
+						else if (connections > 5) dampingFactor = 0.85; // Medium damping
+
+						// Apply velocity limits with progressive damping
+						const maxVelocity = connections > 10 ? 20 : 50; // Lower max velocity for hubs
+
+						if (node.vx && Math.abs(node.vx) > maxVelocity) node.vx *= dampingFactor;
+						if (node.vy && Math.abs(node.vy) > maxVelocity) node.vy *= dampingFactor;
+
+						// Additional micro-oscillation damping for highly connected nodes
+						if (connections > 15) {
+							if (node.vx) node.vx *= 0.98;
+							if (node.vy) node.vy *= 0.98;
+						}
+					}
 					qt = rebuildQuadtree(Quadtree, graphData.nodes);
 					scheduleDraw();
 				});
@@ -717,6 +825,8 @@
 	$effect(() => {
 		if (isInitialized) scheduleDraw();
 	});
+
+	$inspect("Hovered Node", hoveredNode);
 </script>
 
 <div class="relative h-full w-full" bind:this={containerEl}>
@@ -743,7 +853,17 @@
 				<div
 					class="preset-filled-surface-100-900/90 rounded-lg border border-surface-300/20 p-3 backdrop-blur-sm"
 				>
-					<h4 class="mb-2 text-xs font-semibold text-surface-700-300">Average Subscribers</h4>
+					<div class="mb-2 flex items-center gap-2">
+						<h4 class="text-xs font-semibold text-surface-700-300">Color by:</h4>
+						<select 
+							bind:value={selectedMetric}
+							class="text-xs bg-surface-200-800 border border-surface-300-700 rounded px-1 py-0.5"
+						>
+							{#each colorMetrics as metric}
+								<option value={metric.value}>{metric.label}</option>
+							{/each}
+						</select>
+					</div>
 					<div class="space-y-1">
 						{#each legendData as item}
 							<div class="flex items-center gap-2">
@@ -826,7 +946,30 @@
 							</span>
 						</div>
 					{/if}
-
+					{#if hoveredNode.avg_reactions && hoveredNode.avg_reactions >= 0.1}
+						<div class="flex items-center justify-between gap-4">
+							<span class="text-sm opacity-75">Avg Reactions:</span>
+							<span class="text-right text-sm font-medium">
+								{hoveredNode.avg_reactions.toFixed(1)}
+							</span>
+						</div>
+					{/if}
+					{#if hoveredNode.avg_comments && hoveredNode.avg_comments >= 0.1}
+						<div class="flex items-center justify-between gap-4">
+							<span class="text-sm opacity-75">Avg Comments:</span>
+							<span class="text-right text-sm font-medium">
+								{hoveredNode.avg_comments.toFixed(1)}
+							</span>
+						</div>
+					{/if}
+					{#if hoveredNode.avg_restacks && hoveredNode.avg_restacks >= 0.1}
+						<div class="flex items-center justify-between gap-4">
+							<span class="text-sm opacity-75">Avg Restacks:</span>
+							<span class="text-right text-sm font-medium">
+								{hoveredNode.avg_restacks.toFixed(1)}
+							</span>
+						</div>
+					{/if}
 				</section>
 			</div>
 		</div>

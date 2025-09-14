@@ -1,0 +1,1072 @@
+{
+  "correlation_matrix": [
+    {
+      "feature1": "reaction_count",
+      "feature2": "reaction_count",
+      "correlation": 1.0,
+      "row_index": 0,
+      "col_index": 0
+    },
+    {
+      "feature1": "reaction_count",
+      "feature2": "comment_count",
+      "correlation": 0.7114093281759566,
+      "row_index": 0,
+      "col_index": 1
+    },
+    {
+      "feature1": "reaction_count",
+      "feature2": "restacks",
+      "correlation": 0.929403359180686,
+      "row_index": 0,
+      "col_index": 2
+    },
+    {
+      "feature1": "reaction_count",
+      "feature2": "engagement_score",
+      "correlation": 0.9254752002628228,
+      "row_index": 0,
+      "col_index": 3
+    },
+    {
+      "feature1": "reaction_count",
+      "feature2": "title_length",
+      "correlation": -0.023995728659594037,
+      "row_index": 0,
+      "col_index": 4
+    },
+    {
+      "feature1": "reaction_count",
+      "feature2": "content_length",
+      "correlation": 0.05586280760662077,
+      "row_index": 0,
+      "col_index": 5
+    },
+    {
+      "feature1": "reaction_count",
+      "feature2": "link_count",
+      "correlation": 0.040332677281662226,
+      "row_index": 0,
+      "col_index": 6
+    },
+    {
+      "feature1": "reaction_count",
+      "feature2": "hour",
+      "correlation": 0.023972873567075885,
+      "row_index": 0,
+      "col_index": 7
+    },
+    {
+      "feature1": "reaction_count",
+      "feature2": "has_number",
+      "correlation": -0.09636977877324213,
+      "row_index": 0,
+      "col_index": 8
+    },
+    {
+      "feature1": "reaction_count",
+      "feature2": "has_question",
+      "correlation": -0.01590028407059662,
+      "row_index": 0,
+      "col_index": 9
+    },
+    {
+      "feature1": "reaction_count",
+      "feature2": "has_images",
+      "correlation": 0.051389491147972845,
+      "row_index": 0,
+      "col_index": 10
+    },
+    {
+      "feature1": "reaction_count",
+      "feature2": "has_lists",
+      "correlation": -0.08005582005187503,
+      "row_index": 0,
+      "col_index": 11
+    },
+    {
+      "feature1": "comment_count",
+      "feature2": "reaction_count",
+      "correlation": 0.7114093281759566,
+      "row_index": 1,
+      "col_index": 0
+    },
+    {
+      "feature1": "comment_count",
+      "feature2": "comment_count",
+      "correlation": 1.0,
+      "row_index": 1,
+      "col_index": 1
+    },
+    {
+      "feature1": "comment_count",
+      "feature2": "restacks",
+      "correlation": 0.6433128906814823,
+      "row_index": 1,
+      "col_index": 2
+    },
+    {
+      "feature1": "comment_count",
+      "feature2": "engagement_score",
+      "correlation": 0.8905858570886045,
+      "row_index": 1,
+      "col_index": 3
+    },
+    {
+      "feature1": "comment_count",
+      "feature2": "title_length",
+      "correlation": -0.017961877694890563,
+      "row_index": 1,
+      "col_index": 4
+    },
+    {
+      "feature1": "comment_count",
+      "feature2": "content_length",
+      "correlation": 0.04509720130085096,
+      "row_index": 1,
+      "col_index": 5
+    },
+    {
+      "feature1": "comment_count",
+      "feature2": "link_count",
+      "correlation": 0.03456692665182314,
+      "row_index": 1,
+      "col_index": 6
+    },
+    {
+      "feature1": "comment_count",
+      "feature2": "hour",
+      "correlation": 0.016543231304217042,
+      "row_index": 1,
+      "col_index": 7
+    },
+    {
+      "feature1": "comment_count",
+      "feature2": "has_number",
+      "correlation": -0.08098381050141122,
+      "row_index": 1,
+      "col_index": 8
+    },
+    {
+      "feature1": "comment_count",
+      "feature2": "has_question",
+      "correlation": 0.015816245498166893,
+      "row_index": 1,
+      "col_index": 9
+    },
+    {
+      "feature1": "comment_count",
+      "feature2": "has_images",
+      "correlation": 0.049948861196042825,
+      "row_index": 1,
+      "col_index": 10
+    },
+    {
+      "feature1": "comment_count",
+      "feature2": "has_lists",
+      "correlation": -0.0878391786326319,
+      "row_index": 1,
+      "col_index": 11
+    },
+    {
+      "feature1": "restacks",
+      "feature2": "reaction_count",
+      "correlation": 0.929403359180686,
+      "row_index": 2,
+      "col_index": 0
+    },
+    {
+      "feature1": "restacks",
+      "feature2": "comment_count",
+      "correlation": 0.6433128906814823,
+      "row_index": 2,
+      "col_index": 1
+    },
+    {
+      "feature1": "restacks",
+      "feature2": "restacks",
+      "correlation": 1.0,
+      "row_index": 2,
+      "col_index": 2
+    },
+    {
+      "feature1": "restacks",
+      "feature2": "engagement_score",
+      "correlation": 0.8796027960582297,
+      "row_index": 2,
+      "col_index": 3
+    },
+    {
+      "feature1": "restacks",
+      "feature2": "title_length",
+      "correlation": 0.0050286536070760545,
+      "row_index": 2,
+      "col_index": 4
+    },
+    {
+      "feature1": "restacks",
+      "feature2": "content_length",
+      "correlation": 0.05195124151592131,
+      "row_index": 2,
+      "col_index": 5
+    },
+    {
+      "feature1": "restacks",
+      "feature2": "link_count",
+      "correlation": 0.04641567018388663,
+      "row_index": 2,
+      "col_index": 6
+    },
+    {
+      "feature1": "restacks",
+      "feature2": "hour",
+      "correlation": 0.022436034778496493,
+      "row_index": 2,
+      "col_index": 7
+    },
+    {
+      "feature1": "restacks",
+      "feature2": "has_number",
+      "correlation": -0.09356695912329285,
+      "row_index": 2,
+      "col_index": 8
+    },
+    {
+      "feature1": "restacks",
+      "feature2": "has_question",
+      "correlation": -0.013660356436677642,
+      "row_index": 2,
+      "col_index": 9
+    },
+    {
+      "feature1": "restacks",
+      "feature2": "has_images",
+      "correlation": 0.048671417816210094,
+      "row_index": 2,
+      "col_index": 10
+    },
+    {
+      "feature1": "restacks",
+      "feature2": "has_lists",
+      "correlation": -0.07297588915106169,
+      "row_index": 2,
+      "col_index": 11
+    },
+    {
+      "feature1": "engagement_score",
+      "feature2": "reaction_count",
+      "correlation": 0.9254752002628228,
+      "row_index": 3,
+      "col_index": 0
+    },
+    {
+      "feature1": "engagement_score",
+      "feature2": "comment_count",
+      "correlation": 0.8905858570886045,
+      "row_index": 3,
+      "col_index": 1
+    },
+    {
+      "feature1": "engagement_score",
+      "feature2": "restacks",
+      "correlation": 0.8796027960582297,
+      "row_index": 3,
+      "col_index": 2
+    },
+    {
+      "feature1": "engagement_score",
+      "feature2": "engagement_score",
+      "correlation": 1.0,
+      "row_index": 3,
+      "col_index": 3
+    },
+    {
+      "feature1": "engagement_score",
+      "feature2": "title_length",
+      "correlation": -0.01566478707350463,
+      "row_index": 3,
+      "col_index": 4
+    },
+    {
+      "feature1": "engagement_score",
+      "feature2": "content_length",
+      "correlation": 0.05184594671557944,
+      "row_index": 3,
+      "col_index": 5
+    },
+    {
+      "feature1": "engagement_score",
+      "feature2": "link_count",
+      "correlation": 0.03827864188553287,
+      "row_index": 3,
+      "col_index": 6
+    },
+    {
+      "feature1": "engagement_score",
+      "feature2": "hour",
+      "correlation": 0.021287747830783358,
+      "row_index": 3,
+      "col_index": 7
+    },
+    {
+      "feature1": "engagement_score",
+      "feature2": "has_number",
+      "correlation": -0.09436837772531871,
+      "row_index": 3,
+      "col_index": 8
+    },
+    {
+      "feature1": "engagement_score",
+      "feature2": "has_question",
+      "correlation": -0.002614160453943634,
+      "row_index": 3,
+      "col_index": 9
+    },
+    {
+      "feature1": "engagement_score",
+      "feature2": "has_images",
+      "correlation": 0.05226951206654752,
+      "row_index": 3,
+      "col_index": 10
+    },
+    {
+      "feature1": "engagement_score",
+      "feature2": "has_lists",
+      "correlation": -0.08852875063393599,
+      "row_index": 3,
+      "col_index": 11
+    },
+    {
+      "feature1": "title_length",
+      "feature2": "reaction_count",
+      "correlation": -0.023995728659594037,
+      "row_index": 4,
+      "col_index": 0
+    },
+    {
+      "feature1": "title_length",
+      "feature2": "comment_count",
+      "correlation": -0.017961877694890563,
+      "row_index": 4,
+      "col_index": 1
+    },
+    {
+      "feature1": "title_length",
+      "feature2": "restacks",
+      "correlation": 0.0050286536070760545,
+      "row_index": 4,
+      "col_index": 2
+    },
+    {
+      "feature1": "title_length",
+      "feature2": "engagement_score",
+      "correlation": -0.01566478707350463,
+      "row_index": 4,
+      "col_index": 3
+    },
+    {
+      "feature1": "title_length",
+      "feature2": "title_length",
+      "correlation": 1.0,
+      "row_index": 4,
+      "col_index": 4
+    },
+    {
+      "feature1": "title_length",
+      "feature2": "content_length",
+      "correlation": 0.021563627807997844,
+      "row_index": 4,
+      "col_index": 5
+    },
+    {
+      "feature1": "title_length",
+      "feature2": "link_count",
+      "correlation": 0.03045623814666077,
+      "row_index": 4,
+      "col_index": 6
+    },
+    {
+      "feature1": "title_length",
+      "feature2": "hour",
+      "correlation": -0.007450692402613712,
+      "row_index": 4,
+      "col_index": 7
+    },
+    {
+      "feature1": "title_length",
+      "feature2": "has_number",
+      "correlation": 0.16452109855529237,
+      "row_index": 4,
+      "col_index": 8
+    },
+    {
+      "feature1": "title_length",
+      "feature2": "has_question",
+      "correlation": 0.10682785257180812,
+      "row_index": 4,
+      "col_index": 9
+    },
+    {
+      "feature1": "title_length",
+      "feature2": "has_images",
+      "correlation": 0.014377736677805382,
+      "row_index": 4,
+      "col_index": 10
+    },
+    {
+      "feature1": "title_length",
+      "feature2": "has_lists",
+      "correlation": 0.08767741031985184,
+      "row_index": 4,
+      "col_index": 11
+    },
+    {
+      "feature1": "content_length",
+      "feature2": "reaction_count",
+      "correlation": 0.05586280760662077,
+      "row_index": 5,
+      "col_index": 0
+    },
+    {
+      "feature1": "content_length",
+      "feature2": "comment_count",
+      "correlation": 0.04509720130085096,
+      "row_index": 5,
+      "col_index": 1
+    },
+    {
+      "feature1": "content_length",
+      "feature2": "restacks",
+      "correlation": 0.05195124151592131,
+      "row_index": 5,
+      "col_index": 2
+    },
+    {
+      "feature1": "content_length",
+      "feature2": "engagement_score",
+      "correlation": 0.05184594671557944,
+      "row_index": 5,
+      "col_index": 3
+    },
+    {
+      "feature1": "content_length",
+      "feature2": "title_length",
+      "correlation": 0.021563627807997844,
+      "row_index": 5,
+      "col_index": 4
+    },
+    {
+      "feature1": "content_length",
+      "feature2": "content_length",
+      "correlation": 1.0,
+      "row_index": 5,
+      "col_index": 5
+    },
+    {
+      "feature1": "content_length",
+      "feature2": "link_count",
+      "correlation": 0.6828333710680743,
+      "row_index": 5,
+      "col_index": 6
+    },
+    {
+      "feature1": "content_length",
+      "feature2": "hour",
+      "correlation": -0.03547636447093197,
+      "row_index": 5,
+      "col_index": 7
+    },
+    {
+      "feature1": "content_length",
+      "feature2": "has_number",
+      "correlation": 0.04473366807709842,
+      "row_index": 5,
+      "col_index": 8
+    },
+    {
+      "feature1": "content_length",
+      "feature2": "has_question",
+      "correlation": -0.00843217231890094,
+      "row_index": 5,
+      "col_index": 9
+    },
+    {
+      "feature1": "content_length",
+      "feature2": "has_images",
+      "correlation": 0.3459698314633939,
+      "row_index": 5,
+      "col_index": 10
+    },
+    {
+      "feature1": "content_length",
+      "feature2": "has_lists",
+      "correlation": 0.26135119025170483,
+      "row_index": 5,
+      "col_index": 11
+    },
+    {
+      "feature1": "link_count",
+      "feature2": "reaction_count",
+      "correlation": 0.040332677281662226,
+      "row_index": 6,
+      "col_index": 0
+    },
+    {
+      "feature1": "link_count",
+      "feature2": "comment_count",
+      "correlation": 0.03456692665182314,
+      "row_index": 6,
+      "col_index": 1
+    },
+    {
+      "feature1": "link_count",
+      "feature2": "restacks",
+      "correlation": 0.04641567018388663,
+      "row_index": 6,
+      "col_index": 2
+    },
+    {
+      "feature1": "link_count",
+      "feature2": "engagement_score",
+      "correlation": 0.03827864188553287,
+      "row_index": 6,
+      "col_index": 3
+    },
+    {
+      "feature1": "link_count",
+      "feature2": "title_length",
+      "correlation": 0.03045623814666077,
+      "row_index": 6,
+      "col_index": 4
+    },
+    {
+      "feature1": "link_count",
+      "feature2": "content_length",
+      "correlation": 0.6828333710680743,
+      "row_index": 6,
+      "col_index": 5
+    },
+    {
+      "feature1": "link_count",
+      "feature2": "link_count",
+      "correlation": 1.0,
+      "row_index": 6,
+      "col_index": 6
+    },
+    {
+      "feature1": "link_count",
+      "feature2": "hour",
+      "correlation": -0.008239621101898317,
+      "row_index": 6,
+      "col_index": 7
+    },
+    {
+      "feature1": "link_count",
+      "feature2": "has_number",
+      "correlation": 0.04265476967505437,
+      "row_index": 6,
+      "col_index": 8
+    },
+    {
+      "feature1": "link_count",
+      "feature2": "has_question",
+      "correlation": -0.004988868324669316,
+      "row_index": 6,
+      "col_index": 9
+    },
+    {
+      "feature1": "link_count",
+      "feature2": "has_images",
+      "correlation": 0.22366113617127903,
+      "row_index": 6,
+      "col_index": 10
+    },
+    {
+      "feature1": "link_count",
+      "feature2": "has_lists",
+      "correlation": 0.25607259338218974,
+      "row_index": 6,
+      "col_index": 11
+    },
+    {
+      "feature1": "hour",
+      "feature2": "reaction_count",
+      "correlation": 0.023972873567075885,
+      "row_index": 7,
+      "col_index": 0
+    },
+    {
+      "feature1": "hour",
+      "feature2": "comment_count",
+      "correlation": 0.016543231304217042,
+      "row_index": 7,
+      "col_index": 1
+    },
+    {
+      "feature1": "hour",
+      "feature2": "restacks",
+      "correlation": 0.022436034778496493,
+      "row_index": 7,
+      "col_index": 2
+    },
+    {
+      "feature1": "hour",
+      "feature2": "engagement_score",
+      "correlation": 0.021287747830783358,
+      "row_index": 7,
+      "col_index": 3
+    },
+    {
+      "feature1": "hour",
+      "feature2": "title_length",
+      "correlation": -0.007450692402613712,
+      "row_index": 7,
+      "col_index": 4
+    },
+    {
+      "feature1": "hour",
+      "feature2": "content_length",
+      "correlation": -0.03547636447093197,
+      "row_index": 7,
+      "col_index": 5
+    },
+    {
+      "feature1": "hour",
+      "feature2": "link_count",
+      "correlation": -0.008239621101898317,
+      "row_index": 7,
+      "col_index": 6
+    },
+    {
+      "feature1": "hour",
+      "feature2": "hour",
+      "correlation": 1.0,
+      "row_index": 7,
+      "col_index": 7
+    },
+    {
+      "feature1": "hour",
+      "feature2": "has_number",
+      "correlation": -0.03682068847030306,
+      "row_index": 7,
+      "col_index": 8
+    },
+    {
+      "feature1": "hour",
+      "feature2": "has_question",
+      "correlation": -0.0043167990054787,
+      "row_index": 7,
+      "col_index": 9
+    },
+    {
+      "feature1": "hour",
+      "feature2": "has_images",
+      "correlation": -0.03375375881037337,
+      "row_index": 7,
+      "col_index": 10
+    },
+    {
+      "feature1": "hour",
+      "feature2": "has_lists",
+      "correlation": -0.025038464254719468,
+      "row_index": 7,
+      "col_index": 11
+    },
+    {
+      "feature1": "has_number",
+      "feature2": "reaction_count",
+      "correlation": -0.09636977877324213,
+      "row_index": 8,
+      "col_index": 0
+    },
+    {
+      "feature1": "has_number",
+      "feature2": "comment_count",
+      "correlation": -0.08098381050141122,
+      "row_index": 8,
+      "col_index": 1
+    },
+    {
+      "feature1": "has_number",
+      "feature2": "restacks",
+      "correlation": -0.09356695912329285,
+      "row_index": 8,
+      "col_index": 2
+    },
+    {
+      "feature1": "has_number",
+      "feature2": "engagement_score",
+      "correlation": -0.09436837772531871,
+      "row_index": 8,
+      "col_index": 3
+    },
+    {
+      "feature1": "has_number",
+      "feature2": "title_length",
+      "correlation": 0.16452109855529237,
+      "row_index": 8,
+      "col_index": 4
+    },
+    {
+      "feature1": "has_number",
+      "feature2": "content_length",
+      "correlation": 0.04473366807709842,
+      "row_index": 8,
+      "col_index": 5
+    },
+    {
+      "feature1": "has_number",
+      "feature2": "link_count",
+      "correlation": 0.04265476967505437,
+      "row_index": 8,
+      "col_index": 6
+    },
+    {
+      "feature1": "has_number",
+      "feature2": "hour",
+      "correlation": -0.03682068847030306,
+      "row_index": 8,
+      "col_index": 7
+    },
+    {
+      "feature1": "has_number",
+      "feature2": "has_number",
+      "correlation": 1.0,
+      "row_index": 8,
+      "col_index": 8
+    },
+    {
+      "feature1": "has_number",
+      "feature2": "has_question",
+      "correlation": -0.029802486724200446,
+      "row_index": 8,
+      "col_index": 9
+    },
+    {
+      "feature1": "has_number",
+      "feature2": "has_images",
+      "correlation": -0.026086819365827997,
+      "row_index": 8,
+      "col_index": 10
+    },
+    {
+      "feature1": "has_number",
+      "feature2": "has_lists",
+      "correlation": 0.10168283168992276,
+      "row_index": 8,
+      "col_index": 11
+    },
+    {
+      "feature1": "has_question",
+      "feature2": "reaction_count",
+      "correlation": -0.01590028407059662,
+      "row_index": 9,
+      "col_index": 0
+    },
+    {
+      "feature1": "has_question",
+      "feature2": "comment_count",
+      "correlation": 0.015816245498166893,
+      "row_index": 9,
+      "col_index": 1
+    },
+    {
+      "feature1": "has_question",
+      "feature2": "restacks",
+      "correlation": -0.013660356436677642,
+      "row_index": 9,
+      "col_index": 2
+    },
+    {
+      "feature1": "has_question",
+      "feature2": "engagement_score",
+      "correlation": -0.002614160453943634,
+      "row_index": 9,
+      "col_index": 3
+    },
+    {
+      "feature1": "has_question",
+      "feature2": "title_length",
+      "correlation": 0.10682785257180812,
+      "row_index": 9,
+      "col_index": 4
+    },
+    {
+      "feature1": "has_question",
+      "feature2": "content_length",
+      "correlation": -0.00843217231890094,
+      "row_index": 9,
+      "col_index": 5
+    },
+    {
+      "feature1": "has_question",
+      "feature2": "link_count",
+      "correlation": -0.004988868324669316,
+      "row_index": 9,
+      "col_index": 6
+    },
+    {
+      "feature1": "has_question",
+      "feature2": "hour",
+      "correlation": -0.0043167990054787,
+      "row_index": 9,
+      "col_index": 7
+    },
+    {
+      "feature1": "has_question",
+      "feature2": "has_number",
+      "correlation": -0.029802486724200446,
+      "row_index": 9,
+      "col_index": 8
+    },
+    {
+      "feature1": "has_question",
+      "feature2": "has_question",
+      "correlation": 1.0,
+      "row_index": 9,
+      "col_index": 9
+    },
+    {
+      "feature1": "has_question",
+      "feature2": "has_images",
+      "correlation": -0.010215110939341401,
+      "row_index": 9,
+      "col_index": 10
+    },
+    {
+      "feature1": "has_question",
+      "feature2": "has_lists",
+      "correlation": 0.001947345594067927,
+      "row_index": 9,
+      "col_index": 11
+    },
+    {
+      "feature1": "has_images",
+      "feature2": "reaction_count",
+      "correlation": 0.051389491147972845,
+      "row_index": 10,
+      "col_index": 0
+    },
+    {
+      "feature1": "has_images",
+      "feature2": "comment_count",
+      "correlation": 0.049948861196042825,
+      "row_index": 10,
+      "col_index": 1
+    },
+    {
+      "feature1": "has_images",
+      "feature2": "restacks",
+      "correlation": 0.048671417816210094,
+      "row_index": 10,
+      "col_index": 2
+    },
+    {
+      "feature1": "has_images",
+      "feature2": "engagement_score",
+      "correlation": 0.05226951206654752,
+      "row_index": 10,
+      "col_index": 3
+    },
+    {
+      "feature1": "has_images",
+      "feature2": "title_length",
+      "correlation": 0.014377736677805382,
+      "row_index": 10,
+      "col_index": 4
+    },
+    {
+      "feature1": "has_images",
+      "feature2": "content_length",
+      "correlation": 0.3459698314633939,
+      "row_index": 10,
+      "col_index": 5
+    },
+    {
+      "feature1": "has_images",
+      "feature2": "link_count",
+      "correlation": 0.22366113617127903,
+      "row_index": 10,
+      "col_index": 6
+    },
+    {
+      "feature1": "has_images",
+      "feature2": "hour",
+      "correlation": -0.03375375881037337,
+      "row_index": 10,
+      "col_index": 7
+    },
+    {
+      "feature1": "has_images",
+      "feature2": "has_number",
+      "correlation": -0.026086819365827997,
+      "row_index": 10,
+      "col_index": 8
+    },
+    {
+      "feature1": "has_images",
+      "feature2": "has_question",
+      "correlation": -0.010215110939341401,
+      "row_index": 10,
+      "col_index": 9
+    },
+    {
+      "feature1": "has_images",
+      "feature2": "has_images",
+      "correlation": 1.0,
+      "row_index": 10,
+      "col_index": 10
+    },
+    {
+      "feature1": "has_images",
+      "feature2": "has_lists",
+      "correlation": 0.16383438345641116,
+      "row_index": 10,
+      "col_index": 11
+    },
+    {
+      "feature1": "has_lists",
+      "feature2": "reaction_count",
+      "correlation": -0.08005582005187503,
+      "row_index": 11,
+      "col_index": 0
+    },
+    {
+      "feature1": "has_lists",
+      "feature2": "comment_count",
+      "correlation": -0.0878391786326319,
+      "row_index": 11,
+      "col_index": 1
+    },
+    {
+      "feature1": "has_lists",
+      "feature2": "restacks",
+      "correlation": -0.07297588915106169,
+      "row_index": 11,
+      "col_index": 2
+    },
+    {
+      "feature1": "has_lists",
+      "feature2": "engagement_score",
+      "correlation": -0.08852875063393599,
+      "row_index": 11,
+      "col_index": 3
+    },
+    {
+      "feature1": "has_lists",
+      "feature2": "title_length",
+      "correlation": 0.08767741031985184,
+      "row_index": 11,
+      "col_index": 4
+    },
+    {
+      "feature1": "has_lists",
+      "feature2": "content_length",
+      "correlation": 0.26135119025170483,
+      "row_index": 11,
+      "col_index": 5
+    },
+    {
+      "feature1": "has_lists",
+      "feature2": "link_count",
+      "correlation": 0.25607259338218974,
+      "row_index": 11,
+      "col_index": 6
+    },
+    {
+      "feature1": "has_lists",
+      "feature2": "hour",
+      "correlation": -0.025038464254719468,
+      "row_index": 11,
+      "col_index": 7
+    },
+    {
+      "feature1": "has_lists",
+      "feature2": "has_number",
+      "correlation": 0.10168283168992276,
+      "row_index": 11,
+      "col_index": 8
+    },
+    {
+      "feature1": "has_lists",
+      "feature2": "has_question",
+      "correlation": 0.001947345594067927,
+      "row_index": 11,
+      "col_index": 9
+    },
+    {
+      "feature1": "has_lists",
+      "feature2": "has_images",
+      "correlation": 0.16383438345641116,
+      "row_index": 11,
+      "col_index": 10
+    },
+    {
+      "feature1": "has_lists",
+      "feature2": "has_lists",
+      "correlation": 1.0,
+      "row_index": 11,
+      "col_index": 11
+    }
+  ],
+  "features": [
+    "reaction_count",
+    "comment_count",
+    "restacks",
+    "engagement_score",
+    "title_length",
+    "content_length",
+    "link_count",
+    "hour",
+    "has_number",
+    "has_question",
+    "has_images",
+    "has_lists"
+  ],
+  "top_engagement_correlations": [
+    {
+      "feature": "reaction_count",
+      "correlation": 0.9254752002628228
+    },
+    {
+      "feature": "comment_count",
+      "correlation": 0.8905858570886045
+    },
+    {
+      "feature": "restacks",
+      "correlation": 0.8796027960582297
+    },
+    {
+      "feature": "has_images",
+      "correlation": 0.05226951206654752
+    },
+    {
+      "feature": "content_length",
+      "correlation": 0.05184594671557944
+    },
+    {
+      "feature": "link_count",
+      "correlation": 0.03827864188553287
+    },
+    {
+      "feature": "hour",
+      "correlation": 0.021287747830783358
+    },
+    {
+      "feature": "has_question",
+      "correlation": -0.002614160453943634
+    },
+    {
+      "feature": "title_length",
+      "correlation": -0.01566478707350463
+    },
+    {
+      "feature": "has_lists",
+      "correlation": -0.08852875063393599
+    },
+    {
+      "feature": "has_number",
+      "correlation": -0.09436837772531871
+    }
+  ]
+}

@@ -50,7 +50,9 @@
 	},
 	"dependencies": {
 		"@lucide/svelte": "^0.539.0",
+		"@types/d3": "^7.4.3",
 		"3d-force-graph": "^1.78.4",
+		"d3": "^7.9.0",
 		"d3-force": "^3.0.0",
 		"d3-force-3d": "^3.0.6",
 		"d3-quadtree": "^3.0.1",

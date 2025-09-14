@@ -1,0 +1,128 @@
+{
+  "threshold_percentile": 95,
+  "threshold_score": 967.9000000000015,
+  "viral_count": 1821,
+  "viral_percentage": 5.002334972392386,
+  "feature_comparison": [
+    {
+      "feature": "title_length",
+      "viral_mean": 7.271828665568369,
+      "normal_mean": 7.496558903475797,
+      "difference_percentage": -2.9977785914979127
+    },
+    {
+      "feature": "has_number",
+      "viral_mean": 0.1186161449752883,
+      "normal_mean": 0.2682898617778035,
+      "difference_percentage": -55.78806288493836
+    },
+    {
+      "feature": "has_question",
+      "viral_mean": 0.07742998352553541,
+      "normal_mean": 0.07709212885316061,
+      "difference_percentage": 0.43824794748932305
+    },
+    {
+      "feature": "has_exclamation",
+      "viral_mean": 0.04228445908841296,
+      "normal_mean": 0.03631947255797814,
+      "difference_percentage": 16.423659569705173
+    },
+    {
+      "feature": "content_length",
+      "viral_mean": 22012.08750687947,
+      "normal_mean": 17567.00671434827,
+      "difference_percentage": 25.303575417322378
+    },
+    {
+      "feature": "has_images",
+      "viral_mean": 0.8341570565623284,
+      "normal_mean": 0.734428315308542,
+      "difference_percentage": 13.579098078740227
+    },
+    {
+      "feature": "has_lists",
+      "viral_mean": 0.18506315211422295,
+      "normal_mean": 0.33980105257070153,
+      "difference_percentage": -45.537793154505515
+    },
+    {
+      "feature": "link_count",
+      "viral_mean": 11.896532746285086,
+      "normal_mean": 9.509385491169173,
+      "difference_percentage": 25.103065359299205
+    }
+  ],
+  "top_viral_posts": [
+    {
+      "title": "no good alone",
+      "engagement_score": 4467.860000000022,
+      "reaction_count": 1906.0,
+      "comment_count": 237.0,
+      "restacks": 311.0
+    },
+    {
+      "title": "Little Miss Trouble",
+      "engagement_score": 4467.860000000022,
+      "reaction_count": 1906.0,
+      "comment_count": 343.9800000000032,
+      "restacks": 211.0
+    },
+    {
+      "title": "home for the holidays",
+      "engagement_score": 4467.860000000022,
+      "reaction_count": 1906.0,
+      "comment_count": 109.0,
+      "restacks": 311.0
+    },
+    {
+      "title": "You Don't Need To Document Everything",
+      "engagement_score": 4467.860000000022,
+      "reaction_count": 1906.0,
+      "comment_count": 343.9800000000032,
+      "restacks": 311.0
+    },
+    {
+      "title": "Stop Opening Up About Your Mental Health Online",
+      "engagement_score": 4467.860000000022,
+      "reaction_count": 1906.0,
+      "comment_count": 200.0,
+      "restacks": 311.0
+    },
+    {
+      "title": "Maybe You're Not Anxiously Attached",
+      "engagement_score": 4467.860000000022,
+      "reaction_count": 1906.0,
+      "comment_count": 185.0,
+      "restacks": 311.0
+    },
+    {
+      "title": "The Lifegiving Benefits of Befriending Our Mortality",
+      "engagement_score": 4467.860000000022,
+      "reaction_count": 1906.0,
+      "comment_count": 343.9800000000032,
+      "restacks": 257.0
+    },
+    {
+      "title": "Our New Religion Isn't Enough",
+      "engagement_score": 4467.860000000022,
+      "reaction_count": 1906.0,
+      "comment_count": 331.0,
+      "restacks": 311.0
+    },
+    {
+      "title": "How I Kept My Spirit From Breaking",
+      "engagement_score": 4467.860000000022,
+      "reaction_count": 1906.0,
+      "comment_count": 273.0,
+      "restacks": 311.0
+    },
+    {
+      "title": "In Praise Of Not Knowing",
+      "engagement_score": 4467.860000000022,
+      "reaction_count": 1906.0,
+      "comment_count": 295.0,
+      "restacks": 286.0
+    }
+  ]
+}

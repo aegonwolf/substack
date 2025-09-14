@@ -1,0 +1,113 @@
+{
+  "chart_type": "monthly_patterns",
+  "data": [
+    {
+      "month": 1,
+      "month_name": "January",
+      "count": 783,
+      "mean_engagement": 217.09634738186475,
+      "mean_reactions": 112.34355044699872,
+      "mean_comments": 11.63598978288634,
+      "mean_restacks": 12.544061302681992
+    },
+    {
+      "month": 2,
+      "month_name": "February",
+      "count": 963,
+      "mean_engagement": 220.45412253374897,
+      "mean_reactions": 103.6116303219107,
+      "mean_comments": 14.151526479750792,
+      "mean_restacks": 13.363447559709241
+    },
+    {
+      "month": 3,
+      "month_name": "March",
+      "count": 1436,
+      "mean_engagement": 186.4492896935935,
+      "mean_reactions": 88.91016713091922,
+      "mean_comments": 12.80980501392759,
+      "mean_restacks": 9.860724233983287
+    },
+    {
+      "month": 4,
+      "month_name": "April",
+      "count": 1916,
+      "mean_engagement": 159.35737995824647,
+      "mean_reactions": 72.92484342379959,
+      "mean_comments": 10.932651356993741,
+      "mean_restacks": 8.594989561586639
+    },
+    {
+      "month": 5,
+      "month_name": "May",
+      "count": 2663,
+      "mean_engagement": 151.14201276755549,
+      "mean_reactions": 67.62523469770935,
+      "mean_comments": 11.746105895606465,
+      "mean_restacks": 7.975966954562524
+    },
+    {
+      "month": 6,
+      "month_name": "June",
+      "count": 4085,
+      "mean_engagement": 171.77130966952282,
+      "mean_reactions": 75.44137086903305,
+      "mean_comments": 12.350932680538573,
+      "mean_restacks": 9.206854345165238
+    },
+    {
+      "month": 7,
+      "month_name": "July",
+      "count": 6972,
+      "mean_engagement": 188.4284882386691,
+      "mean_reactions": 78.00286861732644,
+      "mean_comments": 14.048198508319013,
+      "mean_restacks": 10.690332759609868
+    },
+    {
+      "month": 8,
+      "month_name": "August",
+      "count": 11661,
+      "mean_engagement": 260.25371751993856,
+      "mean_reactions": 105.1981819741017,
+      "mean_comments": 19.802198782265723,
+      "mean_restacks": 15.271589057542235
+    },
+    {
+      "month": 9,
+      "month_name": "September",
+      "count": 4444,
+      "mean_engagement": 269.2371872187222,
+      "mean_reactions": 98.5506300630063,
+      "mean_comments": 21.6611431143115,
+      "mean_restacks": 14.326057605760576
+    },
+    {
+      "month": 10,
+      "month_name": "October",
+      "count": 417,
+      "mean_engagement": 151.5916546762591,
+      "mean_reactions": 76.88249400479616,
+      "mean_comments": 10.050311750599528,
+      "mean_restacks": 7.438848920863309
+    },
+    {
+      "month": 11,
+      "month_name": "November",
+      "count": 478,
+      "mean_engagement": 163.90916317991648,
+      "mean_reactions": 81.19665271966527,
+      "mean_comments": 11.75928870292889,
+      "mean_restacks": 6.864016736401673
+    },
+    {
+      "month": 12,
+      "month_name": "December",
+      "count": 585,
+      "mean_engagement": 164.90403418803422,
+      "mean_reactions": 85.92991452991453,
+      "mean_comments": 10.524786324786325,
+      "mean_restacks": 8.275213675213676
+    }
+  ]
+}

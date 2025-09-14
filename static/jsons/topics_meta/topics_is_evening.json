@@ -1,0 +1,26 @@
+{
+  "feature": "is_evening",
+  "metric": "engagement_score",
+  "with_feature": {
+    "count": 8972,
+    "percentage": 24.646320358212233,
+    "mean_engagement": 235.59365581810098,
+    "mean_reactions": 101.7399687917967,
+    "mean_comments": 16.86005572893449,
+    "mean_restacks": 13.856888096299599
+  },
+  "without_feature": {
+    "count": 27431,
+    "percentage": 75.35367964178776,
+    "mean_engagement": 208.84574459553082,
+    "mean_reactions": 86.04305347963982,
+    "mean_comments": 15.808183442091098,
+    "mean_restacks": 11.496081076154715
+  },
+  "effect_percentage": 12.807496400930996,
+  "statistical_significance": {
+    "t_statistic": 3.595114130192334,
+    "p_value": 0.0003246778106556208,
+    "significant": true
+  }
+}
