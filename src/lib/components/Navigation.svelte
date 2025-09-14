@@ -175,9 +175,7 @@
 						href={item.href}
 						class="btn transition-all duration-200 {isItemActive(item, $navigationState.currentPath)
 							? 'preset-filled-primary-500'
-							: item.featured
-								? 'preset-filled-primary-500'
-								: 'preset-tonal-surface'}"
+							: 'preset-tonal-surface'}"
 						target={item.external ? '_blank' : undefined}
 						rel={item.external ? 'noopener noreferrer' : undefined}
 						aria-current={isItemActive(item, $navigationState.currentPath) ? 'page' : undefined}
@@ -235,7 +233,7 @@
 						{#if $navigationState.dropdownsEnabled && $navigationState.activeDropdown === item.label}
 							<div
 								id="dropdown-menu-{item.label}"
-								class="bg-surface-100-800-token border-surface-300-600-token rounded-container-token absolute top-full left-0 z-[9999] mt-1 min-w-48 border py-2 shadow-xl transition-all duration-200 ease-out"
+								class="rounded-container-token absolute top-full left-0 z-[9999] mt-1 min-w-48 border border-surface-400-600 bg-surface-200-800 py-2 shadow-xl transition-all duration-200 ease-out"
 								role="menu"
 								aria-labelledby="dropdown-trigger-{item.label}"
 								tabindex="-1"
@@ -243,47 +241,24 @@
 								onmouseleave={() => navigationStore.handleDropdownHover(item.label, false)}
 							>
 								{#each item.children as child}
-									{#if child.featured}
-										<!-- Featured items get primary button styling -->
-										<a
-											href={child.href}
-											class="rounded-token mx-2 mb-1 block px-3 py-2 text-sm transition-all duration-150 {isItemActive(
-												child,
-												$navigationState.currentPath
-											)
-												? 'preset-filled-primary-500'
-												: 'preset-filled-primary-500 opacity-90 hover:opacity-100'}"
-											role="menuitem"
-											tabindex="-1"
-											aria-current={isItemActive(child, $navigationState.currentPath)
-												? 'page'
-												: undefined}
-											onclick={() => navigationStore.setActiveDropdown(null)}
-											onkeydown={(e) => handleMenuItemKeydown(e, item.label)}
-										>
-											{child.label}
-										</a>
-									{:else}
-										<!-- Secondary items get subtle styling -->
-										<a
-											href={child.href}
-											class="rounded-token block px-4 py-2 text-sm transition-all duration-150 {isItemActive(
-												child,
-												$navigationState.currentPath
-											)
-												? 'preset-filled-primary-500'
-												: 'text-surface-900-50-token hover:preset-tonal-surface'}"
-											role="menuitem"
-											tabindex="-1"
-											aria-current={isItemActive(child, $navigationState.currentPath)
-												? 'page'
-												: undefined}
-											onclick={() => navigationStore.setActiveDropdown(null)}
-											onkeydown={(e) => handleMenuItemKeydown(e, item.label)}
-										>
-											{child.label}
-										</a>
-									{/if}
+									<a
+										href={child.href}
+										class="rounded-token block px-4 py-2 text-sm transition-all duration-150 {isItemActive(
+											child,
+											$navigationState.currentPath
+										)
+											? 'preset-filled-primary-500'
+											: 'text-surface-900-50-token hover:preset-tonal-surface'}"
+										role="menuitem"
+										tabindex="-1"
+										aria-current={isItemActive(child, $navigationState.currentPath)
+											? 'page'
+											: undefined}
+										onclick={() => navigationStore.setActiveDropdown(null)}
+										onkeydown={(e) => handleMenuItemKeydown(e, item.label)}
+									>
+										{child.label}
+									</a>
 								{/each}
 							</div>
 						{/if}
@@ -326,9 +301,7 @@
 							href={item.href}
 							class="btn w-full text-left {isItemActive(item, $navigationState.currentPath)
 								? 'preset-filled-primary-500'
-								: item.featured
-									? 'preset-filled-primary-500'
-									: 'preset-tonal-surface'}"
+								: 'preset-tonal-surface'}"
 							target={item.external ? '_blank' : undefined}
 							rel={item.external ? 'noopener noreferrer' : undefined}
 							aria-current={isItemActive(item, $navigationState.currentPath) ? 'page' : undefined}
@@ -393,9 +366,7 @@
 											href={child.href}
 											class="btn w-full text-left {isItemActive(child, $navigationState.currentPath)
 												? 'preset-filled-primary-500'
-												: child.featured
-													? 'preset-filled-primary-500'
-													: 'preset-tonal-surface'}"
+												: 'preset-tonal-surface'}"
 											aria-current={isItemActive(child, $navigationState.currentPath)
 												? 'page'
 												: undefined}
