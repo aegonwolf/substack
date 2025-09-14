@@ -49,7 +49,11 @@
 				// Include engagement metrics
 				avg_reactions: topic.avg_reactions || 0,
 				avg_comments: topic.avg_comments || 0,
-				avg_restacks: topic.avg_restacks || 0
+				avg_restacks: topic.avg_restacks || 0,
+				// Include per-1k engagement metrics
+				avg_reactions_per_1k: topic.avg_reactions_per_1k || 0,
+				avg_comments_per_1k: topic.avg_comments_per_1k || 0,
+				avg_restacks_per_1k: topic.avg_restacks_per_1k || 0
 			};
 		});
 

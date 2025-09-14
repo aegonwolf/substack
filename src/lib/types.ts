@@ -28,3 +28,31 @@ export interface FilterState {
   category: string;
   board: "paid" | "free" | "rising";
 }
+
+// Lazy Loading Types
+export interface LazyLoadState {
+  isIntersecting: boolean;
+  isLoading: boolean;
+  hasLoaded: boolean;
+  hasError: boolean;
+  errorMessage?: string;
+  retryCount: number;
+}
+
+export interface LazyComponentProps {
+  componentImport: () => Promise<any>;
+  fallbackHeight?: string;
+  loadingComponent?: any;
+  errorComponent?: any;
+  props?: Record<string, any>;
+  priority?: 'high' | 'medium' | 'low';
+}
+
+export interface ComponentRegistry {
+  [key: string]: {
+    import: () => Promise<any>;
+    priority: 'high' | 'medium' | 'low';
+    fallbackHeight: string;
+    dependencies?: string[];
+  };
+}

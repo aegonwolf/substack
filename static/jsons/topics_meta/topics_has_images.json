@@ -7,7 +7,12 @@
     "mean_engagement": 234.4233517851174,
     "mean_reactions": 97.70795408106402,
     "mean_comments": 17.46171564438834,
-    "mean_restacks": 13.279748857599287
+    "mean_restacks": 13.279748857599287,
+    "mean_engagement_per_1k": 66.30135667895799,
+    "mean_reactions_per_1k": 30.294385731257904,
+    "mean_comments_per_1k": 4.460241192956137,
+    "mean_restacks_per_1k": 4.065126179297618,
+    "posts_with_subscriber_data": 22437
   },
   "without_feature": {
     "count": 9486,
@@ -15,9 +20,15 @@
     "mean_engagement": 161.566576006747,
     "mean_reactions": 67.78969006957622,
     "mean_comments": 12.111079485557687,
-    "mean_restacks": 8.667720851781572
+    "mean_restacks": 8.667720851781572,
+    "mean_engagement_per_1k": 28.369468520459172,
+    "mean_reactions_per_1k": 10.714101533124474,
+    "mean_comments_per_1k": 2.3548538491280815,
+    "mean_restacks_per_1k": 1.6357356758536084,
+    "posts_with_subscriber_data": 7902
   },
   "effect_percentage": 45.09396533558272,
+  "effect_percentage_per_1k": 133.70672817202595,
   "statistical_significance": {
     "t_statistic": 9.986175256726275,
     "p_value": 1.8782970863163393e-23,

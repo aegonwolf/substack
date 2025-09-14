@@ -11,7 +11,7 @@
 </svelte:head>
 
 <!-- Navigation Header -->
-<header class="w-full overflow-hidden shadow-sm shadow-primary-100-900/50">
+<header class="w-full shadow-sm shadow-primary-100-900/50 relative z-50">
 	<Navigation />
 </header>
 

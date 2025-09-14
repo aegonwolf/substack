@@ -22,3 +22,10 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+/docs
+/scripts
+
+preprocess_category_graph_data.py 
+preprocess_graph_data.py
+preprocess_recommendation_counts.py

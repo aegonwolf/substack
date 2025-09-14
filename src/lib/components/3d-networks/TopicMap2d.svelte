@@ -51,12 +51,15 @@
 
 	// Color metric selection
 	let selectedMetric = $state<string>('avg_subscriber_count');
-	
+
 	const colorMetrics = [
 		{ value: 'avg_subscriber_count', label: 'Average Subscribers' },
 		{ value: 'avg_reactions', label: 'Average Reactions' },
 		{ value: 'avg_comments', label: 'Average Comments' },
 		{ value: 'avg_restacks', label: 'Average Restacks' },
+		{ value: 'avg_reactions_per_1k', label: 'Reactions per 1K' },
+		{ value: 'avg_comments_per_1k', label: 'Comments per 1K' },
+		{ value: 'avg_restacks_per_1k', label: 'Restacks per 1K' },
 		{ value: 'pub_count', label: 'Publication Count' },
 		{ value: 'post_count', label: 'Post Count' }
 	];
@@ -107,7 +110,7 @@
 	// Function to recolor nodes based on selected metric
 	function recolorNodes() {
 		const colorScale = createGenericColorScale(graphData.nodes, selectedMetric);
-		graphData.nodes.forEach(node => {
+		graphData.nodes.forEach((node) => {
 			node.color = colorScale(node[selectedMetric as keyof NodeT] as number);
 		});
 		scheduleDraw();
@@ -826,7 +829,7 @@
 		if (isInitialized) scheduleDraw();
 	});
 
-	$inspect("Hovered Node", hoveredNode);
+	$inspect('Hovered Node', hoveredNode);
 </script>
 
 <div class="relative h-full w-full" bind:this={containerEl}>
@@ -855,9 +858,9 @@
 				>
 					<div class="mb-2 flex items-center gap-2">
 						<h4 class="text-xs font-semibold text-surface-700-300">Color by:</h4>
-						<select 
+						<select
 							bind:value={selectedMetric}
-							class="text-xs bg-surface-200-800 border border-surface-300-700 rounded px-1 py-0.5"
+							class="rounded border border-surface-300-700 bg-surface-200-800 px-1 py-0.5 text-xs"
 						>
 							{#each colorMetrics as metric}
 								<option value={metric.value}>{metric.label}</option>
@@ -900,74 +903,85 @@
 			style="left: {tooltipPosition.x + 15}px; top: {tooltipPosition.y - 10}px;"
 		>
 			<div
-				class="min-w-72 card border border-surface-400 preset-filled-surface-100-900 p-4 shadow-xl"
+				class="min-w-80 card border border-surface-400 preset-filled-surface-100-900 p-4 shadow-xl"
 			>
-				<header class="card-header pb-2">
+				<header class="card-header pb-3">
 					<h4 class="text-on-surface h4 font-semibold">{hoveredNode.name}</h4>
+					<p class="text-sm opacity-75">Topic</p>
 				</header>
-				<section class="card-body space-y-3">
-					<div class="flex items-center justify-between gap-4">
-						<span class="text-sm opacity-75">Category:</span>
-						<span class="text-right text-sm font-medium">{hoveredNode.category}</span>
+				<section class="card-body space-y-4">
+					<!-- Basic Stats -->
+					<div class="space-y-2">
+						<h5 class="text-sm font-medium opacity-90">Overview</h5>
+						<div class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+							{#if hoveredNode.subscriber_count && hoveredNode.subscriber_count > 0}
+								<span class="opacity-75">Total Subscribers:</span>
+								<span class="text-right font-medium"
+									>{hoveredNode.subscriber_count.toLocaleString()}</span
+								>
+							{/if}
+							{#if hoveredNode.avg_subscriber_count && hoveredNode.avg_subscriber_count > 0}
+								<span class="opacity-75">Avg Subscribers:</span>
+								<span class="text-right font-medium"
+									>{hoveredNode.avg_subscriber_count.toLocaleString()}</span
+								>
+							{/if}
+							{#if hoveredNode.pub_count && hoveredNode.pub_count > 0}
+								<span class="opacity-75">Publications:</span>
+								<span class="text-right font-medium">{hoveredNode.pub_count.toLocaleString()}</span>
+							{/if}
+							{#if hoveredNode.post_count && hoveredNode.post_count > 0}
+								<span class="opacity-75">Posts:</span>
+								<span class="text-right font-medium">{hoveredNode.post_count.toLocaleString()}</span
+								>
+							{/if}
+						</div>
 					</div>
-					<div class="flex items-center justify-between gap-4">
-						<span class="text-sm opacity-75">Type:</span>
-						<span class="text-right text-sm font-medium">Topic</span>
-					</div>
-					{#if hoveredNode.subscriber_count && hoveredNode.subscriber_count > 0}
-						<div class="flex items-center justify-between gap-4">
-							<span class="text-sm opacity-75">Total Subscribers:</span>
-							<span class="text-right text-sm font-medium">
-								{hoveredNode.subscriber_count.toLocaleString()}
-							</span>
-						</div>
-					{/if}
-					{#if hoveredNode.avg_subscriber_count && hoveredNode.avg_subscriber_count > 0}
-						<div class="flex items-center justify-between gap-4">
-							<span class="text-sm opacity-75">Avg Subscribers:</span>
-							<span class="text-right text-sm font-medium">
-								{hoveredNode.avg_subscriber_count.toLocaleString()}
-							</span>
-						</div>
-					{/if}
-					{#if hoveredNode.pub_count && hoveredNode.pub_count > 0}
-						<div class="flex items-center justify-between gap-4">
-							<span class="text-sm opacity-75">Publications:</span>
-							<span class="text-right text-sm font-medium">
-								{hoveredNode.pub_count.toLocaleString()}
-							</span>
-						</div>
-					{/if}
-					{#if hoveredNode.post_count && hoveredNode.post_count > 0}
-						<div class="flex items-center justify-between gap-4">
-							<span class="text-sm opacity-75">Posts:</span>
-							<span class="text-right text-sm font-medium">
-								{hoveredNode.post_count.toLocaleString()}
-							</span>
-						</div>
-					{/if}
-					{#if hoveredNode.avg_reactions && hoveredNode.avg_reactions >= 0.1}
-						<div class="flex items-center justify-between gap-4">
-							<span class="text-sm opacity-75">Avg Reactions:</span>
-							<span class="text-right text-sm font-medium">
-								{hoveredNode.avg_reactions.toFixed(1)}
-							</span>
-						</div>
-					{/if}
-					{#if hoveredNode.avg_comments && hoveredNode.avg_comments >= 0.1}
-						<div class="flex items-center justify-between gap-4">
-							<span class="text-sm opacity-75">Avg Comments:</span>
-							<span class="text-right text-sm font-medium">
-								{hoveredNode.avg_comments.toFixed(1)}
-							</span>
-						</div>
-					{/if}
-					{#if hoveredNode.avg_restacks && hoveredNode.avg_restacks >= 0.1}
-						<div class="flex items-center justify-between gap-4">
-							<span class="text-sm opacity-75">Avg Restacks:</span>
-							<span class="text-right text-sm font-medium">
-								{hoveredNode.avg_restacks.toFixed(1)}
-							</span>
+
+					<!-- Engagement Metrics -->
+					{#if (hoveredNode.avg_reactions && hoveredNode.avg_reactions >= 0.1) || (hoveredNode.avg_comments && hoveredNode.avg_comments >= 0.1) || (hoveredNode.avg_restacks && hoveredNode.avg_restacks >= 0.1)}
+						<div class="space-y-2">
+							<h5 class="text-sm font-medium opacity-90">Engagement</h5>
+							<p class="text-xs text-surface-900-100/90"> average / per 1k subscribers</p>
+							<div class="space-y-1">
+								{#if hoveredNode.avg_reactions && hoveredNode.avg_reactions >= 0.1}
+									<div class="grid grid-cols-3 gap-x-2 text-xs">
+										<span class="opacity-75">Reactions:</span>
+										<span class="text-right font-medium"
+											>{hoveredNode.avg_reactions.toFixed(1)}</span
+										>
+										<span class="text-right font-mono opacity-60">
+											{hoveredNode.avg_reactions_per_1k
+												? hoveredNode.avg_reactions_per_1k.toFixed(1)
+												: ''}
+										</span>
+									</div>
+								{/if}
+								{#if hoveredNode.avg_comments && hoveredNode.avg_comments >= 0.1}
+									<div class="grid grid-cols-3 gap-x-2 text-xs">
+										<span class="opacity-75">Comments:</span>
+										<span class="text-right font-medium">{hoveredNode.avg_comments.toFixed(1)}</span
+										>
+										<span class="text-right font-mono opacity-60">
+											{hoveredNode.avg_comments_per_1k
+												? hoveredNode.avg_comments_per_1k.toFixed(1)
+												: ''}
+										</span>
+									</div>
+								{/if}
+								{#if hoveredNode.avg_restacks && hoveredNode.avg_restacks >= 0.1}
+									<div class="grid grid-cols-3 gap-x-2 text-xs">
+										<span class="opacity-75">Restacks:</span>
+										<span class="text-right font-medium">{hoveredNode.avg_restacks.toFixed(1)}</span
+										>
+										<span class="text-right font-mono opacity-60">
+											{hoveredNode.avg_restacks_per_1k
+												? hoveredNode.avg_restacks_per_1k.toFixed(1)
+												: ''}
+										</span>
+									</div>
+								{/if}
+							</div>
 						</div>
 					{/if}
 				</section>

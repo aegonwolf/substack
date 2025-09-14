@@ -70,6 +70,9 @@ export interface NodeT {
   avg_comments?: number;
   avg_restacks?: number;
   avg_reactions?: number;
+  avg_comments_per_1k?: number;
+  avg_restacks_per_1k?: number;
+  avg_reactions_per_1k?: number;
   // Topic-specific properties
   post_count?: number;
   // Knowledge graph properties
